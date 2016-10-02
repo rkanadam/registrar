@@ -1,0 +1,60 @@
+<link rel="import" href="../bower_components/font-roboto/roboto.html">
+<link rel="import" href="../bower_components/paper-styles/paper-style-classes.html">
+<link rel="import" href="../bower_components/paper-card/paper-card.html">
+<link rel="import" href="../bower_components/google-signin/google-signin.html">
+<link rel="import" href="../bower_components/paper-styles/color.html">
+<link rel="import" href="../bower_components/paper-styles/typography.html">
+<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+
+<dom-module id="login-panel">
+    <template>
+        <paper-dialog id = "dialog" entry-animation="scale-up-animation"
+                      exit-animation="fade-out-animation">
+            <h2>Login</h2>
+            <div>
+                <div>
+                    Sairam, Please login with
+                </div>
+                <div>
+                    <google-signin client-id="477636750840-9kmsln38ji1ramlf56uk12ktud92gas6.apps.googleusercontent.com"
+                                   scopes="email profile"
+                                   signed-in="{{isSignedIn}}"
+                                   on-google-signed-out="_onLogout"
+                                   on-google-signin-success="_onLogin" with-backdrop
+                                   always-on-top></google-signin>
+                </div>
+            </div>
+        </paper-dialog>
+    </template>
+    <script>
+        Polymer({
+
+            is: 'login-panel',
+
+            properties: {
+                isSignedIn: {
+                    type: Boolean,
+                    value: false,
+                    observer: "_signInChanged"
+                }
+            },
+
+
+
+            attached: function () {
+
+            },
+
+            _onLogin: function () {
+                window.location = "../index.php";
+            },
+            
+            _onLogout: function () {
+                this.$.dialog.open ();
+            }
+        });
+    </script>
+
+</dom-module>
