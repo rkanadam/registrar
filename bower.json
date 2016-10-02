@@ -1,0 +1,27 @@
+{
+  "name": "registrat",
+  "version": "0.0.0",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "app-elements": "PolymerElements/app-elements",
+    "iron-elements": "PolymerElements/iron-elements",
+    "paper-elements": "PolymerElements/paper-elements",
+    "gold-elements": "PolymerElements/gold-elements",
+    "neon-elements": "PolymerElements/neon-elements",
+    "platinum-elements": "PolymerElements/platinum-elements",
+    "google-web-components": "GoogleWebComponents/google-web-components",
+    "vaadin-combo-box": "^1.1.4",
+    "vaadin-grid": "^1.1.4",
+    "hello": "^1.14.0"
+  },
+  "resolutions": {
+    "firebase": "^3.0"
+  }
+}
