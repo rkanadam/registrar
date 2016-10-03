@@ -1,9 +1,31 @@
 <?php
 
-session_start ();
+session_start();
 if ($_SESSION["authenticated"] !== true) {
-header('Location: unauth/login.php');
-return;
+    header('Location: unauth/login.php');
+    return;
 }
-
 ?>
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
+
+    <script src="../bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <link rel="import" href="elements/registrar-app.html">
+
+
+    <style type="text/css">
+        body {
+            margin: 0;
+            font-family: 'Roboto'
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+<registrar-app/>
+</body>
+</html>
