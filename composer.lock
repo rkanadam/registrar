@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "33cfaa178790173a69b42aa5b0a3475a",
-    "content-hash": "b8508c70f38657de78a3544f480496d5",
+    "hash": "8d5a1098bab45827410adef517c6860f",
+    "content-hash": "d038e62992d131e20f1784b0bdd22bea",
     "packages": [
         {
             "name": "apache/log4php",
@@ -202,6 +202,47 @@
                 "response"
             ],
             "time": "2016-08-06 14:39:51"
+        },
+        {
+            "name": "sag/sag",
+            "version": "v0.9.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sbisbee/sag.git",
+                "reference": "181c586fc24e23bd44c6b857a05892b613c192df"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sbisbee/sag/zipball/181c586fc24e23bd44c6b857a05892b613c192df",
+                "reference": "181c586fc24e23bd44c6b857a05892b613c192df",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.2.0"
+            },
+            "suggest": {
+                "lib-curl": "*"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Sam Bisbee",
+                    "email": "sam@sbisbee.com",
+                    "homepage": "http://www.sbisbee.com/"
+                }
+            ],
+            "description": "A simple but powerful PHP library for talking to CouchDB.",
+            "homepage": "http://www.saggingcouch.com/",
+            "time": "2013-12-27 05:02:01"
         },
         {
             "name": "slim/slim",

@@ -17,4 +17,13 @@ $app->post('/auth/login', function (Request $request, Response $response) {
     $response->getBody()->write(json_encode($return));
     return $response;
 });
+
+$app->any('/me/invitesAndProfiles', function (Request $request, Response $response) {
+    $json = json_decode($request->getBody()->getContents());
+    $auth = Authenticator::getInstance($json->authorizedBy);
+    $return = $auth === null ? false : $auth->authenticate($json);
+    $response->getBody()->write(json_encode($return));
+    return $response;
+});
+
 $app->run();
