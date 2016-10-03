@@ -28,6 +28,10 @@ class DB
         }
     }
 
+    /**
+     * @return DB
+     */
+
     public static function getInstance()
     {
         if (DB::$instance === null) {
@@ -36,19 +40,29 @@ class DB
         return DB::$instance;
     }
 
-    public function getProfiles()
+    public function getProfiles($user)
     {
-        $user = User::get();
         $response = $this->sag->get(
-            "/_design/invitesAndProfiles/_view/profiles?limit=100&reduce=false&start_key=[\""
+            "/_design/profiles/_view/profiles?limit=100&reduce=false&include_docs=true&key=\""
             . ($user->email)
-            . "\"]");
-        return $this->processResponse($response);
+            . "\"");
+        return $this->collectDocs($response);
     }
 
-    private function processResponse($response)
+    private function collectDocs($response)
     {
-        return $response->rows;
+        $docs = [];
+        if (!empty ($response) && !empty($response->body)) {
+            foreach ($response->body->rows as $row) {
+                $docs[] = $row->doc;
+            }
+        }
+        return $docs;
+    }
+
+    private function getViewRows($response)
+    {
+        return empty ($response) || empty($response->body) ? null : $response->body->rows;
     }
 
     public function save($obj)

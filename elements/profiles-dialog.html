@@ -1,15 +1,14 @@
 <dom-module id="profiles-dialog">
     <template>
-        <paper-dialog class="notificationAndInvites" id="notificationAndInvitesDialog"
-                      entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop always-on-top>
+        <paper-dialog class="profiles" id="profilesDialog"
+                      entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop
+                      always-on-top>
             <div class="pink">
-                <div class="paper-header"><h2>Invites and Profiles</h2></div>
+                <div class="paper-header"><h2>Profiles</h2></div>
                 <div class="content">
-                    <template is="dom-repeat" items="{{invitesAndProfiles}}" as="invite" filter="_isInvite">
-                        <div>[[invite.value.user_email]]</div>
-                    </template>
-                    <template is="dom-repeat" items="{{invitesAndProfiles}}" as="profile" filter="_isProfile">
-                        <div>[[profile.value.user_email]]</div>
+                    <template is="dom-repeat" items="{{profile}}" as="profile" filter="_isProfile">
+                        <div>[[profile.name]]</div>
+                        <div>[[profile.email]]</div>
                     </template>
                 </div>
             </div>
@@ -17,7 +16,7 @@
         <iron-ajax url="../api.php/me/profiles"
                    handle-as="json"
                    content-type="application/json"
-                   on-response="_onInvitesAndProfiles"
+                   on-response="_onProfiles"
                    method="POST"
                    auto
                    verbose/>
@@ -33,12 +32,7 @@
 
             properties: {
 
-                opened: {
-                    type: Boolean,
-                    value: false
-                },
-
-                invitesAndProfiles: {
+                profiles: {
                     type: Array,
                     value: function () {
                         return [];
@@ -50,28 +44,21 @@
             },
 
             open: function () {
-                this.$.notificationAndInvitesDialog.open();
+                this.$.profilesDialog.open();
             },
 
             close: function () {
-                this.$.notificationAndInvitesDialog.close();
+                this.$.profilesDialog.close();
             },
 
-            _onInvitesAndProfiles: function (e) {
+            _onProfiles: function (e) {
                 var response = e.target.lastResponse;
-                if (response && response.body && response.body.total_rows > 0) {
-                    var rows = response.body.rows;
-                    this.set("invitesAndProfiles", rows);
-                    this.$.notificationAndInvitesDialog.open();
+                if (response) {
+                    this.set("profiles", response);
+                    if (response.length) {
+                        this.$.profilesDialog.open();
+                    }
                 }
-            },
-
-            _isProfile: function (item) {
-                return item.key && item.key[1] === "profile";
-            },
-
-            _isInvite: function (item) {
-                return item.key && item.key[1] === "invite";
             }
         });
     </script>

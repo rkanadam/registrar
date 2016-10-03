@@ -33,10 +33,9 @@ $app->post('/auth/login', function (Request $request, Response $response) {
     $auth = Authenticator::getInstance($json->authorizedBy);
     $return = $auth === null ? false : $auth->authenticate($json);
     if ($return) {
-        $db = DB::getInstance();
-        $profiles = $db->getProfiles();
-        if (empty($profile)) {
-            $user = User::get();
+        $user = User::get();
+        $profiles = $user->profiles;
+        if (empty($profiles)) {
             $user->createNewProfile();
         }
     }
@@ -45,8 +44,8 @@ $app->post('/auth/login', function (Request $request, Response $response) {
 });
 
 $app->any('/me/profiles', function (Request $request, Response $response) {
-    $db = DB::getInstance();
-    $response->getBody()->write(json_encode($db->getProfiles()));
+    $user = User::get();
+    $response->getBody()->write(json_encode($user->profiles));
     return $response;
 });
 

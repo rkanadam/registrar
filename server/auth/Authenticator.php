@@ -16,8 +16,6 @@ abstract class Authenticator
         }
 
         $response = $this->authenticateImpl($json);
-        Log::error("Caught an exception while processing ");
-
         if ($response !== false) {
             Session::set(Session::AUTH_RESPONSE, $response);
         }
