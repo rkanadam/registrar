@@ -5,16 +5,18 @@ namespace util;
 class User
 {
     public $isAuthenticated = false;
-    public $userName = "";
+    public $name = "";
     public $email = "";
     public $_id = "";
+    public $authenticationResponse = null;
 
     private function __construct($isAuthenticated, $auth)
     {
         $this->isAuthenticated = $isAuthenticated;
+        $this->authenticationResponse = $auth;
         if ($isAuthenticated) {
             $this->email = $auth->email;
-            $this->userName = $auth->userName;
+            $this->name = $auth->name;
         }
     }
 

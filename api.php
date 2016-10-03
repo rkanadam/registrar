@@ -11,6 +11,7 @@ use auth\Authenticator;
 use db\DB;
 
 $app = new \Slim\App;
+//Add an authorization middleware
 $app->add(function ($request, $response, $next) {
     global $user;
 
@@ -36,5 +37,12 @@ $app->any('/me/invitesAndProfiles', function (Request $request, Response $respon
     $response->getBody()->write(json_encode($db->getInvitesAndProfiles()));
     return $response;
 });
+
+$app->any('/me', function (Request $request, Response $response) {
+    global $user;
+    $response->getBody()->write(json_encode($user));
+    return $response;
+});
+
 
 $app->run();
