@@ -7,8 +7,7 @@ use \Sag;
 use util\Passwords;
 use \Exception;
 use Logger;
-
-global $user;
+use util\User;
 
 class DB
 {
@@ -41,10 +40,10 @@ class DB
 
     public function getInvitesAndProfiles()
     {
-        global $user;
+        $user = User::get();
         return $this->sag->get(
-            "/_design/invitesAndProfiles/_view/invitesAndProfiles?limit=100&reduce=false&start_key=["
+            "/_design/invitesAndProfiles/_view/invitesAndProfiles?limit=100&reduce=false&start_key=[\""
             . ($user->email)
-            . "]");
+            . "\"]");
     }
 }

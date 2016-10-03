@@ -10,6 +10,8 @@ class User
     public $_id = "";
     public $authenticationResponse = null;
 
+    private static $instance = null;
+
     private function __construct($isAuthenticated, $auth)
     {
         $this->isAuthenticated = $isAuthenticated;
@@ -22,6 +24,12 @@ class User
 
     public static function init($isAuthenticated, $auth)
     {
-        return new User($isAuthenticated, $auth);
+        User::$instance = new User($isAuthenticated, $auth);
+        return User::$instance;
+    }
+
+    public static function get()
+    {
+        return User::$instance;
     }
 }

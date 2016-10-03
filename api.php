@@ -3,17 +3,16 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 require_once __DIR__ . '/vendor/autoload.php';
-
-$user = null;
 require_once __DIR__ . '/server/util/init_once.php';
 
 use auth\Authenticator;
 use db\DB;
+use util\User;
 
 $app = new \Slim\App;
 //Add an authorization middleware
 $app->add(function ($request, $response, $next) {
-    global $user;
+    $user = User::get();
 
     $path = $request->getUri()->getPath();
     if (strpos($path, "/auth") === 0 || $user->isAuthenticated !== false) {
@@ -39,7 +38,7 @@ $app->any('/me/invitesAndProfiles', function (Request $request, Response $respon
 });
 
 $app->any('/me', function (Request $request, Response $response) {
-    global $user;
+    $user = User::get();
     $response->getBody()->write(json_encode($user));
     return $response;
 });
