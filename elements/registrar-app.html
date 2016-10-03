@@ -52,8 +52,8 @@
             }
 
             app-toolbar#wideLayoutToolbar paper-icon-button {
-                padding: 0px;
-                margin: 0px 0px 25px 0px;
+                padding: 5px;
+                margin: 3px 0px 5px 0px;
             }
 
 
@@ -77,10 +77,10 @@
             <app-header-layout>
                 <app-header class="main-header">
 
-                    <app-toolbar>
-                        <paper-icon-button class="menu-button" icon="menu" drawer-toggle hidden$="{{wideLayout}}"></paper-icon-button>
-                        <div main-title hidden$="{{wideLayout}}"></div>
-                        <a href="#profile" hidden$="{{wideLayout}}">
+                    <app-toolbar hidden$="{{wideLayout}}">
+                        <paper-icon-button class="menu-button" icon="menu" drawer-toggle></paper-icon-button>
+                        <div main-title></div>
+                        <a href="#profile">
                             <paper-icon-button id="number" icon="account-box" alt="User Name"
                                                title="Signed in as [[authorizedUser.name]] with e-mail [[authorizedUser.email]]"
                                                click="_showProfilePage()">Edit Profile</paper-icon-button>
@@ -88,13 +88,12 @@
                     </app-toolbar>
 
                     <app-toolbar id = "wideLayoutToolbar" class="tabs-bar" hidden$="{{!wideLayout}}">
-                        <div main-title></div>
-                        <!-- Nav on desktop: tabs -->
                         <paper-tabs selected="{{selected}}" attr-for-selected="name" bottom-item>
                             <template is="dom-repeat" items="{{items}}">
                                 <paper-tab name="{{item}}">{{item}}</paper-tab>
                             </template>
                         </paper-tabs>
+                        <div main-title></div>
                         <a href="#profile">
                             <paper-icon-button id="number" icon="account-box" alt="User Name"
                                                title="Signed in as [[authorizedUser.name]] with e-mail [[authorizedUser.email]]"
