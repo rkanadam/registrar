@@ -5,20 +5,28 @@ namespace db;
 
 use \Sag;
 use util\Passwords;
+use \Exception;
+use Logger;
 
 class DB
 {
     private static $instance = null;
 
     private $sag = null;
+    private $logger = null;
 
     private function __construct()
     {
-        $sag = new Sag("https://rkanadam.cloudant.com/registrar", "80");
-        list($userName, $password) = Passwords::forDB();
-        $sag->login($userName, $password);
-
-        $this->sag = $sag;
+        $this->logger = Logger::getLogger(__CLASS__);
+        try {
+            $sag = new Sag("rkanadam.cloudant.com");
+            list($userName, $password) = Passwords::forDB();
+            $sag->login($userName, $password);
+            $sag->setDatabase("registrar");
+            $this->sag = $sag;
+        } catch (Exception $e) {
+            $this->logger->error("Encountered and exception while connecting to cloudant: " . ($e->getMessage()));
+        }
     }
 
     public static function getInstance()
@@ -31,6 +39,6 @@ class DB
 
     public function getInvitesAndProfiles()
     {
-
+        return $this->sag->get("/_design/invitesAndProfiles/_view/invitesAndProfiles?limit=100&reduce=false");
     }
 }

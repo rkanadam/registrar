@@ -7,6 +7,7 @@ require_once __DIR__ . '/server/util/init_once.php';
 
 
 use auth\Authenticator;
+use db\DB;
 
 $app = new \Slim\App;
 
@@ -19,10 +20,8 @@ $app->post('/auth/login', function (Request $request, Response $response) {
 });
 
 $app->any('/me/invitesAndProfiles', function (Request $request, Response $response) {
-    $json = json_decode($request->getBody()->getContents());
-    $auth = Authenticator::getInstance($json->authorizedBy);
-    $return = $auth === null ? false : $auth->authenticate($json);
-    $response->getBody()->write(json_encode($return));
+    $db = DB::getInstance();
+    $response->getBody()->write(json_encode($db->getInvitesAndProfiles()));
     return $response;
 });
 
