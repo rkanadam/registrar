@@ -1,5 +1,5 @@
 <link rel="import" href="../bower_components/font-roboto/roboto.html">
-<link rel="import" href="../bower_components/paper-styles/paper-style-classes.html">
+<link rel="import" href="../bower_components/paper-styles/paper-styles-classes.html">
 <link rel="import" href="../bower_components/paper-card/paper-card.html">
 <link rel="import" href="../bower_components/google-signin/google-signin.html">
 <link rel="import" href="../bower_components/paper-styles/color.html">
@@ -7,10 +7,11 @@
 <link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
 <link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 
 <dom-module id="login-panel">
     <template>
-        <paper-dialog id = "dialog" entry-animation="scale-up-animation"
+        <paper-dialog id="dialog" entry-animation="scale-up-animation"
                       exit-animation="fade-out-animation">
             <h2>Login</h2>
             <div>
@@ -18,41 +19,43 @@
                     Sairam, Please login with
                 </div>
                 <div>
-                    <google-signin client-id="477636750840-9kmsln38ji1ramlf56uk12ktud92gas6.apps.googleusercontent.com"
+                    <google-signin client-id="626033832662-1rs94afbg88p6g0vl9hq81gs6l0o0r60.apps.googleusercontent.com"
                                    scopes="email profile"
-                                   signed-in="{{isSignedIn}}"
                                    on-google-signed-out="_onLogout"
-                                   on-google-signin-success="_onLogin" with-backdrop
-                                   always-on-top></google-signin>
+                                   on-google-signin-success="_onLogin"
+                    ></google-signin>
                 </div>
             </div>
         </paper-dialog>
+        <iron-ajax id="ajax"
+                   url="../api.php/auth/login"
+                   handle-as="json"
+                   content-type="application/json"
+                   on-response="_onAjaxResponse"
+                   method="POST"
+                   verbose/>
     </template>
     <script>
         Polymer({
 
             is: 'login-panel',
 
-            properties: {
-                isSignedIn: {
-                    type: Boolean,
-                    value: false,
-                    observer: "_signInChanged"
-                }
-            },
-
-
-
-            attached: function () {
-
-            },
-
             _onLogin: function () {
-                window.location = "../index.php";
+                var user = gapi.auth2.getAuthInstance()['currentUser'].get();
+                var authResponse = user.getAuthResponse();
+                var idToken = authResponse.id_token;
+                this.$.ajax.body = {authorizedBy: "google", idToken: idToken};
+                this.$.ajax.generateRequest ();
             },
-            
+
             _onLogout: function () {
-                this.$.dialog.open ();
+                this.$.dialog.open();
+            },
+
+            _onAjaxResponse: function () {
+                if (this.$.ajax.lastResponse !== false) {
+                    window.location = "../index.php";
+                }
             }
         });
     </script>
