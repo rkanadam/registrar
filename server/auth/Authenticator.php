@@ -2,30 +2,24 @@
 
 namespace auth;
 
-use Logger;
+use util\Session;
+use util\Log;
 
 abstract class Authenticator
 {
-    public $logger = null;
-
-    function __construct()
-    {
-        $this->logger = Logger::getLogger(__CLASS__);
-    }
 
     public function authenticate($json)
     {
-        $this->logger->debug("Authenticating with json args: " . json_encode($json));
+        Log::info("Authenticating with json args: " . json_encode($json));
         if (empty($json)) {
             return false;
         }
 
         $response = $this->authenticateImpl($json);
+        Log::error("Caught an exception while processing ");
+
         if ($response !== false) {
-            session_start();
-            $_SESSION["authenticated"] = true;
-            $_SESSION["authenticationResponse"] = $response;
-            session_write_close();
+            Session::set(Session::AUTH_RESPONSE, $response);
         }
         return $response;
     }

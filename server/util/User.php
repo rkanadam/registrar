@@ -2,34 +2,43 @@
 
 namespace util;
 
+use db\DB;
+use util\Log;
+
 class User
 {
-    public $isAuthenticated = false;
     public $name = "";
     public $email = "";
     public $_id = "";
-    public $authenticationResponse = null;
+    private $authResponse = null;
 
     private static $instance = null;
 
-    private function __construct($isAuthenticated, $auth)
+    private function __construct($authResponse)
     {
-        $this->isAuthenticated = $isAuthenticated;
-        $this->authenticationResponse = $auth;
-        if ($isAuthenticated) {
-            $this->email = $auth->email;
-            $this->name = $auth->name;
+        $this->authResponse = $authResponse;
+        if ($authResponse) {
+            $this->email = $authResponse->email;
+            $this->name = $authResponse->name;
         }
     }
 
-    public static function init($isAuthenticated, $auth)
-    {
-        User::$instance = new User($isAuthenticated, $auth);
-        return User::$instance;
+    public function isAuthenticated () {
+        return !empty ($this->authResponse);
     }
+
 
     public static function get()
     {
+        if (User::$instance === null) {
+            User::$instance = new User(Session::get(Session::AUTH_RESPONSE));
+        }
         return User::$instance;
+    }
+
+    public function createNewProfile () {
+        $db = DB::getInstance();
+        $saved = $db->save ($this);
+        return $saved;
     }
 }

@@ -1,0 +1,78 @@
+<dom-module id="profiles-dialog">
+    <template>
+        <paper-dialog class="notificationAndInvites" id="notificationAndInvitesDialog"
+                      entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop always-on-top>
+            <div class="pink">
+                <div class="paper-header"><h2>Invites and Profiles</h2></div>
+                <div class="content">
+                    <template is="dom-repeat" items="{{invitesAndProfiles}}" as="invite" filter="_isInvite">
+                        <div>[[invite.value.user_email]]</div>
+                    </template>
+                    <template is="dom-repeat" items="{{invitesAndProfiles}}" as="profile" filter="_isProfile">
+                        <div>[[profile.value.user_email]]</div>
+                    </template>
+                </div>
+            </div>
+        </paper-dialog>
+        <iron-ajax url="../api.php/me/profiles"
+                   handle-as="json"
+                   content-type="application/json"
+                   on-response="_onInvitesAndProfiles"
+                   method="POST"
+                   auto
+                   verbose/>
+
+        <style>
+
+        </style>
+    </template>
+    <script>
+        Polymer({
+
+            is: 'profiles-dialog',
+
+            properties: {
+
+                opened: {
+                    type: Boolean,
+                    value: false
+                },
+
+                invitesAndProfiles: {
+                    type: Array,
+                    value: function () {
+                        return [];
+                    }
+                }
+            },
+
+            attached: function () {
+            },
+
+            open: function () {
+                this.$.notificationAndInvitesDialog.open();
+            },
+
+            close: function () {
+                this.$.notificationAndInvitesDialog.close();
+            },
+
+            _onInvitesAndProfiles: function (e) {
+                var response = e.target.lastResponse;
+                if (response && response.body && response.body.total_rows > 0) {
+                    var rows = response.body.rows;
+                    this.set("invitesAndProfiles", rows);
+                    this.$.notificationAndInvitesDialog.open();
+                }
+            },
+
+            _isProfile: function (item) {
+                return item.key && item.key[1] === "profile";
+            },
+
+            _isInvite: function (item) {
+                return item.key && item.key[1] === "invite";
+            }
+        });
+    </script>
+</dom-module>

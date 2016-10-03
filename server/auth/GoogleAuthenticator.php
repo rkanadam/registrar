@@ -1,11 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: rkanadam
- * Date: 02/10/16
- * Time: 9:11 PM
- */
-
 namespace auth;
 
 
@@ -14,24 +7,22 @@ class GoogleAuthenticator extends Authenticator
 
     protected function authenticateImpl($args)
     {
-        if (empty($args)) {
-            return false;
-        }
         $idToken = $args->idToken;
         $url = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token=$idToken";
+        Log::warn("URL is \n$url\n");
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_URL, $url);
         $result = curl_exec($ch);
-        $this->logger->debug("Authentication response from Goog: \n$result\n");
+        Log::warn("Authentication response from Goog: \n$result\n");
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
         if ($httpCode == 200) {
-            $this->logger->info("Successfully validated token with Google");
+            Log::info("Successfully validated token with Google");
             return json_decode($result);
         } else {
-            $this->logger->error("Authentication failed for token: $idToken. Response: $result");
+            Log::error("Authentication failed for token: $idToken. Response: $result");
         }
 
         return false;

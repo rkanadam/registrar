@@ -1,28 +1,5 @@
-<link rel="import" href="../bower_components/font-roboto/roboto.html">
-<link rel="import" href="../bower_components/paper-styles/paper-styles-classes.html">
-<link rel="import" href="../bower_components/paper-styles/color.html">
-<link rel="import" href="../bower_components/paper-styles/typography.html">
-<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
-<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
-<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
-<link rel="import" href="../bower_components/paper-menu/paper-menu.html">
-<link rel="import" href="../bower_components/paper-item/paper-item.html">
-<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
-<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
-<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
-<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
-<link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
-<link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
-<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
-<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
-<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
-<link rel="import" href="../bower_components/neon-animation/animations/fade-in-animation.html">
-<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
-<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
-<link rel="import" href="../bower_components/paper-header-panel/paper-header-panel.html">
+<link rel="import" href="imports.html">
+<link rel="import" href="profiles-dialog.html">
 
 <dom-module id="registrar-app">
     <template>
@@ -133,24 +110,9 @@
                         </a>
 
                     </app-toolbar>
-
                 </app-header>
+                <profiles-dialog opened></profiles-dialog>
             </app-header-layout>
-            <paper-dialog class="notificationAndInvites" id="notificationAndInvitesDialog"
-                          entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
-                <div class="pink">
-                    <div class="paper-header"><h2>Invites and Profiles</h2></div>
-                    <div class="content">
-                        <template is="dom-repeat" items="{{invitesAndProfiles}}" as="invite" filter="_isInvite">
-                            <div>[[invite.value.user_email]]</div>
-                        </template>
-                        <template is="dom-repeat" items="{{invitesAndProfiles}}" as="profile" filter="_isProfile">
-                            <div>[[profile.value.user_email]]</div>
-                        </template>
-                    </div>
-                </div>
-            </paper-dialog>
-
         </app-drawer-layout>
 
         <iron-media-query query="min-width: 600px" query-matches="{{wideLayout}}"></iron-media-query>
@@ -163,18 +125,8 @@
                    auto
                    verbose></iron-ajax>
 
-        <iron-ajax url="../api.php/me/invitesAndProfiles"
-                   handle-as="json"
-                   content-type="application/json"
-                   on-response="_onInvitesAndProfiles"
-                   method="POST"
-                   auto
-                   verbose></iron-ajax>
-
     </template>
-
     <script>
-
         Polymer({
 
             is: 'registrar-app',
@@ -204,13 +156,6 @@
                     value: function () {
                         return {name: "", email: ""};
                     }
-                },
-
-                invitesAndProfiles: {
-                    type: Array,
-                    value: function () {
-                        return [];
-                    }
                 }
             },
 
@@ -225,23 +170,6 @@
             _onMe: function (e) {
                 var response = e.target.lastResponse;
                 this.set("authorizedUser", response);
-            },
-
-            _onInvitesAndProfiles: function (e) {
-                var response = e.target.lastResponse;
-                if (response && response.body && response.body.total_rows > 0) {
-                    var rows = response.body.rows;
-                    this.set("invitesAndProfiles", rows);
-                    this.$.notificationAndInvitesDialog.open();
-                }
-            },
-
-            _isProfile: function (item) {
-                return item.key && item.key[1] === "profile";
-            },
-
-            _isInvite: function (item) {
-                return item.key && item.key[1] === "invite";
             }
         });
 

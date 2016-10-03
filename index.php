@@ -1,7 +1,15 @@
 <?php
 
-session_start();
-if ($_SESSION["authenticated"] !== true) {
+require_once __DIR__ . '/vendor/autoload.php';
+require_once __DIR__ . '/server/util/init_once.php';
+
+use util\User;
+use util\Log;
+
+$user = User::get();
+
+Log::info ("Found the user allright: " . (json_encode($user)));
+if (!$user->isAuthenticated ()) {
     header('Location: unauth/login.php');
     return;
 }

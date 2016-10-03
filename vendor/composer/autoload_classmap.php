@@ -175,10 +175,11 @@ return array(
     'Slim\\Route' => $vendorDir . '/slim/slim/Slim/Route.php',
     'Slim\\RouteGroup' => $vendorDir . '/slim/slim/Slim/RouteGroup.php',
     'Slim\\Router' => $vendorDir . '/slim/slim/Slim/Router.php',
-    'auth\\AuthenticationException' => $baseDir . '/server/auth/AuthenticationException.php',
     'auth\\Authenticator' => $baseDir . '/server/auth/Authenticator.php',
     'auth\\GoogleAuthenticator' => $baseDir . '/server/auth/GoogleAuthenticator.php',
     'db\\DB' => $baseDir . '/server/db/DB.php',
+    'util\\Log' => $baseDir . '/server/util/Log.php',
     'util\\Passwords' => $baseDir . '/server/util/Passwords.php',
+    'util\\Session' => $baseDir . '/server/util/Session.php',
     'util\\User' => $baseDir . '/server/util/User.php',
 );

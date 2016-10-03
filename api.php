@@ -8,16 +8,21 @@ require_once __DIR__ . '/server/util/init_once.php';
 use auth\Authenticator;
 use db\DB;
 use util\User;
+use util\Log;
 
 $app = new \Slim\App;
+
 //Add an authorization middleware
 $app->add(function ($request, $response, $next) {
     $user = User::get();
 
     $path = $request->getUri()->getPath();
-    if (strpos($path, "/auth") === 0 || $user->isAuthenticated !== false) {
+    Log::debug("Attempting to authorize $path");
+    if (strpos($path, "auth/") === 0 || $user->isAuthenticated()) {
+        //Allow all paths that start with auth or any other if the user is authenticated
         return $next($request, $response);
     } else {
+        Log::info("Rejecting $path as user is not authenticated");
         return $response->withStatus(403);
     }
 });
@@ -27,13 +32,21 @@ $app->post('/auth/login', function (Request $request, Response $response) {
     $json = json_decode($request->getBody()->getContents());
     $auth = Authenticator::getInstance($json->authorizedBy);
     $return = $auth === null ? false : $auth->authenticate($json);
+    if ($return) {
+        $db = DB::getInstance();
+        $profiles = $db->getProfiles();
+        if (empty($profile)) {
+            $user = User::get();
+            $user->createNewProfile();
+        }
+    }
     $response->getBody()->write(json_encode($return));
     return $response;
 });
 
-$app->any('/me/invitesAndProfiles', function (Request $request, Response $response) {
+$app->any('/me/profiles', function (Request $request, Response $response) {
     $db = DB::getInstance();
-    $response->getBody()->write(json_encode($db->getInvitesAndProfiles()));
+    $response->getBody()->write(json_encode($db->getProfiles()));
     return $response;
 });
 

@@ -6,7 +6,7 @@ namespace db;
 use \Sag;
 use util\Passwords;
 use \Exception;
-use Logger;
+use util\Log;
 use util\User;
 
 class DB
@@ -14,11 +14,9 @@ class DB
     private static $instance = null;
 
     private $sag = null;
-    private $logger = null;
 
     private function __construct()
     {
-        $this->logger = Logger::getLogger(__CLASS__);
         try {
             $sag = new Sag("rkanadam.cloudant.com");
             list($userName, $password) = Passwords::forDB();
@@ -26,7 +24,7 @@ class DB
             $sag->setDatabase("registrar");
             $this->sag = $sag;
         } catch (Exception $e) {
-            $this->logger->error("Encountered and exception while connecting to cloudant: " . ($e->getMessage()));
+            Log::error("Encountered and exception while connecting to cloudant: " . ($e->getMessage()));
         }
     }
 
@@ -38,12 +36,27 @@ class DB
         return DB::$instance;
     }
 
-    public function getInvitesAndProfiles()
+    public function getProfiles()
     {
         $user = User::get();
-        return $this->sag->get(
-            "/_design/invitesAndProfiles/_view/invitesAndProfiles?limit=100&reduce=false&start_key=[\""
+        $response = $this->sag->get(
+            "/_design/invitesAndProfiles/_view/profiles?limit=100&reduce=false&start_key=[\""
             . ($user->email)
             . "\"]");
+        return $this->processResponse($response);
+    }
+
+    private function processResponse($response)
+    {
+        return $response->rows;
+    }
+
+    public function save($obj)
+    {
+        if (!empty($obj->{"_id"})) {
+            return $this->sag->put($obj->{"_id"}, $obj);
+        } else {
+            return $this->sag->post($obj);
+        }
     }
 }

@@ -35,6 +35,3 @@ Logger::configure(array(
     )
 ));
 
-global $user;
-$user = User::init($_SESSION["authenticated"], $_SESSION["authenticationResponse"]);
-
