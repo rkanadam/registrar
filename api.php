@@ -3,13 +3,25 @@ use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/server/util/init_once.php';
 
+$user = null;
+require_once __DIR__ . '/server/util/init_once.php';
 
 use auth\Authenticator;
 use db\DB;
 
 $app = new \Slim\App;
+$app->add(function ($request, $response, $next) {
+    global $user;
+
+    $path = $request->getUri()->getPath();
+    if (strpos($path, "/auth") === 0 || $user->isAuthenticated !== false) {
+        return $next($request, $response);
+    } else {
+        return $response->withStatus(403);
+    }
+});
+
 
 $app->post('/auth/login', function (Request $request, Response $response) {
     $json = json_decode($request->getBody()->getContents());

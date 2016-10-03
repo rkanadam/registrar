@@ -8,6 +8,8 @@ use util\Passwords;
 use \Exception;
 use Logger;
 
+global $user;
+
 class DB
 {
     private static $instance = null;
@@ -39,6 +41,10 @@ class DB
 
     public function getInvitesAndProfiles()
     {
-        return $this->sag->get("/_design/invitesAndProfiles/_view/invitesAndProfiles?limit=100&reduce=false");
+        global $user;
+        return $this->sag->get(
+            "/_design/invitesAndProfiles/_view/invitesAndProfiles?limit=100&reduce=false&start_key=["
+            . ($user->email)
+            . "]");
     }
 }

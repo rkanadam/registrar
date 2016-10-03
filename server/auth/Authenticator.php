@@ -19,7 +19,15 @@ abstract class Authenticator
         if (empty($json)) {
             return false;
         }
-        return $this->authenticateImpl($json);
+
+        $response = $this->authenticateImpl($json);
+        if ($response !== false) {
+            session_start();
+            $_SESSION["authenticated"] = true;
+            $_SESSION["authenticationResponse"] = $response;
+            session_write_close();
+        }
+        return $response;
     }
 
     public static function getInstance($authType)

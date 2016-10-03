@@ -180,4 +180,5 @@ return array(
     'auth\\GoogleAuthenticator' => $baseDir . '/server/auth/GoogleAuthenticator.php',
     'db\\DB' => $baseDir . '/server/db/DB.php',
     'util\\Passwords' => $baseDir . '/server/util/Passwords.php',
+    'util\\User' => $baseDir . '/server/util/User.php',
 );

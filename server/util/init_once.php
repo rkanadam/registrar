@@ -2,6 +2,9 @@
 
 namespace util;
 
+session_start();
+session_write_close();
+
 use \Logger;
 
 $logFile = dirname($_SERVER["SCRIPT_FILENAME"]) . "/logs/server.log";
@@ -31,3 +34,7 @@ Logger::configure(array(
         )
     )
 ));
+
+global $user;
+$user = User::init($_SESSION["authenticated"], $_SESSION["authenticationResponse"]);
+
