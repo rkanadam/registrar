@@ -1,15 +1,39 @@
 <dom-module id="profiles-dialog">
     <template>
+        <style>
+
+            iron-list {
+                --iron-list-items-container: {
+                    margin: 10px auto;
+                };
+            }
+
+            .profile {
+                padding: 16px 22px;
+                border-bottom: 1px solid #CCC;
+                background: var(--paper-light-blue-50);
+            }
+
+            .profile:hover {
+                background: var(--paper-blue-500);
+                color: #fff;
+            }
+
+        </style>
         <paper-dialog class="profiles" id="profilesDialog"
-                      entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop
-                      always-on-top>
+                      entry-animation="scale-up-animation" exit-animation="fade-out-animation"
+        >
             <div class="pink">
                 <div class="paper-header"><h2>Profiles</h2></div>
                 <div class="content">
-                    <template is="dom-repeat" items="{{profile}}" as="profile" filter="_isProfile">
-                        <div>[[profile.name]]</div>
-                        <div>[[profile.email]]</div>
-                    </template>
+                    This e-mail address is associated with multiple profiles. Please select one to continue.
+                    <iron-list id = "profileList" items="[[profiles]]" as="profile" selection-enabled>
+                        <template>
+                            <div class = "profile" tabindex$="[[tabIndex]]" aria-label$="Select/Deselect [[profile.name]]">
+                                <iron-icon icon="account-box"></iron-icon>[[profile.name]]
+                            </div>
+                        </template>
+                    </iron-list>
                 </div>
             </div>
         </paper-dialog>
@@ -45,6 +69,7 @@
 
             open: function () {
                 this.$.profilesDialog.open();
+                this.$.profileList.focus ();
             },
 
             close: function () {
@@ -56,7 +81,7 @@
                 if (response) {
                     this.set("profiles", response);
                     if (response.length) {
-                        this.$.profilesDialog.open();
+                        this.open();
                     }
                 }
             }

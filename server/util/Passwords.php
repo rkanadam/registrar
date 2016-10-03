@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by IntelliJ IDEA.
- * User: rkanadam
- * Date: 02/10/16
- * Time: 11:34 PM
- */
 
 namespace util;
 
