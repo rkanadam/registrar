@@ -16,6 +16,13 @@
 <link rel="import" href="../bower_components/paper-tabs/paper-tab.html">
 <link rel="import" href="../bower_components/iron-media-query/iron-media-query.html">
 <link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/neon-animation/animations/scale-up-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/fade-in-animation.html">
+<link rel="import" href="../bower_components/neon-animation/animations/fade-out-animation.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-header-panel/paper-header-panel.html">
 
 <dom-module id="registrar-app">
     <template>
@@ -56,6 +63,29 @@
                 margin: 3px 0px 5px 0px;
             }
 
+            paper-dialog.notificationAndInvites {
+                width: 80vw;
+                height: 60vh;
+                overflow: auto;
+                margin: 0px;
+                padding: 0px;
+                background: #EEE;
+            }
+
+            paper-dialog.notificationAndInvites .pink .paper-header {
+                background-color: var(--paper-pink-a200);
+                margin: -24px;
+                padding: 12px;
+                color: white;
+                transition: height 0.2s;
+            }
+
+            paper-dialog.notificationAndInvites .pink .content {
+                margin: 24px;
+                padding: 12px;
+                color: #000080;
+                transition: height 0.2s;
+            }
 
         </style>
 
@@ -83,11 +113,12 @@
                         <a href="#profile">
                             <paper-icon-button id="number" icon="account-box" alt="User Name"
                                                title="Signed in as [[authorizedUser.name]] with e-mail [[authorizedUser.email]]"
-                                               click="_showProfilePage()">Edit Profile</paper-icon-button>
+                                               click="_showProfilePage()">Edit Profile
+                            </paper-icon-button>
                         </a>
                     </app-toolbar>
 
-                    <app-toolbar id = "wideLayoutToolbar" class="tabs-bar" hidden$="{{!wideLayout}}">
+                    <app-toolbar id="wideLayoutToolbar" class="tabs-bar" hidden$="{{!wideLayout}}">
                         <paper-tabs selected="{{selected}}" attr-for-selected="name" bottom-item>
                             <template is="dom-repeat" items="{{items}}">
                                 <paper-tab name="{{item}}">{{item}}</paper-tab>
@@ -97,18 +128,48 @@
                         <a href="#profile">
                             <paper-icon-button id="number" icon="account-box" alt="User Name"
                                                title="Signed in as [[authorizedUser.name]] with e-mail [[authorizedUser.email]]"
-                                               click="_showProfilePage()">Edit Profile</paper-icon-button>
+                                               click="_showProfilePage()">Edit Profile
+                            </paper-icon-button>
                         </a>
 
                     </app-toolbar>
 
-
                 </app-header>
             </app-header-layout>
+            <paper-dialog class="notificationAndInvites" id="notificationAndInvitesDialog"
+                          entry-animation="scale-up-animation" exit-animation="fade-out-animation" with-backdrop>
+                <div class="pink">
+                    <div class="paper-header"><h2>Invites and Profiles</h2></div>
+                    <div class="content">
+                        <template is="dom-repeat" items="{{invitesAndProfiles}}" as="invite" filter="_isInvite">
+                            <div>[[invite.value.user_email]]</div>
+                        </template>
+                        <template is="dom-repeat" items="{{invitesAndProfiles}}" as="profile" filter="_isProfile">
+                            <div>[[profile.value.user_email]]</div>
+                        </template>
+                    </div>
+                </div>
+            </paper-dialog>
 
         </app-drawer-layout>
 
         <iron-media-query query="min-width: 600px" query-matches="{{wideLayout}}"></iron-media-query>
+
+        <iron-ajax url="../api.php/me"
+                   handle-as="json"
+                   content-type="application/json"
+                   on-response="_onMe"
+                   method="POST"
+                   auto
+                   verbose></iron-ajax>
+
+        <iron-ajax url="../api.php/me/invitesAndProfiles"
+                   handle-as="json"
+                   content-type="application/json"
+                   on-response="_onInvitesAndProfiles"
+                   method="POST"
+                   auto
+                   verbose></iron-ajax>
 
     </template>
 
@@ -136,6 +197,20 @@
                     value: function () {
                         return ['Notifications', 'Invites', 'Events', 'Reports', 'Messages'];
                     }
+                },
+
+                authorizedUser: {
+                    type: Object,
+                    value: function () {
+                        return {name: "", email: ""};
+                    }
+                },
+
+                invitesAndProfiles: {
+                    type: Array,
+                    value: function () {
+                        return [];
+                    }
                 }
             },
 
@@ -145,6 +220,28 @@
                 if (wide && drawer.opened) {
                     drawer.opened = false;
                 }
+            },
+
+            _onMe: function (e) {
+                var response = e.target.lastResponse;
+                this.set("authorizedUser", response);
+            },
+
+            _onInvitesAndProfiles: function (e) {
+                var response = e.target.lastResponse;
+                if (response && response.body && response.body.total_rows > 0) {
+                    var rows = response.body.rows;
+                    this.set("invitesAndProfiles", rows);
+                    this.$.notificationAndInvitesDialog.open();
+                }
+            },
+
+            _isProfile: function (item) {
+                return item.key && item.key[1] === "profile";
+            },
+
+            _isInvite: function (item) {
+                return item.key && item.key[1] === "invite";
             }
         });
 
