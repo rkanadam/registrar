@@ -13,7 +13,6 @@ $app = new \Slim\App;
 $app->post('/auth/login', function (Request $request, Response $response) {
     $json = json_decode($request->getBody()->getContents());
     $auth = Authenticator::getInstance($json->authorizedBy);
-    $auth->logger->error("Hmmm we are logging allright!");
     $return = $auth === null ? false : $auth->authenticate($json);
     $response->getBody()->write(json_encode($return));
     return $response;

@@ -24,9 +24,11 @@ class GoogleAuthenticator extends Authenticator
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_URL, $url);
         $result = curl_exec($ch);
+        $this->logger->debug("Authentication response from Goog: \n$result\n");
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
         if ($httpCode == 200) {
+            $this->logger->info("Successfully validated token with Google");
             return json_decode($result);
         } else {
             $this->logger->error("Authentication failed for token: $idToken. Response: $result");

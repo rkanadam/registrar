@@ -4,11 +4,13 @@ namespace util;
 
 use \Logger;
 
-$logFile = getcwd() . "/logs/server.log";
+$logFile = dirname($_SERVER["SCRIPT_FILENAME"]) . "/logs/server.log";
+
 if (!file_exists($logFile)) {
     $fh = fopen($logFile, "a+");
     fflush($fh);
     fclose($fh);
+    chmod($logFile, 0777);
 }
 
 Logger::configure(array(
