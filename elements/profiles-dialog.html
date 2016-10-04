@@ -14,9 +14,10 @@
                 background: var(--paper-light-blue-50);
             }
 
-            .profile:hover {
+            .profile:hover, .profile.selected {
                 background: var(--paper-blue-500);
                 color: #fff;
+                outline: none;
             }
 
         </style>
@@ -27,13 +28,19 @@
                 <div class="paper-header"><h2>Profiles</h2></div>
                 <div class="content">
                     This e-mail address is associated with multiple profiles. Please select one to continue.
-                    <iron-list id = "profileList" items="[[profiles]]" as="profile" selection-enabled>
-                        <template>
-                            <div class = "profile" tabindex$="[[tabIndex]]" aria-label$="Select/Deselect [[profile.name]]">
-                                <iron-icon icon="account-box"></iron-icon>[[profile.name]]
+                    <paper-listbox
+                            id="profileList"
+                            on-iron-select="_onProfileSelected"
+                            selected="0">
+                        <template is="dom-repeat" items="[[profiles]]" as="profile">
+                            <div tabindex$="[[tabIndex]]"
+                                 aria-label$="Select/Deselect [[profile.name]]"
+                                 class="profile">
+                                <iron-icon icon="account-box"></iron-icon>
+                                [[profile.name]]
                             </div>
                         </template>
-                    </iron-list>
+                    </paper-listbox>
                 </div>
             </div>
         </paper-dialog>
@@ -58,18 +65,28 @@
 
                 profiles: {
                     type: Array,
-                    value: function () {
-                        return [];
-                    }
+                    value: [],
+                    notify: true
+                },
+
+                autoOpen: {
+                    type: Boolean,
+                    value: false
+                },
+
+                selectedProfile: {
+                    type: Object,
+                    notify: true
                 }
             },
 
             attached: function () {
+                console.log (this.autoOpen);
             },
 
             open: function () {
                 this.$.profilesDialog.open();
-                this.$.profileList.focus ();
+                this.$.profileList.focus();
             },
 
             close: function () {
@@ -81,9 +98,20 @@
                 if (response) {
                     this.set("profiles", response);
                     if (response.length) {
-                        this.open();
+                        if (response.length > 1) {
+                            if (this.autoOpen) {
+                                this.open();
+                            }
+                        } else {
+                            this.set("selectedProfile", response[0]);
+                        }
                     }
                 }
+            },
+
+            _onProfileSelected: function (e) {
+                var selectedProfile = this.profiles[this.$.profileList.selected];
+                this.set("selectedProfile", selectedProfile);
             }
         });
     </script>

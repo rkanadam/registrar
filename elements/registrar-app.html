@@ -64,6 +64,17 @@
                 transition: height 0.2s;
             }
 
+            .profile {
+                @apply(--paper-font-body1);
+                color: white;
+                text-decoration: none;
+                text-transform: uppercase;
+            }
+
+            .profile:hover {
+                text-decoration: underline;
+            }
+
         </style>
 
         <app-drawer-layout force-narrow>
@@ -87,12 +98,17 @@
                     <app-toolbar hidden$="{{wideLayout}}">
                         <paper-icon-button class="menu-button" icon="menu" drawer-toggle></paper-icon-button>
                         <div main-title></div>
-                        <a href="#profile">
-                            <paper-icon-button id="number" icon="account-box" alt="User Name"
+                        <a href="#profile" class="profile">
+                            <paper-icon-button icon="account-box" alt="User Name"
                                                title="Signed in as [[authorizedUser.name]] with e-mail [[authorizedUser.email]]"
                                                click="_showProfilePage()">Edit Profile
                             </paper-icon-button>
                         </a>
+                        <paper-icon-button icon="arrow-drop-down" alt="User Name"
+                                           title="Signed in as [[authorizedUser.name]] with e-mail [[authorizedUser.email]]"
+                                           click="_showProfilePage()">Edit Profile
+                        </paper-icon-button>
+
                     </app-toolbar>
 
                     <app-toolbar id="wideLayoutToolbar" class="tabs-bar" hidden$="{{!wideLayout}}">
@@ -102,16 +118,21 @@
                             </template>
                         </paper-tabs>
                         <div main-title></div>
-                        <a href="#profile">
-                            <paper-icon-button id="number" icon="account-box" alt="User Name"
-                                               title="Signed in as [[authorizedUser.name]] with e-mail [[authorizedUser.email]]"
+                        <a href="#profile"  class = "profile">
+                            <paper-icon-button icon="account-box" alt="User Name"
+                                               title="Signed in as [[selectedProfile.name]] with e-mail [[selectedProfile.email]]"
                                                click="_showProfilePage()">Edit Profile
                             </paper-icon-button>
+                            <span>[[selectedProfile.name]]</span>
                         </a>
+                        <paper-icon-button hidden$="[[profiles.length]]" icon="arrow-drop-down" alt="User Name"
+                                           title="Signed in as [[authorizedUser.name]] with e-mail [[authorizedUser.email]]"
+                                           click="_showProfilePage()">Edit Profile
+                        </paper-icon-button>
 
                     </app-toolbar>
                 </app-header>
-                <profiles-dialog opened></profiles-dialog>
+                <profiles-dialog auto-open selected-profile="{{selectedProfile}}" profiles="{{profiles}}"></profiles-dialog>
             </app-header-layout>
         </app-drawer-layout>
 
@@ -120,7 +141,7 @@
         <iron-ajax url="../api.php/me"
                    handle-as="json"
                    content-type="application/json"
-                   on-response="_onMe"
+                   last-response="{{authorizedUser}}"
                    method="POST"
                    auto
                    verbose></iron-ajax>
@@ -141,7 +162,7 @@
                 wideLayout: {
                     type: Boolean,
                     value: false,
-                    observer: 'onLayoutChange',
+                    observer: 'onLayoutChange'
                 },
 
                 items: {
@@ -156,6 +177,16 @@
                     value: function () {
                         return {name: "", email: ""};
                     }
+                },
+
+                selectedProfile: {
+                    type: Object,
+                    observer: '_onProfileChanged'
+                },
+
+                profiles: {
+                    type: Array,
+                    value: [],
                 }
             },
 
@@ -165,11 +196,6 @@
                 if (wide && drawer.opened) {
                     drawer.opened = false;
                 }
-            },
-
-            _onMe: function (e) {
-                var response = e.target.lastResponse;
-                this.set("authorizedUser", response);
             }
         });
 
