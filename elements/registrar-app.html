@@ -1,5 +1,4 @@
 <link rel="import" href="imports.html">
-<link rel="import" href="profiles-dialog.html">
 
 <dom-module id="registrar-app">
     <template>
@@ -138,13 +137,19 @@
 
 
                 </app-header>
-                <profiles-dialog id="profileSelector" auto-open selected-profile="{{profile}}"
-                                 profiles="{{profiles}}"></profiles-dialog>
+                <profile-selector-dialog id="profileSelector" auto-open selected-profile="{{profile}}"
+                                 profiles="{{profiles}}"></profile-selector-dialog>
+                <neon-animated-pages selected="[[page]]"
+                                     entry-animation="fade-in-animation"
+                                     exit-animation="fade-out-animation"
+                                     attr-for-selected="name">
+                    <profile-page name="profile" profile="{{profile}}"></profile-page>
+                </neon-animated-pages>
             </app-header-layout>
         </app-drawer-layout>
 
-        <iron-media-query query="min-width: 600px" query-matches="{{wideLayout}}"></iron-media-query>
 
+        <iron-media-query query="min-width: 600px" query-matches="{{wideLayout}}"></iron-media-query>
         <iron-location hash="[[page]]"></iron-location>
         <app-location route="{{route}}" use-hash-as-path></app-location>
         <app-route
@@ -153,11 +158,6 @@
                 data="{{routeData}}"
                 tail="{{tail}}">
         </app-route>
-        <neon-animated-pages id="pages" selected="[[page]]" entry-animation="fade-in-animation"
-                             exit-animation="fade-out-animation"
-                             attr-for-selected="name">
-        </neon-animated-pages>
-
     </template>
     <script>
         Polymer({
@@ -236,7 +236,7 @@
             _onProfileChange: function () {
                 if (this.profile) {
                     if (!this.page) {
-                        this.set("page", "notifications");
+                        this.set("page", "profile");
                     }
                 }
             },
