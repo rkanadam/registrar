@@ -4,10 +4,9 @@
 <dom-module id="registrar-app">
     <template>
 
-        <style>
+        <style include="iron-flex iron-flex-alignment">
 
             app-toolbar {
-                height: 35px;
                 background-color: var(--paper-purple-500);
                 color: white;
             }
@@ -109,23 +108,26 @@
                                 icon="arrow-drop-down"
                                 title="Show other profiles"
                                 on-click="_showProfileSelector">
+                        </paper-icon-button>
 
                     </app-toolbar>
 
-                    <app-toolbar id="wideLayoutToolbar" class="tabs-bar" hidden$="{{!wideLayout}}">
-                        <paper-tabs selected="{{selected}}" attr-for-selected="name" bottom-item>
+                    <app-toolbar id="wideLayoutToolbar" hidden$="{{!wideLayout}}" class="layout horizontal">
+                        <paper-tabs selected="{{selected}}" attr-for-selected="name">
                             <template is="dom-repeat" items="{{items}}">
                                 <paper-tab name="{{item}}">{{item}}</paper-tab>
                             </template>
                         </paper-tabs>
-                        <div main-title></div>
-                        <a href="#profile" class="profile">
-                            <paper-icon-button icon="account-box" alt="User Name"
-                                               title="Signed in as [[selectedProfile.name]] with e-mail [[selectedProfile.email]]"
-                                               click="_showProfilePage()">Edit Profile
-                            </paper-icon-button>
-                            <span>[[selectedProfile.name]]</span>
-                        </a>
+                        <div class="flex"></div>
+                        <paper-tabs selected="{{selected}}" attr-for-selected="name">
+                            <paper-tab name="profile" class="flex">
+                                <paper-icon-button icon="account-box" alt="User Name"
+                                                   title="Signed in as [[selectedProfile.name]] with e-mail [[selectedProfile.email]]"
+                                                   click="_showProfilePage()">Edit Profile
+                                </paper-icon-button>
+                                <span>[[selectedProfile.name]]</span>
+                            </paper-tab>
+                        </paper-tabs>
                         <paper-icon-button
                                 hidden$="[[!_isProfileSelectorEnabled(profiles)]]"
                                 icon="arrow-drop-down"
@@ -171,7 +173,7 @@
                 items: {
                     type: Array,
                     value: function () {
-                        return ['Notifications', 'Invites', 'Events', 'Reports', 'Messages'];
+                        return ['Notifications', 'Invites', 'Reports', 'Messages', 'Profile'];
                     }
                 },
 
