@@ -16,7 +16,7 @@ $config['errorHandler'] = function ($c) {
         Log::error("Encountered an exception while processing path [", $request->getUri()->getPath(), "].\nException\n", $e->getMessage(), "\nTrace:\n", $e->getTraceAsString());
         return $c['response']->withStatus(500)
             ->withHeader('Content-Type', 'text/html')
-            ->write('Something went wrong!');
+            ->write('Processing Error');
     };
 };
 $app = new \Slim\App ($config);

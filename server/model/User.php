@@ -24,9 +24,9 @@ class User
         if ($authResponse) {
             $this->email = $authResponse->email;
             $this->name = $authResponse->name;
+            $db = DB::getInstance();
+            $this->profiles = $db->getProfiles($this);
         }
-        $db = DB::getInstance();
-        $this->profiles = $db->getProfiles($this);
     }
 
     /**

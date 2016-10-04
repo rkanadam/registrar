@@ -46,7 +46,18 @@ class DB
             "/_design/profiles/_view/profiles?limit=100&reduce=false&include_docs=true&key=\""
             . ($user->email)
             . "\"");
-        return $this->collectDocs($response);
+        $docs = $this->collectDocs($response);
+        foreach ($docs as $doc) {
+            if ($doc->primaryKey) {
+                $response = $this->sag->get(
+                    "/_design/profiles/_view/profilesByPrimaryKey?limit=100&reduce=false&include_docs=true&key=\""
+                    . ($doc->primaryKey)
+                    . "\"");
+                return $this->collectDocs($response);
+            }
+        }
+
+        return [];
     }
 
     private function collectDocs($response)
