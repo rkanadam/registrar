@@ -10,39 +10,31 @@ class Log
 
     public static function log()
     {
-        $str = "";
-        foreach (func_get_args() as $arg) {
-            if (is_string($arg)) {
-                $str .= $arg;
-            } else {
-                $str .= print_r($arg, true);
-            }
-        }
-        return Log::info($str);
+        return Log::info(Log::format(func_get_args()));
     }
 
-    public static function debug($str)
+    public static function debug()
     {
         $logger = Log::get();
-        return $logger->debug($str);
+        return $logger->debug(Log::format(func_get_args()));
     }
 
-    public static function info($str)
+    public static function info()
     {
         $logger = Log::get();
-        return $logger->info($str);
+        return $logger->info(Log::format(func_get_args()));
     }
 
-    public static function warn($str)
+    public static function warn()
     {
         $logger = Log::get();
-        return $logger->warn($str);
+        return $logger->warn(Log::format(func_get_args()));
     }
 
     public static function error($str)
     {
         $logger = Log::get();
-        return $logger->error($str);
+        return $logger->error(Log::format(func_get_args()));
     }
 
 
@@ -52,5 +44,18 @@ class Log
             Log::$logger = Logger::getLogger(__CLASS__);
         }
         return Log::$logger;
+    }
+
+    private function format($args)
+    {
+        $str = "";
+        foreach (func_get_args() as $arg) {
+            if (is_string($arg)) {
+                $str .= $arg;
+            } else {
+                $str .= print_r($arg, true);
+            }
+        }
+        return $str;
     }
 }

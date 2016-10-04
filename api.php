@@ -12,8 +12,8 @@ use util\Log;
 
 $config = new \Slim\Container();
 $config['errorHandler'] = function ($c) {
-    return function ($request, $response, $exception) use ($c) {
-        Log::error($exception->getTraceAsString());
+    return function ($request, $response, $e) use ($c) {
+        Log::error("Encountered an exception while processing path [", $request->getUri()->getPath(), "].\nException\n", $e->getMessage(), "\nTrace:\n", $e->getTraceAsString());
         return $c['response']->withStatus(500)
             ->withHeader('Content-Type', 'text/html')
             ->write('Something went wrong!');
