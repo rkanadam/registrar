@@ -99,7 +99,7 @@
                         <div main-title></div>
                         <a href="#profile" class="profile">
                             <paper-icon-button icon="account-box" alt="User Name"
-                                               title="Signed in as [[authorizedUser.name]] with e-mail [[authorizedUser.email]]"
+                                               title$="{{localize('signedInAs', 'name', selectedProfile.name, 'email', selectedProfile.email)}}"
                                                click="_showProfilePage()">Edit Profile
                             </paper-icon-button>
                         </a>
@@ -122,7 +122,7 @@
                         <paper-tabs selected="{{selected}}" attr-for-selected="name">
                             <paper-tab name="profile" class="flex">
                                 <paper-icon-button icon="account-box" alt="User Name"
-                                                   title="Signed in as [[selectedProfile.name]] with e-mail [[selectedProfile.email]]"
+                                                   title$="{{localize('signedInAs', 'name', selectedProfile.name, 'email', selectedProfile.email)}}"
                                                    click="_showProfilePage()">Edit Profile
                                 </paper-icon-button>
                                 <span>[[selectedProfile.name]]</span>
@@ -135,6 +135,8 @@
                                 on-click="_showProfileSelector">
                         </paper-icon-button>
                     </app-toolbar>
+
+
                 </app-header>
                 <profiles-dialog id="profileSelector" auto-open selected-profile="{{selectedProfile}}"
                                  profiles="{{profiles}}"></profiles-dialog>
@@ -151,6 +153,19 @@
                    auto
                    verbose></iron-ajax>
 
+        <iron-location hash="{{url}}" query="[[_computeQuery(page)]]"></iron-location>
+        <app-location route="{{route}}" use-hash-as-path></app-location>
+        <app-route
+                route="{{route}}"
+                pattern=":page"
+                data="{{routeData}}"
+                tail="{{tail}}">
+        </app-route>
+        <neon-animated-pages id="pages" selected="[[page]]" entry-animation="fade-in-animation"
+                             exit-animation="fade-out-animation"
+                             attr-for-selected="name">
+        </neon-animated-pages>
+
     </template>
     <script>
         Polymer({
@@ -158,6 +173,11 @@
             is: 'registrar-app',
 
             properties: {
+
+                language: {
+                    type: String,
+                    value: 'en'
+                },
 
                 selected: {
                     type: String,
@@ -192,6 +212,14 @@
                     type: Array,
                     value: [],
                 }
+            },
+
+            behaviors: [
+                Polymer.AppLocalizeBehavior
+            ],
+
+            attached: function () {
+                this.loadResources(this.resolveUrl('../locales.json'));
             },
 
             onLayoutChange: function (wide) {
