@@ -7,7 +7,7 @@ use \Sag;
 use util\Passwords;
 use \Exception;
 use util\Log;
-use util\User;
+use model\User;
 
 class DB
 {
@@ -65,12 +65,23 @@ class DB
         return empty ($response) || empty($response->body) ? null : $response->body->rows;
     }
 
-    public function save($obj)
+    public function save(&$obj)
     {
+        $return = false;
         if (!empty($obj->{"_id"})) {
-            return $this->sag->put($obj->{"_id"}, $obj);
+            $return = $this->sag->put($obj->{"_id"}, $obj);
+            Log::log("Object update response: \n", $return);
         } else {
-            return $this->sag->post($obj);
+            $return = $this->sag->post($obj);
+            Log::log("Object create response: \n", $return);
         }
+
+        if ($return && $return->body) {
+            $obj->{"_id"} = $return->body->id;
+            $obj->{"_rev"} = $return->body->rev;
+            return true;
+        }
+
+        return false;
     }
 }

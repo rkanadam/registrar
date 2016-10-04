@@ -7,10 +7,19 @@ require_once __DIR__ . '/server/util/init_once.php';
 
 use auth\Authenticator;
 use db\DB;
-use util\User;
+use model\User;
 use util\Log;
 
-$app = new \Slim\App;
+$config = new \Slim\Container();
+$config['errorHandler'] = function ($c) {
+    return function ($request, $response, $exception) use ($c) {
+        Log::error($exception->getTraceAsString());
+        return $c['response']->withStatus(500)
+            ->withHeader('Content-Type', 'text/html')
+            ->write('Something went wrong!');
+    };
+};
+$app = new \Slim\App ($config);
 
 //Add an authorization middleware
 $app->add(function ($request, $response, $next) {

@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'util\\' => array($baseDir . '/server/util'),
+    'model\\' => array($baseDir . '/server/model'),
     'db\\' => array($baseDir . '/server/db'),
     'auth\\' => array($baseDir . '/server/auth'),
     'Slim\\' => array($vendorDir . '/slim/slim/Slim'),

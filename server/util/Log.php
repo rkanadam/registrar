@@ -8,8 +8,16 @@ class Log
 {
     private static $logger = null;
 
-    public static function log($str)
+    public static function log()
     {
+        $str = "";
+        foreach (func_get_args() as $arg) {
+            if (is_string($arg)) {
+                $str .= $arg;
+            } else {
+                $str .= print_r($arg, true);
+            }
+        }
         return Log::info($str);
     }
 

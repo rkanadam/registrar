@@ -8,6 +8,7 @@
     "psr-4": {
       "auth\\": "server/auth/",
       "util\\": "server/util/",
+      "model\\": "server/model/",
       "db\\": "server/db/"
     }
   }

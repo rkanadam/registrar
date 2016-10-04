@@ -178,8 +178,8 @@ return array(
     'auth\\Authenticator' => $baseDir . '/server/auth/Authenticator.php',
     'auth\\GoogleAuthenticator' => $baseDir . '/server/auth/GoogleAuthenticator.php',
     'db\\DB' => $baseDir . '/server/db/DB.php',
+    'model\\User' => $baseDir . '/server/model/User.php',
     'util\\Log' => $baseDir . '/server/util/Log.php',
     'util\\Passwords' => $baseDir . '/server/util/Passwords.php',
     'util\\Session' => $baseDir . '/server/util/Session.php',
-    'util\\User' => $baseDir . '/server/util/User.php',
 );

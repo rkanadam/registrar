@@ -1,9 +1,10 @@
 <?php
 
-namespace util;
+namespace model;
 
 use db\DB;
 use util\Log;
+use util\Session;
 use \stdClass;
 
 class User
@@ -56,9 +57,11 @@ class User
         $profile->email = $this->email;
         $profile->name = $this->name;
         $profile->type = "profile";
+        $profile->primary = true;
         $db->save($profile);
-
-        Log::info("Created a new profile " . (print_r($profile)));
+        Log::log("Created a new profile ", $profile);
+        $profile->{"primaryKey"} = $profile->{"_id"};
+        $db->save($profile);
         $this->profiles[] = $profile;
         return $this;
     }

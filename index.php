@@ -3,7 +3,7 @@
 require_once __DIR__ . '/vendor/autoload.php';
 require_once __DIR__ . '/server/util/init_once.php';
 
-use util\User;
+use model\User;
 use util\Log;
 
 $user = User::get();
