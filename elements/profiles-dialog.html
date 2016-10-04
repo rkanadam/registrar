@@ -21,8 +21,11 @@
             }
 
         </style>
-        <paper-dialog class="profiles" id="profilesDialog"
-                      entry-animation="scale-up-animation" exit-animation="fade-out-animation"
+        <paper-dialog
+                class="profiles"
+                id="profilesDialog"
+                entry-animation="scale-up-animation"
+                exit-animation="fade-out-animation"
         >
             <div class="pink">
                 <div class="paper-header"><h2>Profiles</h2></div>
@@ -31,7 +34,7 @@
                     <paper-listbox
                             id="profileList"
                             on-iron-select="_onProfileSelected"
-                            selected="0">
+                    >
                         <template is="dom-repeat" items="[[profiles]]" as="profile">
                             <div tabindex$="[[tabIndex]]"
                                  aria-label$="Select/Deselect [[profile.name]]"
@@ -81,7 +84,7 @@
             },
 
             attached: function () {
-                console.log (this.autoOpen);
+                console.log(this.autoOpen);
             },
 
             open: function () {
@@ -112,6 +115,7 @@
             _onProfileSelected: function (e) {
                 var selectedProfile = this.profiles[this.$.profileList.selected];
                 this.set("selectedProfile", selectedProfile);
+                this.close();
             }
         });
     </script>

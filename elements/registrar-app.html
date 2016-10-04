@@ -104,10 +104,11 @@
                                                click="_showProfilePage()">Edit Profile
                             </paper-icon-button>
                         </a>
-                        <paper-icon-button icon="arrow-drop-down" alt="User Name"
-                                           title="Signed in as [[authorizedUser.name]] with e-mail [[authorizedUser.email]]"
-                                           click="_showProfilePage()">Edit Profile
-                        </paper-icon-button>
+                        <paper-icon-button
+                                hidden$="[[!_isProfileSelectorEnabled(profiles)]]"
+                                icon="arrow-drop-down"
+                                title="Show other profiles"
+                                on-click="_showProfileSelector">
 
                     </app-toolbar>
 
@@ -118,21 +119,23 @@
                             </template>
                         </paper-tabs>
                         <div main-title></div>
-                        <a href="#profile"  class = "profile">
+                        <a href="#profile" class="profile">
                             <paper-icon-button icon="account-box" alt="User Name"
                                                title="Signed in as [[selectedProfile.name]] with e-mail [[selectedProfile.email]]"
                                                click="_showProfilePage()">Edit Profile
                             </paper-icon-button>
                             <span>[[selectedProfile.name]]</span>
                         </a>
-                        <paper-icon-button hidden$="[[profiles.length]]" icon="arrow-drop-down" alt="User Name"
-                                           title="Signed in as [[authorizedUser.name]] with e-mail [[authorizedUser.email]]"
-                                           click="_showProfilePage()">Edit Profile
+                        <paper-icon-button
+                                hidden$="[[!_isProfileSelectorEnabled(profiles)]]"
+                                icon="arrow-drop-down"
+                                title="Show other profiles"
+                                on-click="_showProfileSelector">
                         </paper-icon-button>
-
                     </app-toolbar>
                 </app-header>
-                <profiles-dialog auto-open selected-profile="{{selectedProfile}}" profiles="{{profiles}}"></profiles-dialog>
+                <profiles-dialog id="profileSelector" auto-open selected-profile="{{selectedProfile}}"
+                                 profiles="{{profiles}}"></profiles-dialog>
             </app-header-layout>
         </app-drawer-layout>
 
@@ -180,8 +183,7 @@
                 },
 
                 selectedProfile: {
-                    type: Object,
-                    observer: '_onProfileChanged'
+                    type: Object
                 },
 
                 profiles: {
@@ -196,6 +198,14 @@
                 if (wide && drawer.opened) {
                     drawer.opened = false;
                 }
+            },
+
+            _isProfileSelectorEnabled: function (profiles) {
+                return profiles && profiles.length > 1;
+            },
+
+            _showProfileSelector: function () {
+                this.$.profileSelector.open();
             }
         });
 
