@@ -1,6 +1,11 @@
 {
   "en": {
-    "signedInAs": "Signed in as {name} with e-mail {email}"
+    "signedInAs": "Signed in as {name} with e-mail {email}",
+    "notifications": "Notifications",
+    "events": "Events",
+    "reports": "Reports",
+    "messages": "Messages",
+    "profile": "Profile"
   },
   "fr": {
   }

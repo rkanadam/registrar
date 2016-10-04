@@ -83,9 +83,9 @@
                 <app-toolbar></app-toolbar>
 
                 <!-- Nav on mobile: side nav menu -->
-                <paper-menu selected="{{selected}}" attr-for-selected="name">
-                    <template is="dom-repeat" items="{{items}}">
-                        <paper-item name="{{item}}">{{item}}</paper-item>
+                <paper-menu selected="{{page}}" attr-for-selected="name">
+                    <template is="dom-repeat" items="{{tabs}}">
+                        <paper-item name="{{tabs}}">{{tabs}}</paper-item>
                     </template>
                 </paper-menu>
 
@@ -99,7 +99,7 @@
                         <div main-title></div>
                         <a href="#profile" class="profile">
                             <paper-icon-button icon="account-box" alt="User Name"
-                                               title$="{{localize('signedInAs', 'name', selectedProfile.name, 'email', selectedProfile.email)}}"
+                                               title$="{{localize('signedInAs', 'name', profile.name, 'email', profile.email)}}"
                                                click="_showProfilePage()">Edit Profile
                             </paper-icon-button>
                         </a>
@@ -112,20 +112,20 @@
 
                     </app-toolbar>
 
-                    <app-toolbar id="wideLayoutToolbar" hidden$="{{!wideLayout}}" class="layout horizontal">
-                        <paper-tabs selected="{{selected}}" attr-for-selected="name">
-                            <template is="dom-repeat" items="{{items}}">
-                                <paper-tab name="{{item}}">{{item}}</paper-tab>
+                    <app-toolbar hidden$="{{!wideLayout}}" class="layout horizontal">
+                        <paper-tabs selected="{{page}}" attr-for-selected="name">
+                            <template is="dom-repeat" items="{{tabs}}" as="tab">
+                                <paper-tab name="{{tab}}">{{localize(tab)}}</paper-tab>
                             </template>
                         </paper-tabs>
                         <div class="flex"></div>
-                        <paper-tabs selected="{{selected}}" attr-for-selected="name">
+                        <paper-tabs selected="{{page}}" attr-for-selected="name">
                             <paper-tab name="profile" class="flex">
                                 <paper-icon-button icon="account-box" alt="User Name"
-                                                   title$="{{localize('signedInAs', 'name', selectedProfile.name, 'email', selectedProfile.email)}}"
+                                                   title$="{{localize('signedInAs', 'name', profile.name, 'email', profile.email)}}"
                                                    click="_showProfilePage()">Edit Profile
                                 </paper-icon-button>
-                                <span>[[selectedProfile.name]]</span>
+                                <span>[[profile.name]]</span>
                             </paper-tab>
                         </paper-tabs>
                         <paper-icon-button
@@ -138,22 +138,14 @@
 
 
                 </app-header>
-                <profiles-dialog id="profileSelector" auto-open selected-profile="{{selectedProfile}}"
+                <profiles-dialog id="profileSelector" auto-open selected-profile="{{profile}}"
                                  profiles="{{profiles}}"></profiles-dialog>
             </app-header-layout>
         </app-drawer-layout>
 
         <iron-media-query query="min-width: 600px" query-matches="{{wideLayout}}"></iron-media-query>
 
-        <iron-ajax url="../api.php/me"
-                   handle-as="json"
-                   content-type="application/json"
-                   last-response="{{authorizedUser}}"
-                   method="POST"
-                   auto
-                   verbose></iron-ajax>
-
-        <iron-location hash="{{url}}" query="[[_computeQuery(page)]]"></iron-location>
+        <iron-location hash="[[page]]"></iron-location>
         <app-location route="{{route}}" use-hash-as-path></app-location>
         <app-route
                 route="{{route}}"
@@ -174,48 +166,51 @@
 
             properties: {
 
-                language: {
-                    type: String,
-                    value: 'en'
-                },
-
-                selected: {
-                    type: String,
-                    value: 'Item One'
-                },
-
                 wideLayout: {
                     type: Boolean,
                     value: false,
                     observer: 'onLayoutChange'
                 },
 
-                items: {
+                language: {
+                    type: String,
+                    value: 'en'
+                },
+
+                tabs: {
                     type: Array,
                     value: function () {
-                        return ['Notifications', 'Invites', 'Reports', 'Messages', 'Profile'];
+                        return ['notifications', 'events', 'reports', 'messages'];
                     }
                 },
 
-                authorizedUser: {
+                profile: {
                     type: Object,
-                    value: function () {
-                        return {name: "", email: ""};
-                    }
-                },
-
-                selectedProfile: {
-                    type: Object
+                    observer: '_onProfileChange'
                 },
 
                 profiles: {
                     type: Array,
                     value: [],
+                },
+
+                page: {
+                    type: String,
+                    value: ""
+                },
+
+                url: {
+                    type: String,
+                    value: ""
                 }
             },
 
             behaviors: [
                 Polymer.AppLocalizeBehavior
+            ],
+
+            observers: [
+                '_routePageChanged(routeData.page)',
             ],
 
             attached: function () {
@@ -236,6 +231,18 @@
 
             _showProfileSelector: function () {
                 this.$.profileSelector.open();
+            },
+
+            _onProfileChange: function () {
+                if (this.profile) {
+                    if (!this.page) {
+                        this.set("page", "notifications");
+                    }
+                }
+            },
+
+            _routePageChanged: function (page) {
+                this.set("page", page);
             }
         });
 
