@@ -1,6 +1,6 @@
 {
-  "Zone 1 ": {
-    "zone": "Zone 1",
+  "Zone 1": {
+    "name": "Zone 1",
     "president": "Dr. Phil Gosselin",
     "countries": [
       "Aruba",
@@ -18,8 +18,8 @@
       "U.S. Virgin Islands"
     ]
   },
-  "Zone 2A ": {
-    "zone": "Zone 2A",
+  "Zone 2A": {
+    "name": "Zone 2A",
     "president": "Mr. John Behner",
     "countries": [
       "Costa Rica",
@@ -37,8 +37,8 @@
       "Puerto Rico"
     ]
   },
-  "Zone 2B ": {
-    "zone": "Zone 2B",
+  "Zone 2B": {
+    "name": "Zone 2B",
     "president": "Mr. John Behner",
     "countries": [
       "Argentina",
@@ -53,8 +53,8 @@
       "Venezuela"
     ]
   },
-  "Zone 3 ": {
-    "zone": "Zone 3",
+  "Zone 3": {
+    "name": "Zone 3",
     "president": "Mr. Neville Fredericks",
     "countries": [
       "Australia",
@@ -63,8 +63,8 @@
       "Papua New Guinea"
     ]
   },
-  "Zone 4 ": {
-    "zone": "Zone 4",
+  "Zone 4": {
+    "name": "Zone 4",
     "president": "Dr. V. K Ravindran",
     "countries": [
       "Bhutan",
@@ -81,8 +81,8 @@
       "Thailand"
     ]
   },
-  "Zone 5 ": {
-    "zone": "Zone 5",
+  "Zone 5": {
+    "name": "Zone 5",
     "president": "Mr. Nari Chugani",
     "countries": [
       "China",
@@ -92,8 +92,8 @@
       "Taiwan"
     ]
   },
-  "Zone 6 ": {
-    "zone": "Zone 6",
+  "Zone 6": {
+    "name": "Zone 6",
     "president": "Ms. Alida Parks",
     "countries": [
       "Bosnia and Herzegovina",
@@ -111,8 +111,8 @@
       "Switzerland"
     ]
   },
-  "Zone 7 ": {
-    "zone": "Zone 7",
+  "Zone 7": {
+    "name": "Zone 7",
     "president": "Ms. Petra von Kalinowski",
     "countries": [
       "Austria",
@@ -134,8 +134,8 @@
       "United Kingdom"
     ]
   },
-  "Zone 8 ": {
-    "zone": "Zone 8",
+  "Zone 8": {
+    "name": "Zone 8",
     "president": "Mr. Valery Voshchinin",
     "countries": [
       "Azerbaijan",
@@ -148,8 +148,8 @@
       "Uzbekistan"
     ]
   },
-  "Zone 9A ": {
-    "zone": "Zone 9A",
+  "Zone 9A": {
+    "name": "Zone 9A",
     "president": "Mr. Ramesh Hathiramani",
     "countries": [
       "Benin",
@@ -175,8 +175,8 @@
       "Zimbabwe"
     ]
   },
-  "Zone 9B ": {
-    "zone": "Zone 9B",
+  "Zone 9B": {
+    "name": "Zone 9B",
     "president": "Mr. GB Choithram Jethwani",
     "countries": [
       "United Arab Emirates",

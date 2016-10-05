@@ -14,7 +14,8 @@
     "age": "Age",
     "years": "Years",
     "country": "Country",
-    "zone": "Zone"
+    "zone": "Zone",
+    "na": "Not Applicable"
   },
   "fr": {
   }

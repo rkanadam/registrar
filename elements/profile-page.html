@@ -45,10 +45,10 @@
                               item-value-path="name"
                               selected-item="{{country}}"
                               value="{{profile.country}}"
+                              class="flex"
             ></vaadin-combo-box>
-            <br/>
-            <paper-input name="zone" label="{{localize('zone')}}" required
-                         value="{{profile.zone}}" readonly disabled></paper-input>
+            <paper-input class="flex" name="zone" label="{{localize('zone')}}" required
+                         value="[[__computeZoneLabel(profile.zone)]]" readonly></paper-input>
             <div class="layout horizontal" style="margin: auto;">
                 <paper-button raised onclick="_submit(event)">Submit</paper-button>
                 <paper-button raised onclick="_reset(event)">Reset</paper-button>
@@ -59,7 +59,13 @@
         <iron-ajax auto
                    handle-as="json"
                    url="../bower_components/Countries/countries.min.json"
+                   on-response="_onCountriesFetch"
                    last-response="{{countries}}"
+        ></iron-ajax>
+        <iron-ajax id="zonesRequest"
+                   handle-as="json"
+                   url="../zones.json"
+                   last-response="{{zones}}"
         ></iron-ajax>
     </template>
     <script>
@@ -79,6 +85,14 @@
 
                 country: {
                     type: Object
+                },
+
+                countries: {
+                    type: Object
+                },
+
+                zones: {
+                    type: Object
                 }
             },
 
@@ -94,12 +108,16 @@
                 this.loadResources(this.resolveUrl('../locales.json'));
             },
 
+            _onCountriesFetch: function () {
+                this.$.zonesRequest.generateRequest();
+            },
+
             _getCountries: function (countries) {
                 if (!countries || !countries.countries) return [];
                 var list = [];
                 for (var key in countries.countries) {
                     var country = countries.countries[key];
-                    country.label = country.native + " (" + country.name + ")";
+                    country.label = country.native !== country.name ? country.native + " (" + country.name + ")" : country.name;
                     list.push(country);
                 }
                 return list;
@@ -107,10 +125,32 @@
 
             _onCountryChanged: function (country) {
                 if (country) {
-                    var country = country.name.toLowerCase ();
-
+                    var country = country.name;
+                    if (this.zones) {
+                        for (var zone in this.zones) {
+                            if (this.zones[zone].countries.indexOf(country) !== -1) {
+                                this.set("profile.zone", zone);
+                                return;
+                            }
+                        }
+                    }
                 }
+
+                this.set("profile.zone", "NA");
+            },
+
+            __computeZoneLabel: function (zone) {
+                if (!zone) {
+                    return localize('zone');
+                }
+                if (zone && this.zones[zone]) {
+                    return this.zones[zone].name + " (" + this.zones[zone].president + ")";
+                } else if (zone === "NA") {
+                    return this.localize("na");
+                }
+                return "";
             }
+
         });
     </script>
 </dom-module>
