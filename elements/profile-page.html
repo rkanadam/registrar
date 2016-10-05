@@ -4,47 +4,113 @@
             paper-button {
                 background: var(--paper-light-blue-500);
             }
+
+            label {
+                align-self: center;
+                font-family: 'Roboto';
+                color: var(--paper-input-container-color, --secondary-text-color);
+            }
         </style>
-            <form is="iron-form" method="get" action="/" id="basic" class="layout vertical">
-                <paper-input name="name" label="Name" required></paper-input>
-                <br>
-                <paper-checkbox name="food" value="cheese" required>I like cheese</paper-checkbox>
-                <br>
-                <paper-dropdown-menu label="Cars" name="cars" required>
-                    <paper-menu class="dropdown-content">
-                        <paper-item value="volvo">Volvo</paper-item>
-                        <paper-item value="saab">Saab</paper-item>
-                        <paper-item value="fiat">Fiat</paper-item>
-                        <paper-item value="audi">Audi</paper-item>
-                    </paper-menu>
-                </paper-dropdown-menu>
-                <div class = "layout horizontal" style="margin: auto;">
-                    <paper-button raised onclick="_submit(event)">Submit</paper-button>
-                    <paper-button raised onclick="_reset(event)">Reset</paper-button>
-                </div>
-                <div class="output"></div>
-            </form>
+        <form is="iron-form" method="get" action="/" id="basic" class="layout vertical">
+            <paper-input name="firstName" label="{{localize('firstName')}}" required
+                         value="{{profile.firstName}}"></paper-input>
+            <br>
+            <paper-input name="lastName" label="{{localize('lastName')}}" required
+                         value="{{profile.lastName}}"></paper-input>
+            <br>
+            <div class="layout horizontal">
+                <label id="gender">[[localize('gender')]]</label>
+                <paper-radio-group aria-labelledby="gender" selected="{{profile.gender}}">
+                    <paper-radio-button name="male">[[localize('male')]]</paper-radio-button>
+                    <paper-radio-button name="female">[[localize('female')]]</paper-radio-button>
+                </paper-radio-group>
+            </div>
+            <paper-dropdown-menu label="[[localize('age')]]" name="age" required horizontal-align="left">
+                <paper-listbox class="dropdown-content">
+                    <paper-item value="0-4">0 - 4 [[localize('years')]]</paper-item>
+                    <paper-item value="4-10">4 - 10 [[localize('years')]]</paper-item>
+                    <paper-item value="11-14">11 - 14 [[localize('years')]]</paper-item>
+                    <paper-item value="14-17">14 - 17 [[localize('years')]]</paper-item>
+                    <paper-item value="18-25">18 - 25 [[localize('years')]]</paper-item>
+                    <paper-item value="26-35">26 - 35 [[localize('years')]]</paper-item>
+                    <paper-item value="36-60">36 - 60 [[localize('years')]]</paper-item>
+                    <paper-item value="60-99">60+ [[localize('years')]]</paper-item>
+                </paper-listbox>
+            </paper-dropdown-menu>
+            <br/>
+            <vaadin-combo-box label="[[localize('country')]]"
+                              name="country"
+                              items="[[_getCountries(countries)]]"
+                              item-label-path="label"
+                              item-value-path="name"
+                              selected-item="{{country}}"
+                              value="{{profile.country}}"
+            ></vaadin-combo-box>
+            <br/>
+            <paper-input name="zone" label="{{localize('zone')}}" required
+                         value="{{profile.zone}}" readonly disabled></paper-input>
+            <div class="layout horizontal" style="margin: auto;">
+                <paper-button raised onclick="_submit(event)">Submit</paper-button>
+                <paper-button raised onclick="_reset(event)">Reset</paper-button>
+            </div>
+            <div class="output"></div>
+        </form>
         </div>
-        <script>
-            function _submit(event) {
-                Polymer.dom(event).localTarget.parentElement.submit();
-            }
-            function _reset(event) {
-                var form = Polymer.dom(event).localTarget.parentElement
-                form.reset();
-                form.querySelector('.output').innerHTML = '';
-            }
-            basic.addEventListener('iron-form-submit', function (event) {
-                this.querySelector('.output').innerHTML = JSON.stringify(event.detail);
-            });
-        </script>
+        <iron-ajax auto
+                   handle-as="json"
+                   url="../bower_components/Countries/countries.min.json"
+                   last-response="{{countries}}"
+        ></iron-ajax>
     </template>
     <script>
         Polymer({
 
             is: 'profile-page',
 
-            properties: {}
+            properties: {
+                profile: {
+                    type: Object
+                },
+
+                language: {
+                    type: String,
+                    value: 'en'
+                },
+
+                country: {
+                    type: Object
+                }
+            },
+
+            observers: [
+                '_onCountryChanged(country)'
+            ],
+
+            behaviors: [
+                Polymer.AppLocalizeBehavior
+            ],
+
+            attached: function () {
+                this.loadResources(this.resolveUrl('../locales.json'));
+            },
+
+            _getCountries: function (countries) {
+                if (!countries || !countries.countries) return [];
+                var list = [];
+                for (var key in countries.countries) {
+                    var country = countries.countries[key];
+                    country.label = country.native + " (" + country.name + ")";
+                    list.push(country);
+                }
+                return list;
+            },
+
+            _onCountryChanged: function (country) {
+                if (country) {
+                    var country = country.name.toLowerCase ();
+
+                }
+            }
         });
     </script>
 </dom-module>

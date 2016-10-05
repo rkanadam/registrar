@@ -5,7 +5,16 @@
     "events": "Events",
     "reports": "Reports",
     "messages": "Messages",
-    "profile": "Profile"
+    "profile": "Profile",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "age": "Age",
+    "years": "Years",
+    "country": "Country",
+    "zone": "Zone"
   },
   "fr": {
   }

@@ -1,0 +1,193 @@
+{
+  "Zone 1 ": {
+    "zone": "Zone 1",
+    "president": "Dr. Phil Gosselin",
+    "countries": [
+      "Aruba",
+      "Barbados",
+      "Canada",
+      "Curacao",
+      "Guyana",
+      "Jamaica",
+      "Saint Kitts and Nevis",
+      "Saint Lucia",
+      "Saint Martin",
+      "Suriname",
+      "Trinidad and Tobago",
+      "United States",
+      "U.S. Virgin Islands"
+    ]
+  },
+  "Zone 2A ": {
+    "zone": "Zone 2A",
+    "president": "Mr. John Behner",
+    "countries": [
+      "Costa Rica",
+      "Cuba",
+      "Dominican Republic",
+      "El Salvador",
+      "French Guiana",
+      "Guadeloupe",
+      "Guatemala",
+      "Haiti",
+      "Honduras",
+      "Mexico",
+      "Nicaragua",
+      "Panama",
+      "Puerto Rico"
+    ]
+  },
+  "Zone 2B ": {
+    "zone": "Zone 2B",
+    "president": "Mr. John Behner",
+    "countries": [
+      "Argentina",
+      "Bolivia",
+      "Brazil",
+      "Chile",
+      "Colombia",
+      "Ecuador",
+      "Paraguay",
+      "Peru",
+      "Uruguay",
+      "Venezuela"
+    ]
+  },
+  "Zone 3 ": {
+    "zone": "Zone 3",
+    "president": "Mr. Neville Fredericks",
+    "countries": [
+      "Australia",
+      "Fiji",
+      "New Zealand",
+      "Papua New Guinea"
+    ]
+  },
+  "Zone 4 ": {
+    "zone": "Zone 4",
+    "president": "Dr. V. K Ravindran",
+    "countries": [
+      "Bhutan",
+      "Brunei",
+      "Cambodia",
+      "Indonesia",
+      "Laos",
+      "Malaysia",
+      "Myanmar [Burma]",
+      "Nepal",
+      "Philippines",
+      "Singapore",
+      "Sri Lanka",
+      "Thailand"
+    ]
+  },
+  "Zone 5 ": {
+    "zone": "Zone 5",
+    "president": "Mr. Nari Chugani",
+    "countries": [
+      "China",
+      "Hong Kong",
+      "Japan",
+      "South Korea",
+      "Taiwan"
+    ]
+  },
+  "Zone 6 ": {
+    "zone": "Zone 6",
+    "president": "Ms. Alida Parks",
+    "countries": [
+      "Bosnia and Herzegovina",
+      "Croatia",
+      "France",
+      "Greece",
+      "Israel",
+      "Italy",
+      "Macedonia",
+      "Romania",
+      "Serbia",
+      "Montenegro",
+      "Slovenia",
+      "Spain",
+      "Switzerland"
+    ]
+  },
+  "Zone 7 ": {
+    "zone": "Zone 7",
+    "president": "Ms. Petra von Kalinowski",
+    "countries": [
+      "Austria",
+      "Belgium",
+      "Czech Republic",
+      "Denmark",
+      "Estonia",
+      "Finland",
+      "Germany",
+      "Hungary",
+      "Ireland",
+      "Latvia",
+      "Lithuania",
+      "Netherlands",
+      "Norway",
+      "Poland",
+      "Slovakia",
+      "Sweden",
+      "United Kingdom"
+    ]
+  },
+  "Zone 8 ": {
+    "zone": "Zone 8",
+    "president": "Mr. Valery Voshchinin",
+    "countries": [
+      "Azerbaijan",
+      "Belarus",
+      "Kazakhstan",
+      "Kyrgyzstan",
+      "Moldova",
+      "Russia",
+      "Ukraine",
+      "Uzbekistan"
+    ]
+  },
+  "Zone 9A ": {
+    "zone": "Zone 9A",
+    "president": "Mr. Ramesh Hathiramani",
+    "countries": [
+      "Benin",
+      "Botswana",
+      "Cameroon",
+      "Republic of the Congo",
+      "Democratic Republic of the Congo",
+      "Gabon",
+      "Ghana",
+      "Ivory Coast",
+      "Kenya",
+      "Madagascar",
+      "Malawi",
+      "Mauritius",
+      "Morocco",
+      "Nigeria",
+      "Sierra Leone",
+      "South Africa",
+      "Tanzania",
+      "Togo",
+      "Uganda",
+      "Zambia",
+      "Zimbabwe"
+    ]
+  },
+  "Zone 9B ": {
+    "zone": "Zone 9B",
+    "president": "Mr. GB Choithram Jethwani",
+    "countries": [
+      "United Arab Emirates",
+      "Bahrain",
+      "Iran",
+      "Kuwait",
+      "Oman",
+      "Qatar",
+      "Saudi Arabia",
+      "Syria",
+      "Turkey"
+    ]
+  }
+}

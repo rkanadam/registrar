@@ -9,7 +9,8 @@ use \stdClass;
 
 class User
 {
-    public $name = "";
+    public $firstName = "";
+    public $lastName = "";
     public $email = "";
     public $_id = "";
     public $profiles = array();
@@ -23,6 +24,8 @@ class User
         $this->authResponse = $authResponse;
         if ($authResponse) {
             $this->email = $authResponse->email;
+            $this->firstName = $authResponse->given_name;
+            $this->lastName = $authResponse->family_name;
             $this->name = $authResponse->name;
             $db = DB::getInstance();
             $this->profiles = $db->getProfiles($this);
@@ -55,6 +58,8 @@ class User
 
         $profile = new stdClass();
         $profile->email = $this->email;
+        $profile->firstName = $this->firstName;
+        $profile->lastName = $this->lastName;
         $profile->name = $this->name;
         $profile->type = "profile";
         $profile->primary = true;
