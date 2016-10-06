@@ -20,7 +20,9 @@
     "vaadin-combo-box": "^1.1.4",
     "vaadin-grid": "^1.1.4",
     "hello": "^1.14.0",
-    "countries": "^1.2.0"
+    "countries": "^1.2.0",
+    "spinner-backdrop": "^1.0.0",
+    "lodash": "^4.16.3"
   },
   "resolutions": {
     "firebase": "^3.0"

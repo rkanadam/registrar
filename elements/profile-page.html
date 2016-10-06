@@ -10,63 +10,72 @@
                 font-family: 'Roboto';
                 color: var(--paper-input-container-color, --secondary-text-color);
             }
+
+            spinner-backdrop {
+                --spinner-backdrop-overlay-color: var(--paper-purple-50);
+            }
+
         </style>
-        <form is="iron-form" method="get" action="/" id="basic" class="layout vertical">
-            <paper-input name="firstName" label="{{localize('firstName')}}" required
-                         value="{{profile.firstName}}"></paper-input>
-            <br>
-            <paper-input name="lastName" label="{{localize('lastName')}}" required
-                         value="{{profile.lastName}}"></paper-input>
-            <br>
-            <div class="layout horizontal">
-                <label id="gender">[[localize('gender')]]</label>
-                <paper-radio-group aria-labelledby="gender" selected="{{profile.gender}}">
-                    <paper-radio-button name="male">[[localize('male')]]</paper-radio-button>
-                    <paper-radio-button name="female">[[localize('female')]]</paper-radio-button>
-                </paper-radio-group>
-            </div>
-            <paper-dropdown-menu label="[[localize('age')]]" name="age" required horizontal-align="left">
-                <paper-listbox class="dropdown-content">
-                    <paper-item value="0-4">0 - 4 [[localize('years')]]</paper-item>
-                    <paper-item value="4-10">4 - 10 [[localize('years')]]</paper-item>
-                    <paper-item value="11-14">11 - 14 [[localize('years')]]</paper-item>
-                    <paper-item value="14-17">14 - 17 [[localize('years')]]</paper-item>
-                    <paper-item value="18-25">18 - 25 [[localize('years')]]</paper-item>
-                    <paper-item value="26-35">26 - 35 [[localize('years')]]</paper-item>
-                    <paper-item value="36-60">36 - 60 [[localize('years')]]</paper-item>
-                    <paper-item value="60-99">60+ [[localize('years')]]</paper-item>
-                </paper-listbox>
-            </paper-dropdown-menu>
-            <br/>
-            <vaadin-combo-box label="[[localize('country')]]"
-                              name="country"
-                              items="[[_getCountries(countries)]]"
-                              item-label-path="label"
-                              item-value-path="name"
-                              selected-item="{{country}}"
-                              value="{{profile.country}}"
-                              class="flex"
-            ></vaadin-combo-box>
-            <paper-input class="flex" name="zone" label="{{localize('zone')}}" required
-                         value="[[__computeZoneLabel(profile.zone)]]" readonly></paper-input>
-            <div class="layout horizontal" style="margin: auto;">
-                <paper-button raised onclick="_submit(event)">Submit</paper-button>
-                <paper-button raised onclick="_reset(event)">Reset</paper-button>
-            </div>
-            <div class="output"></div>
-        </form>
+        <div style="padding: 0px 20px;position: relative">
+            <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
+            <form is="iron-form" method="get" action="/" id="basic" class="layout vertical" style="position: relative;">
+                <paper-input name="firstName" label="{{localize('firstName')}}" required
+                             value="{{profile.firstName}}"></paper-input>
+                <br>
+                <paper-input name="lastName" label="{{localize('lastName')}}" required
+                             value="{{profile.lastName}}"></paper-input>
+                <br>
+                <div class="layout horizontal">
+                    <label id="gender">[[localize('gender')]]</label>
+                    <paper-radio-group aria-labelledby="gender" selected="{{profile.gender}}">
+                        <paper-radio-button name="male">[[localize('male')]]</paper-radio-button>
+                        <paper-radio-button name="female">[[localize('female')]]</paper-radio-button>
+                    </paper-radio-group>
+                </div>
+                <paper-dropdown-menu label="[[localize('age')]]" name="age" required horizontal-align="left">
+                    <paper-listbox class="dropdown-content">
+                        <paper-item value="0-4">0 - 4 [[localize('years')]]</paper-item>
+                        <paper-item value="4-10">4 - 10 [[localize('years')]]</paper-item>
+                        <paper-item value="11-14">11 - 14 [[localize('years')]]</paper-item>
+                        <paper-item value="14-17">14 - 17 [[localize('years')]]</paper-item>
+                        <paper-item value="18-25">18 - 25 [[localize('years')]]</paper-item>
+                        <paper-item value="26-35">26 - 35 [[localize('years')]]</paper-item>
+                        <paper-item value="36-60">36 - 60 [[localize('years')]]</paper-item>
+                        <paper-item value="60-99">60+ [[localize('years')]]</paper-item>
+                    </paper-listbox>
+                </paper-dropdown-menu>
+                <br/>
+                <vaadin-combo-box label="[[localize('country')]]"
+                                  name="country"
+                                  items="[[_getCountries(countries)]]"
+                                  item-label-path="label"
+                                  item-value-path="name"
+                                  selected-item="{{country}}"
+                                  value="{{profile.country}}"
+                                  class="flex"
+                ></vaadin-combo-box>
+                <paper-input class="flex" name="zone" label="{{localize('zone')}}" required
+                             value="[[__computeZoneLabel(profile.zone)]]" readonly></paper-input>
+                <div class="layout horizontal" style="margin: auto;">
+                    <paper-button raised onclick="_submit(event)">Submit</paper-button>
+                    <paper-button raised onclick="_reset(event)">Reset</paper-button>
+                </div>
+                <div class="output"></div>
+            </form>
+            <iron-ajax auto
+                       handle-as="json"
+                       url="../bower_components/Countries/countries.min.json"
+                       on-response="_onCountriesFetch"
+                       last-response="{{countries}}"
+                       bubbles
+            ></iron-ajax>
+            <iron-ajax id="zonesRequest"
+                       handle-as="json"
+                       url="../zones.json"
+                       last-response="{{zones}}"
+                       bubbles
+            ></iron-ajax>
         </div>
-        <iron-ajax auto
-                   handle-as="json"
-                   url="../bower_components/Countries/countries.min.json"
-                   on-response="_onCountriesFetch"
-                   last-response="{{countries}}"
-        ></iron-ajax>
-        <iron-ajax id="zonesRequest"
-                   handle-as="json"
-                   url="../zones.json"
-                   last-response="{{zones}}"
-        ></iron-ajax>
     </template>
     <script>
         Polymer({
@@ -93,6 +102,11 @@
 
                 zones: {
                     type: Object
+                },
+
+                loading: {
+                    type: Boolean,
+                    value: false
                 }
             },
 
@@ -103,6 +117,20 @@
             behaviors: [
                 Polymer.AppLocalizeBehavior
             ],
+
+            listeners: {
+                "request": "_onAjaxRequest",
+                "response": "_onAjaxResponse"
+            },
+
+            _onAjaxRequest: function () {
+                this.set("loading", true);
+            },
+
+            _onAjaxResponse: function () {
+                this.set("loading", false);
+            },
+
 
             attached: function () {
                 this.loadResources(this.resolveUrl('../locales.json'));
@@ -140,9 +168,6 @@
             },
 
             __computeZoneLabel: function (zone) {
-                if (!zone) {
-                    return localize('zone');
-                }
                 if (zone && this.zones[zone]) {
                     return this.zones[zone].name + " (" + this.zones[zone].president + ")";
                 } else if (zone === "NA") {

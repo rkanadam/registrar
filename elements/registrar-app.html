@@ -139,13 +139,11 @@
                 </app-header>
                 <profile-selector-dialog id="profileSelector" auto-open selected-profile="{{profile}}"
                                          profiles="{{profiles}}"></profile-selector-dialog>
-                <div style="padding: 0 5vw;">
-                    <neon-animated-pages selected="[[page]]"
-                                         entry-animation="fade-in-animation"
-                                         attr-for-selected="name">
-                        <profile-page name="profile" profile="{{profile}}" language="[[language]]"></profile-page>
-                    </neon-animated-pages>
-                </div>
+                <neon-animated-pages selected="[[page]]"
+                                     entry-animation="fade-in-animation"
+                                     attr-for-selected="name">
+                    <profile-page name="profile" profile="{{profile}}" language="[[language]]"></profile-page>
+                </neon-animated-pages>
             </app-header-layout>
         </app-drawer-layout>
 

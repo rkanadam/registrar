@@ -22,6 +22,7 @@ if (!$user->isAuthenticated ()) {
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
 
     <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="bower_components/lodash/dist/lodash.min.js"></script>
     <link rel="import" href="elements/registrar-app.html">
 
 
