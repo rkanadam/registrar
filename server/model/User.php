@@ -57,15 +57,15 @@ class User
         $db = DB::getInstance();
 
         $profile = new stdClass();
-        $profile->email = $this->email;
-        $profile->firstName = $this->firstName;
-        $profile->lastName = $this->lastName;
-        $profile->name = $this->name;
-        $profile->type = "profile";
-        $profile->primary = true;
+        $profile["email"] = $this->email;
+        $profile["firstName"] = $this->firstName;
+        $profile["lastName"] = $this->lastName;
+        $profile["name"] = $this->name;
+        $profile["type"] = "profile";
+        $profile["primary"] = true;
         $db->save($profile);
         Log::log("Created a new profile ", $profile);
-        $profile->{"primaryKey"} = $profile->{"_id"};
+        $profile["primaryKey"] = $profile["_id"];
         $db->save($profile);
         $this->profiles[] = $profile;
         return $this;

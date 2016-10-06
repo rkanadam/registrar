@@ -79,8 +79,8 @@ class DB
     public function save(&$obj)
     {
         $return = false;
-        if (!empty($obj->{"_id"})) {
-            $return = $this->sag->put($obj->{"_id"}, $obj);
+        if (!empty($obj["_id"])) {
+            $return = $this->sag->put($obj["_id"], $obj);
             Log::log("Object update response: \n", $return);
         } else {
             $return = $this->sag->post($obj);
@@ -88,8 +88,8 @@ class DB
         }
 
         if ($return && $return->body) {
-            $obj->{"_id"} = $return->body->id;
-            $obj->{"_rev"} = $return->body->rev;
+            $obj["_id"] = $return->body->id;
+            $obj["_rev"] = $return->body->rev;
             return true;
         }
 

@@ -15,7 +15,9 @@
     "years": "Years",
     "country": "Country",
     "zone": "Zone",
-    "na": "Not Applicable"
+    "na": "Not Applicable",
+    "save": "Save",
+    "reset": "Reset"
   },
   "fr": {
   }

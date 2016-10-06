@@ -48,7 +48,7 @@ $app->post('/auth/login', function (Request $request, Response $response) {
             $user->createNewProfile();
         }
     }
-    $response->getBody()->write(json_encode($return));
+    $response->withJson($return);
     return $response;
 });
 
@@ -60,8 +60,19 @@ $app->any('/me/profiles', function (Request $request, Response $response) {
 
 $app->any('/me', function (Request $request, Response $response) {
     $user = User::get();
-    $response->getBody()->write(json_encode($user));
+    $response->withJson($user);
     return $response;
+});
+
+$app->post('/profile/{id}', function (Request $request, Response $response) {
+    $user = User::get();
+    $id = $request->getAttribute("id");
+    $profile = $request->getParsedBody();
+    $profile["_id"] = $id;
+    //Now save it
+    $db = DB::getInstance();
+    $db->save($profile);
+    return $response->withJson ($profile);
 });
 
 
