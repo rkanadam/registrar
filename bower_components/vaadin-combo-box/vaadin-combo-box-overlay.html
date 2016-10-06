@@ -63,7 +63,7 @@
   </style>
 
   <template>
-    <div id="scroller" scroller="[[_getScroller()]]">
+    <div id="scroller" scroller="[[_getScroller()]]" on-tap="_stopPropagation">
       <iron-list
           id="selector"
           touch-device$="[[touchDevice]]"
@@ -250,6 +250,7 @@
     },
 
     ensureItemsRendered: function() {
+      this.$.selector.flushDebouncer('_debounceTemplate');
       this.$.selector._render && this.$.selector._render();
     },
 
@@ -339,6 +340,10 @@
 
     _preventDefault: function(e) {
       e.preventDefault();
+    },
+
+    _stopPropagation: function(e) {
+      e.stopPropagation();
     }
   });
 </script>

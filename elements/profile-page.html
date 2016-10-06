@@ -17,12 +17,11 @@
             }
 
             paper-dialog.save {
-                width: 75vw;
-                height: 40vh;
                 padding: 5vh 5vh;
+                z-index: 105;
             }
         </style>
-        <paper-dialog id="saveDialog" class="save" modal>
+        <paper-dialog id="saveDialog" class="save" modal on-iron-overlay-opened="_patchOverlay">
             <div class="layout vertical">
                 <div class="layout horizontal center-justified">
                     <animated-check></animated-check>
@@ -171,6 +170,11 @@
                 this.set("loading", false);
             },
 
+            _patchOverlay: function (e) {
+                if (e.target.withBackdrop) {
+                    e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+                }
+            },
 
             attached: function () {
                 this.loadResources(this.resolveUrl('../locales.json'));
