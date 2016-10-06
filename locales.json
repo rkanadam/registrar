@@ -17,7 +17,10 @@
     "zone": "Zone",
     "na": "Not Applicable",
     "save": "Save",
-    "reset": "Reset"
+    "reset": "Reset",
+    "primaryProfile": "Primary Profile",
+    "close": "Close",
+    "profileSavedMessage": "The profile was successfully saved"
   },
   "fr": {
   }

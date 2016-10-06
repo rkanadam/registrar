@@ -16,7 +16,24 @@
                 --spinner-backdrop-overlay-color: var(--paper-purple-50);
             }
 
+            paper-dialog.save {
+                width: 75vw;
+                height: 40vh;
+                padding: 5vh 5vh;
+            }
         </style>
+        <paper-dialog id="saveDialog" class="save" modal>
+            <div class="layout vertical">
+                <div class="layout horizontal center-justified">
+                    <animated-check></animated-check>
+                    <paper-item>[[localize('profileSavedMessage')]]</paper-item>
+                </div>
+                <br>
+                <div class="layout horizontal center-justified">
+                    <paper-button class="" raised onclick="saveDialog.close()">[[localize('close')]]</paper-button>
+                </div>
+            </div>
+        </paper-dialog>
         <div style="padding: 0px 20px 20px 20px;position: relative;">
             <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
             <iron-form method="get" action="/" id="basic" class="layout vertical" style="position: relative;">
@@ -59,6 +76,8 @@
                 ></vaadin-combo-box>
                 <paper-input class="flex" name="zone" label="{{localize('zone')}}" required
                              value="[[_computeZoneLabel(profile.zone)]]" readonly></paper-input>
+                <br>
+                <paper-checkbox checked="{{profile.primary}}">[[localize('primaryProfile')]]</paper-checkbox>
                 <div class="layout horizontal" style="margin: auto;">
                     <paper-button raised onclick="saveRequest.generateRequest ()">[[localize('save')]]</paper-button>
                     <paper-button raised on-click="_onReset">[[localize('reset')]]</paper-button>
@@ -83,6 +102,7 @@
                     url="[[_computeSaveUrl(profile)]]"
                     content-type="application/json"
                     handle-as="json"
+                    last-response="{{profile}}"
                     on-response="_onSave"
                     on-error="_onSaveError"
                     body="[[profile]]"
@@ -197,7 +217,7 @@
             },
 
             _onProfileChanged: function (profile) {
-                if (!this.previousProfile) {
+                if (profile) {
                     this.previousProfile = JSON.stringify(profile);
                 }
             },
@@ -211,7 +231,7 @@
             },
 
             _onSave: function () {
-                debugger;
+                this.$.saveDialog.open();
             },
 
             _onSaveError: function () {
