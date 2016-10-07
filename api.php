@@ -52,17 +52,25 @@ $app->post('/auth/login', function (Request $request, Response $response) {
     return $response;
 });
 
-$app->any('/me/profiles', function (Request $request, Response $response) {
-    $user = User::get();
-    $response->getBody()->write(json_encode($user->profiles));
-    return $response;
-});
-
 $app->any('/me', function (Request $request, Response $response) {
     $user = User::get();
     $response->withJson($user);
     return $response;
 });
+
+$app->any('/me/profiles', function (Request $request, Response $response) {
+    $user = User::get();
+    $response->withJson($user->profiles);
+    return $response;
+});
+
+$app->post('/me/profiles/select', function (Request $request, Response $response) {
+    $user = User::get();
+    $profile = $request->getParsedBody();
+    $return = $user->setSelectedProfileId($profile["_id"]);
+    return $response->withJson($return);
+});
+
 
 $app->post('/profile/{id}', function (Request $request, Response $response) {
     $user = User::get();
@@ -72,7 +80,7 @@ $app->post('/profile/{id}', function (Request $request, Response $response) {
     //Now save it
     $db = DB::getInstance();
     $db->save($profile);
-    return $response->withJson ($profile);
+    return $response->withJson($profile);
 });
 
 

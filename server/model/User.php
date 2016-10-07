@@ -52,6 +52,37 @@ class User
         return User::$instance;
     }
 
+    /**
+     * @return boolean
+     */
+    public function setSelectedProfileId($profileId)
+    {
+        foreach ($this->profiles as $profile) {
+            Log::log("Selected profile is ", $profile, $profileId);
+            if ($profile->{"_id"} === $profileId) {
+                Session::set(Session::SELECTED_PROFILE_ID, $profileId);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * @return User
+     */
+    public function getSelectedProfile()
+    {
+        $profileId = Session::get(Session::SELECTED_PROFILE_ID);
+        if (empty($profileId)) return null;
+        foreach ($this->profiles as $profile) {
+            if ($profile["_id"] === $profileId) {
+                return $profile;
+            }
+        }
+        return null;
+    }
+
+
     public function createNewProfile()
     {
         $db = DB::getInstance();

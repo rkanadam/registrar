@@ -12,6 +12,7 @@ namespace util;
 class Session
 {
     const AUTH_RESPONSE = "authResponse";
+    const SELECTED_PROFILE_ID = "selectedProfileId";
 
     public static function get($key)
     {

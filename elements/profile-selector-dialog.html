@@ -1,5 +1,6 @@
 <dom-module id="profile-selector-dialog">
     <template>
+        <style include="app-theme"></style>
         <style>
 
             iron-list {
@@ -11,11 +12,11 @@
             .profile {
                 padding: 16px 22px;
                 border-bottom: 1px solid #CCC;
-                background: var(--paper-light-blue-50);
+                background: var(--light-primary-color);
             }
 
             .profile:hover, .profile.selected {
-                background: var(--paper-blue-500);
+                background: var(--dark-primary-color);
                 color: #fff;
                 outline: none;
             }
@@ -55,9 +56,13 @@
                    auto
                    verbose/>
 
-        <style>
-
-        </style>
+        <iron-ajax id="selectProfileRequest"
+                   url="../api.php/me/profiles/select"
+                   handle-as="json"
+                   body="{{selectedProfile}}"
+                   content-type="application/json"
+                   method="POST"
+                   verbose/>
     </template>
     <script>
         Polymer({
@@ -87,6 +92,11 @@
                 console.log(this.autoOpen);
             },
 
+            observers: [
+                '_onSelectedProfileChanged(selectedProfile)',
+            ],
+
+
             open: function () {
                 this.$.profilesDialog.open();
                 this.$.profileList.focus();
@@ -109,6 +119,12 @@
                             this.set("selectedProfile", response[0]);
                         }
                     }
+                }
+            },
+
+            _onSelectedProfileChanged: function (selectedProfile) {
+                if (selectedProfile) {
+                    this.$.selectProfileRequest.generateRequest();
                 }
             },
 
