@@ -1,8 +1,29 @@
 <dom-module id="events-page">
-    <style include="app-theme"></style>
+    <style include="app-theme">
+
+    </style>
     <template>
-        <div class="layout vertical" style="height: 100%;">
-            <paper-item>[[localize('eventPageDescription')]]</paper-item>
+        <div class="layout vertical" style="height: 100%;padding: 0px 20px 0px 20px">
+            <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
+            <div class="app-button-bar layout horizontal">
+                <paper-item class="flex">[[localize('eventPageDescription')]]</paper-item>
+                <paper-button primary raised>
+                    <iron-icon icon="add-box"></iron-icon>
+                    &nbsp;&nbsp;[[localize('addNewEvent')]]
+                </paper-button>
+            </div>
+            <iron-list id="eventList" items="events" as="event" scroll-target="html" class="flex">
+                <template>
+                    <div>
+                    </div>
+                </template>
+            </iron-list>
+            <iron-ajax auto
+                       handle-as="json"
+                       url="api.php/events"
+                       last-response="{{events}}"
+                       bubbles
+            ></iron-ajax>
         </div>
     </template>
     <script>
@@ -12,7 +33,13 @@
 
             behaviors: [
                 AppBehaviors.AppBehavior
-            ]
+            ],
+
+            properties: {
+                "events": {
+                    type: Array
+                }
+            }
         });
     </script>
 </dom-module>

@@ -1,18 +1,7 @@
 <dom-module id="profile-page">
     <style include="app-theme"></style>
     <template>
-        <paper-dialog id="saveDialog" class="save" modal on-iron-overlay-opened="_patchOverlay">
-            <div class="layout vertical">
-                <div class="layout horizontal center-justified">
-                    <animated-check></animated-check>
-                    <paper-item>[[localize('profileSavedMessage')]]</paper-item>
-                </div>
-                <br>
-                <div class="layout horizontal center-justified">
-                    <paper-button class="" raised onclick="saveDialog.close()">[[localize('close')]]</paper-button>
-                </div>
-            </div>
-        </paper-dialog>
+        <success-dialog id="saveDialog" msg-key="profileSavedMessage"></success-dialog>
         <div style="padding: 0px 20px 0px 20px;position: relative;height: 100%;">
             <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
             <iron-form method="get" action="/" id="basic" class="layout vertical" style="height: 100%">
