@@ -1,36 +1,11 @@
 <link rel="import" href="imports.html">
-
 <dom-module id="registrar-app">
     <template>
-
+        <style include="app-theme"></style>
         <style include="iron-flex iron-flex-alignment">
-
-            app-toolbar {
-                background-color: var(--paper-purple-500);
-                color: white;
-            }
 
             .main-header {
                 box-shadow: 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
-            }
-
-            paper-tabs {
-                max-width: 640px;
-                --paper-tabs-selection-bar-color: white;
-            }
-
-            paper-tab {
-                color: white;
-                --paper-tab-ink: white;
-                text-transform: uppercase;
-            }
-
-            [hidden] {
-                display: none !important;
-            }
-
-            app-toolbar paper-icon-button {
-                color: white;
             }
 
             app-toolbar#wideLayoutToolbar paper-icon-button {
@@ -139,9 +114,11 @@
                 </app-header>
                 <profile-selector-dialog id="profileSelector" auto-open selected-profile="{{profile}}"
                                          profiles="{{profiles}}"></profile-selector-dialog>
-                <neon-animated-pages selected="[[page]]"
+                <neon-animated-pages style="height: 90vh"
+                                     selected="[[page]]"
                                      entry-animation="fade-in-animation"
-                                     attr-for-selected="name">
+                                     attr-for-selected="name"
+                                     class="flex">
                     <profile-page name="profile" profile="{{profile}}" language="[[language]]"></profile-page>
                 </neon-animated-pages>
             </app-header-layout>

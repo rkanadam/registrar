@@ -1,26 +1,6 @@
 <dom-module id="profile-page">
+    <style include="app-theme"></style>
     <template>
-        <style include="iron-flex iron-flex-alignment">
-            paper-button {
-                background: var(--paper-purple-900);
-                color: white;
-            }
-
-            label {
-                align-self: center;
-                font-family: 'Roboto';
-                color: var(--paper-input-container-color, --secondary-text-color);
-            }
-
-            spinner-backdrop {
-                --spinner-backdrop-overlay-color: var(--paper-purple-50);
-            }
-
-            paper-dialog.save {
-                padding: 5vh 5vh;
-                z-index: 105;
-            }
-        </style>
         <paper-dialog id="saveDialog" class="save" modal on-iron-overlay-opened="_patchOverlay">
             <div class="layout vertical">
                 <div class="layout horizontal center-justified">
@@ -33,16 +13,14 @@
                 </div>
             </div>
         </paper-dialog>
-        <div style="padding: 0px 20px 20px 20px;position: relative;">
+        <div style="padding: 0px 20px 0px 20px;position: relative;height: 100%;">
             <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
-            <iron-form method="get" action="/" id="basic" class="layout vertical" style="position: relative;">
+            <iron-form method="get" action="/" id="basic" class="layout vertical" style="height: 100%">
                 <input type="hidden" name="_id" value="[[profile._id]]">
                 <paper-input name="firstName" label="{{localize('firstName')}}" required
                              value="{{profile.firstName}}"></paper-input>
-                <br>
                 <paper-input name="lastName" label="{{localize('lastName')}}" required
                              value="{{profile.lastName}}"></paper-input>
-                <br>
                 <div class="layout horizontal">
                     <label id="gender">[[localize('gender')]]</label>
                     <paper-radio-group aria-labelledby="gender" selected="{{profile.gender}}">
@@ -63,7 +41,6 @@
                         <paper-item label="60-99">60+ [[localize('years')]]</paper-item>
                     </paper-listbox>
                 </paper-dropdown-menu>
-                <br/>
                 <vaadin-combo-box label="[[localize('country')]]"
                                   name="country"
                                   items="[[_getCountries(countries)]]"
@@ -71,15 +48,14 @@
                                   item-value-path="name"
                                   selected-item="{{country}}"
                                   value="{{profile.country}}"
-                                  class="flex"
                 ></vaadin-combo-box>
-                <paper-input class="flex" name="zone" label="{{localize('zone')}}" required
+                <paper-input name="zone" label="{{localize('zone')}}" required
                              value="[[_computeZoneLabel(profile.zone)]]" readonly></paper-input>
-                <br>
                 <paper-checkbox checked="{{profile.primary}}">[[localize('primaryProfile')]]</paper-checkbox>
-                <div class="layout horizontal" style="margin: auto;">
-                    <paper-button raised onclick="saveRequest.generateRequest ()">[[localize('save')]]</paper-button>
-                    <paper-button raised on-click="_onReset">[[localize('reset')]]</paper-button>
+                <div class="flex layout horizontal center-center">
+                    <paper-button primary raised onclick="saveRequest.generateRequest ()">[[localize('save')]]
+                    </paper-button>
+                    <paper-button secondary raised on-click="_onReset">[[localize('reset')]]</paper-button>
                 </div>
             </iron-form>
             <iron-ajax auto
