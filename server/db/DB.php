@@ -60,6 +60,13 @@ class DB
         return [];
     }
 
+    public function getEvents()
+    {
+        $response = $this->sag->get(
+            "/_design/profiles/_view/events?limit=100&reduce=false&include_docs=true");
+        return $this->collectDocs($response);
+    }
+
     private function collectDocs($response)
     {
         $docs = [];

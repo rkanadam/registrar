@@ -71,6 +71,11 @@ $app->post('/me/profiles/select', function (Request $request, Response $response
     return $response->withJson($return);
 });
 
+$app->get('/events', function (Request $request, Response $response) {
+    $db = DB::getInstance();
+    $response->withJson($db->getEvents ());
+    return $response;
+});
 
 $app->post('/profile/{id}', function (Request $request, Response $response) {
     $user = User::get();

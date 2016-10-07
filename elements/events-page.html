@@ -3,42 +3,48 @@
 
     </style>
     <template>
-        <div class="layout vertical" style="height: 100%;padding: 0px 20px 0px 20px">
-            <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
-            <div class="app-button-bar layout horizontal">
-                <paper-item class="flex">[[localize('eventPageDescription')]]</paper-item>
-                <paper-button primary raised>
-                    <iron-icon icon="add-box"></iron-icon>
-                    &nbsp;&nbsp;[[localize('addNewEvent')]]
-                </paper-button>
-            </div>
-            <iron-list id="eventList" items="events" as="event" scroll-target="html" class="flex">
-                <template>
-                    <div>
-                    </div>
-                </template>
-            </iron-list>
-            <iron-ajax auto
-                       handle-as="json"
-                       url="api.php/events"
-                       last-response="{{events}}"
-                       bubbles
-            ></iron-ajax>
-        </div>
+        <app-route
+                route="{{route}}"
+                pattern="/:page"
+                data="{{routeData}}"
+                tail="{{tail}}">
+        </app-route>
+        <iron-pages fallback-selection="one"
+                    selected="{{page}}"
+                    attr-for-selected="name"
+                    class="flex"
+        >
+            <event-page name="add" profile="{{event}}" language="[[language]]"></event-page>
+            <event-page name="one" profile="{{profile}}" language="[[language]]"></event-page>
+            <event-list name="list" profile="{{profile}}" language="[[language]]"></event-list>
+        </iron-pages>
     </template>
     <script>
         Polymer({
 
             is: 'events-page',
 
+            properties: {
+                route: {
+                    type: Object,
+                    value: {}
+                },
+                page: {
+                    type: String
+                },
+                event: {}
+            },
+
             behaviors: [
                 AppBehaviors.AppBehavior
             ],
 
-            properties: {
-                "events": {
-                    type: Array
-                }
+            observers: [
+                '_routePageChanged(routeData.page)',
+            ],
+
+            _routePageChanged: function (page) {
+                this.set("page", page);
             }
         });
     </script>
