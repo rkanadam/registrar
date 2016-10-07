@@ -115,12 +115,12 @@
                 <profile-selector-dialog id="profileSelector" auto-open selected-profile="{{profile}}"
                                          profiles="{{profiles}}"></profile-selector-dialog>
                 <neon-animated-pages style="height: 90vh"
-                                     selected="[[page]]"
+                                     selected="{{page}}"
                                      entry-animation="fade-in-animation"
                                      attr-for-selected="name"
                                      class="flex">
                     <profile-page name="profile" profile="{{profile}}" language="[[language]]"></profile-page>
-                    <events-page name="events"></events-page>
+                    <events-page name="events" language="[[language]]"></events-page>
                 </neon-animated-pages>
             </app-header-layout>
         </app-drawer-layout>
@@ -147,11 +147,6 @@
                     type: Boolean,
                     value: false,
                     observer: 'onLayoutChange'
-                },
-
-                language: {
-                    type: String,
-                    value: 'en'
                 },
 
                 tabs: {
@@ -183,16 +178,12 @@
             },
 
             behaviors: [
-                Polymer.AppLocalizeBehavior
+                AppBehaviors.AppBehavior
             ],
 
             observers: [
                 '_routePageChanged(routeData.page)',
             ],
-
-            attached: function () {
-                this.loadResources(this.resolveUrl('../locales.json'));
-            },
 
             onLayoutChange: function (wide) {
                 var drawer = this.$.drawer;

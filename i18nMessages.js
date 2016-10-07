@@ -1,4 +1,4 @@
-{
+window.i18nMessages = {
   "en": {
     "signedInAs": "Signed in as {name} with e-mail {email}",
     "notifications": "Notifications",
@@ -20,8 +20,9 @@
     "reset": "Reset",
     "primaryProfile": "Primary Profile",
     "close": "Close",
-    "profileSavedMessage": "The profile was successfully saved"
+    "profileSavedMessage": "The profile was successfully saved",
+    "eventPageDescription": "Use this page to create a new event. Events can be applied to groups which match a criteria or to a closed group of individuals."
   },
   "fr": {
   }
-}
+};

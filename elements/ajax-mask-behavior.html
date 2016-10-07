@@ -1,0 +1,38 @@
+<script>
+    var AjaxMaskBehavior = {
+
+        properties: {
+            loading: {
+                type: Boolean,
+                value: false,
+                notify: true,
+            }
+        },
+
+        attached: function () {
+            if (!this.language) {
+                this.set("language", "en");
+            }
+            this.set("resources", window.i18nMessages);
+        },
+
+        listeners: {
+            "request": "_onAjaxRequest",
+            "response": "_onAjaxResponse",
+            "error": "_onAjaxError"
+        },
+
+        _onAjaxRequest: function () {
+            this.set("loading", true);
+        },
+
+        _onAjaxResponse: function () {
+            this.set("loading", false);
+        },
+
+        _onAjaxError: function () {
+            this.set("loading", false);
+        }
+    };
+    AppBehaviors.AjaxMaskBehavior = AjaxMaskBehavior;
+</script>

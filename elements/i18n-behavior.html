@@ -1,0 +1,11 @@
+<script>
+    var I18NBehavior = {
+        attached: function () {
+            if (!this.language) {
+                this.set("language", "en");
+            }
+            this.set("resources", window.i18nMessages);
+        }
+    };
+    AppBehaviors.I18NBehavior = [Polymer.AppLocalizeBehavior, I18NBehavior]
+</script>

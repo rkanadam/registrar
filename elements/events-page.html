@@ -1,0 +1,18 @@
+<dom-module id="events-page">
+    <style include="app-theme"></style>
+    <template>
+        <div class="layout vertical" style="height: 100%;">
+            <paper-item>[[localize('eventPageDescription')]]</paper-item>
+        </div>
+    </template>
+    <script>
+        Polymer({
+
+            is: 'events-page',
+
+            behaviors: [
+                AppBehaviors.AppBehavior
+            ]
+        });
+    </script>
+</dom-module>

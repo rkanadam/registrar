@@ -1,0 +1,15 @@
+<script>
+    var OverlayFixBehavior = {
+
+        listeners: {
+            "iron-overlay-opened":"_patchOverlay"
+        },
+
+        _patchOverlay: function (e) {
+            if (e.target.withBackdrop) {
+                e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
+            }
+        }
+    };
+    AppBehaviors.OverlayFixBehavior = OverlayFixBehavior;
+</script>

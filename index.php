@@ -23,6 +23,8 @@ if (!$user->isAuthenticated ()) {
 
     <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
     <script src="bower_components/lodash/dist/lodash.min.js"></script>
+    <script src="i18nMessages.js"></script>
+    <script type="text/javascript">window.AppBehaviors = {}</script>
     <link rel="import" href="elements/registrar-app.html">
 
 

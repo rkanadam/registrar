@@ -125,36 +125,8 @@
             ],
 
             behaviors: [
-                Polymer.AppLocalizeBehavior
+                AppBehaviors.AppBehavior
             ],
-
-            listeners: {
-                "request": "_onAjaxRequest",
-                "response": "_onAjaxResponse",
-                "error": "_onAjaxError"
-            },
-
-            _onAjaxRequest: function () {
-                this.set("loading", true);
-            },
-
-            _onAjaxResponse: function () {
-                this.set("loading", false);
-            },
-
-            _onAjaxError: function () {
-                this.set("loading", false);
-            },
-
-            _patchOverlay: function (e) {
-                if (e.target.withBackdrop) {
-                    e.target.parentNode.insertBefore(e.target.backdropElement, e.target);
-                }
-            },
-
-            attached: function () {
-                this.loadResources(this.resolveUrl('../locales.json'));
-            },
 
             _onCountriesFetch: function () {
                 this.$.zonesRequest.generateRequest();
@@ -188,10 +160,12 @@
             },
 
             _computeZoneLabel: function (zone) {
-                if (zone && this.zones[zone]) {
-                    return this.zones[zone].name + " (" + this.zones[zone].president + ")";
-                } else if (zone === "NA") {
-                    return this.localize("na");
+                if (typeof(this.localize) === "function") {
+                    if (zone && this.zones && this.zones[zone]) {
+                        return this.zones[zone].name + " (" + this.zones[zone].president + ")";
+                    } else if (zone === "NA") {
+                        return this.localize("na");
+                    }
                 }
                 return "";
             },
@@ -217,7 +191,6 @@
             _onSaveError: function () {
                 debugger;
             },
-
 
             _computeSaveUrl: function (profile) {
                 return "api.php/profile/" + (profile && profile._id ? profile._id : "");
