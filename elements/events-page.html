@@ -9,15 +9,16 @@
                 data="{{routeData}}"
                 tail="{{tail}}">
         </app-route>
-        <iron-pages fallback-selection="one"
-                    selected="{{page}}"
-                    attr-for-selected="name"
-                    class="flex"
-        >
+        <neon-animated-pages fallback-selection="list"
+                             selected="{{page}}"
+                             attr-for-selected="name"
+                             entry-animation="fade-in-animation"
+                             exit-animation="fade-out-animation"
+                             style="height: 100%">
             <event-page name="add" profile="{{event}}" language="[[language]]"></event-page>
-            <event-page name="one" profile="{{profile}}" language="[[language]]"></event-page>
-            <event-list name="list" profile="{{profile}}" language="[[language]]"></event-list>
-        </iron-pages>
+            <event-page name="one" profile="{{event}}" language="[[language]]"></event-page>
+            <event-list name="list" profile="{{event}}" language="[[language]]"></event-list>
+        </neon-animated-pages>
     </template>
     <script>
         Polymer({
@@ -32,7 +33,9 @@
                 page: {
                     type: String
                 },
-                event: {}
+                event: {
+                    type: Object
+                }
             },
 
             behaviors: [

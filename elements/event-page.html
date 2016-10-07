@@ -1,0 +1,29 @@
+<dom-module id="event-page">
+    <style include="app-theme">
+
+    </style>
+    <template>
+        <div class="layout vertical" style="height: 100%;padding: 0px 20px 0px 20px">
+            <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
+            <div class="app-button-bar layout horizontal">
+                <paper-item class="flex">[[localize('eventPageDescription')]]</paper-item>
+            </div>
+        </div>
+    </template>
+    <script>
+        Polymer({
+
+            is: 'event-page',
+
+            behaviors: [
+                AppBehaviors.AppBehavior
+            ],
+
+            properties: {
+                "events": {
+                    type: Array
+                }
+            }
+        });
+    </script>
+</dom-module>
