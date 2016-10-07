@@ -120,16 +120,17 @@
                                      exit-animation="fade-out-animation"
                                      attr-for-selected="name"
                                      class="flex">
-                    <profile-page name="profile" route="{{tail}}" profile="{{profile}}"
+                    <profile-page name="profile" route="{{tail}}" page="{{subPage}}" profile="{{profile}}"
                                   language="[[language]]"></profile-page>
-                    <events-page name="events" route="{{tail}}" language="[[language]]"></events-page>
+                    <events-page name="events" route="{{tail}}" page="{{subPage}}"
+                                 language="[[language]]"></events-page>
                 </neon-animated-pages>
             </app-header-layout>
         </app-drawer-layout>
 
 
         <iron-media-query query="min-width: 600px" query-matches="{{wideLayout}}"></iron-media-query>
-        <iron-location hash="[[page]]"></iron-location>
+        <iron-location hash="[[_computeUrlHash(page, subPage)]]"></iron-location>
         <app-location route="{{route}}" use-hash-as-path></app-location>
         <app-route
                 route="{{route}}"
@@ -173,6 +174,11 @@
                     value: ""
                 },
 
+                subPage: {
+                    type: String,
+                    value: ""
+                },
+
                 url: {
                     type: String,
                     value: ""
@@ -184,7 +190,7 @@
             ],
 
             observers: [
-                '_routePageChanged(routeData.page)',
+                '_routePageChanged(routeData.page)'
             ],
 
             onLayoutChange: function (wide) {
@@ -212,7 +218,16 @@
             },
 
             _routePageChanged: function (page) {
+                this.set("subPage", "");
                 this.set("page", page);
+            },
+
+            _computeUrlHash: function (page, subPage) {
+                if (page) {
+                    return page + (subPage ? ("/" + subPage) : "");
+                }
+
+                return "profile";
             }
         });
 

@@ -9,13 +9,12 @@
                 data="{{routeData}}"
                 tail="{{tail}}">
         </app-route>
-        <neon-animated-pages fallback-selection="list"
-                             selected="{{page}}"
+        <neon-animated-pages selected="{{pageSelector}}"
                              attr-for-selected="name"
                              entry-animation="fade-in-animation"
                              exit-animation="fade-out-animation"
                              style="height: 100%">
-            <event-page name="add" profile="{{event}}" language="[[language]]"></event-page>
+            <event-page name="new" profile="{{event}}" language="[[language]]"></event-page>
             <event-page name="one" profile="{{event}}" language="[[language]]"></event-page>
             <event-list name="list" profile="{{event}}" language="[[language]]"></event-list>
         </neon-animated-pages>
@@ -28,10 +27,16 @@
             properties: {
                 route: {
                     type: Object,
-                    value: {}
+                    value: {},
+                    observer: "_routeChanged"
                 },
                 page: {
-                    type: String
+                    type: String,
+                    notify: true
+                },
+                pageSelector: {
+                    type: String,
+                    notify: true
                 },
                 event: {
                     type: Object
@@ -43,11 +48,29 @@
             ],
 
             observers: [
-                '_routePageChanged(routeData.page)',
+                '_routePageChanged(routeData.page)'
             ],
 
+            _routeChanged: function () {
+                if (this.route && this.route.path === "") {
+                    this._routePageChanged(this.route.path);
+                }
+            },
+
             _routePageChanged: function (page) {
-                this.set("page", page);
+                if (page === undefined) {
+                    return;
+                }
+                if (page === "new") {
+                    this.set("page", "new");
+                    this.set("pageSelector", "new");
+                } else if (!page) {
+                    this.set("page", "");
+                    this.set("pageSelector", "list");
+                } else {
+                    this.set("page", page);
+                    this.set("pageSelector", page);
+                }
             }
         });
     </script>
