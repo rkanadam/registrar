@@ -11,6 +11,10 @@
             '_pageIdChanged(route, routeData.pageId)'
         ],
 
+        attached: function () {
+            this._pageId = "";
+        },
+
         _pageIdChanged: function (route, pageId) {
             if (route === undefined || pageId === undefined) {
                 return;
@@ -18,7 +22,9 @@
             if (!this._isRouteChangeApplicableToMe()) {
                 return;
             }
-            var page = this._getPage(pageId)
+            var pageId = route.path === "" ? "" : pageId;
+            this._pageId = pageId;
+            var page = this._getPage(pageId);
             if (page === undefined) {
                 return;
             }
@@ -67,6 +73,8 @@
                     return "";
                 case "new":
                     return "new";
+                case "edit":
+                    return this._pageId ? this._pageId : "edit";
                 default:
                     return page;
             }
