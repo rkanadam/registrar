@@ -120,9 +120,9 @@
                                      exit-animation="fade-out-animation"
                                      attr-for-selected="name"
                                      class="flex">
-                    <profile-page name="profile" route="{{tail}}" page="{{subPage}}" profile="{{profile}}"
+                    <profile-page name="profile" route="{{subroute}}" profile="{{profile}}"
                                   language="[[language]]"></profile-page>
-                    <events-page name="events" route="{{tail}}" page="{{subPage}}"
+                    <events-page name="events" route="{{subroute}}"
                                  language="[[language]]"></events-page>
                 </neon-animated-pages>
             </app-header-layout>
@@ -130,14 +130,14 @@
 
 
         <iron-media-query query="min-width: 600px" query-matches="{{wideLayout}}"></iron-media-query>
-        <iron-location hash="[[_computeUrlHash(page, subPage)]]"></iron-location>
-        <app-location route="{{route}}" use-hash-as-path></app-location>
+        <iron-location hash="[[_computeUrlHash(page, tail)]]"></iron-location>
+        <app-location id="location" route="{{route}}" use-hash-as-path></app-location>
         <app-route
+                id="route"
+                pattern="/:pageId"
                 route="{{route}}"
-                pattern=":page"
                 data="{{routeData}}"
-                tail="{{tail}}">
-        </app-route>
+                tail="{{subroute}}"></app-route>
     </template>
     <script>
         Polymer({
@@ -167,30 +167,11 @@
                 profiles: {
                     type: Array,
                     value: [],
-                },
-
-                page: {
-                    type: String,
-                    value: ""
-                },
-
-                subPage: {
-                    type: String,
-                    value: ""
-                },
-
-                url: {
-                    type: String,
-                    value: ""
                 }
             },
 
             behaviors: [
                 AppBehaviors.AppBehavior
-            ],
-
-            observers: [
-                '_routePageChanged(routeData.page)'
             ],
 
             onLayoutChange: function (wide) {
@@ -217,17 +198,16 @@
                 }
             },
 
-            _routePageChanged: function (page) {
-                this.set("subPage", "");
-                this.set("page", page);
-            },
-
-            _computeUrlHash: function (page, subPage) {
-                if (page) {
-                    return page + (subPage ? ("/" + subPage) : "");
+            _computeUrlHash: function (page, subroute) {
+                if (page && subroute) {
+                    if (subroute && subroute.path) {
+                        return subroute.path;
+                    } else {
+                        return page;
+                    }
                 }
 
-                return "profile";
+                return page;
             }
         });
 

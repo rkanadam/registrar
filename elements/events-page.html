@@ -1,21 +1,20 @@
 <dom-module id="events-page">
-    <style include="app-theme">
-
-    </style>
+    <style include="app-theme"></style>
     <template>
         <app-route
+                id="route"
+                pattern="/:pageId"
                 route="{{route}}"
-                pattern="/:page"
                 data="{{routeData}}"
-                tail="{{tail}}">
-        </app-route>
-        <neon-animated-pages selected="{{pageSelector}}"
+                tail="{{subroute}}"></app-route>
+        <neon-animated-pages selected="{{page}}"
+                             fallback-selection="edit"
                              attr-for-selected="name"
                              entry-animation="fade-in-animation"
                              exit-animation="fade-out-animation"
                              style="height: 100%">
             <event-page name="new" profile="{{event}}" language="[[language]]"></event-page>
-            <event-page name="one" profile="{{event}}" language="[[language]]"></event-page>
+            <event-page name="edit" profile="{{event}}" language="[[language]]"></event-page>
             <event-list name="list" profile="{{event}}" language="[[language]]"></event-list>
         </neon-animated-pages>
     </template>
@@ -25,19 +24,6 @@
             is: 'events-page',
 
             properties: {
-                route: {
-                    type: Object,
-                    value: {},
-                    observer: "_routeChanged"
-                },
-                page: {
-                    type: String,
-                    notify: true
-                },
-                pageSelector: {
-                    type: String,
-                    notify: true
-                },
                 event: {
                     type: Object
                 }
@@ -45,33 +31,7 @@
 
             behaviors: [
                 AppBehaviors.AppBehavior
-            ],
-
-            observers: [
-                '_routePageChanged(routeData.page)'
-            ],
-
-            _routeChanged: function () {
-                if (this.route && this.route.path === "") {
-                    this._routePageChanged(this.route.path);
-                }
-            },
-
-            _routePageChanged: function (page) {
-                if (page === undefined) {
-                    return;
-                }
-                if (page === "new") {
-                    this.set("page", "new");
-                    this.set("pageSelector", "new");
-                } else if (!page) {
-                    this.set("page", "");
-                    this.set("pageSelector", "list");
-                } else {
-                    this.set("page", page);
-                    this.set("pageSelector", page);
-                }
-            }
+            ]
         });
     </script>
 </dom-module>

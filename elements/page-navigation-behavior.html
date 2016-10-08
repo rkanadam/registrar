@@ -1,0 +1,70 @@
+<script>
+    var PageNavigationBehavior = {
+        properties: {
+            page: {
+                type: String,
+                observer: "_pageChanged"
+            }
+        },
+
+        observers: [
+            '_routeChanged(route)',
+            '_pageIdChanged(routeData.pageId)'
+        ],
+
+        _routeChanged: function (route) {
+            if (route && route.path === "") {
+                this.set("page", this._getPage(""));
+            }
+        },
+
+        _pageIdChanged: function (pageId) {
+            if (pageId === undefined) {
+                return;
+            }
+            var page = this._getPage(pageId)
+            if (page === undefined) {
+                return;
+            }
+            if (this.page !== page) {
+                this.set("page", page);
+            }
+        },
+
+        _pageChanged: function (page) {
+            if (page === undefined) {
+                return "";
+            }
+
+            var hash = this._getHash(page);
+            if (hash && hash[0] !== "/") {
+                hash = "/" + hash;
+            }
+            if (this.$.route && this.$.route.route && this.$.route.route.path !== hash) {
+                this.$.route.set("route.path", hash);
+            }
+        },
+
+        _getPage: function (pageId) {
+            if (!pageId) {
+                return "list";
+            }
+            if (pageId === "new") {
+                return "new";
+            }
+            return pageId;
+        },
+
+        _getHash: function (page) {
+            switch (page) {
+                case "list":
+                    return "";
+                case "new":
+                    return "new";
+                default:
+                    return page;
+            }
+        }
+    };
+    AppBehaviors.PageNavigationBehavior = PageNavigationBehavior;
+</script>
