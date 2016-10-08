@@ -8,18 +8,14 @@
         },
 
         observers: [
-            '_routeChanged(route)',
-            '_pageIdChanged(routeData.pageId)'
+            '_pageIdChanged(route, routeData.pageId)'
         ],
 
-        _routeChanged: function (route) {
-            if (route && route.path === "") {
-                this.set("page", this._getPage(""));
+        _pageIdChanged: function (route, pageId) {
+            if (route === undefined || pageId === undefined) {
+                return;
             }
-        },
-
-        _pageIdChanged: function (pageId) {
-            if (pageId === undefined) {
+            if (!this._isRouteChangeApplicableToMe()) {
                 return;
             }
             var page = this._getPage(pageId)
@@ -29,6 +25,16 @@
             if (this.page !== page) {
                 this.set("page", page);
             }
+        },
+
+        _isRouteChangeApplicableToMe: function () {
+            if (this.parentElement) {
+                if (this.parentElement.attrForSelected) {
+                    var myPageName = this.getAttribute(this.parentElement.attrForSelected);
+                    return myPageName == this.parentElement.selected || myPageName == this.parentElement.fallbackSelection;
+                }
+            }
+            return false;
         },
 
         _pageChanged: function (page) {
