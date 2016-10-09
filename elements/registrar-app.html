@@ -58,8 +58,10 @@
 
                 <!-- Nav on mobile: side nav menu -->
                 <paper-menu selected="{{page}}" attr-for-selected="name">
-                    <template is="dom-repeat" items="{{tabs}}">
-                        <paper-item name="{{tabs}}">{{tabs}}</paper-item>
+                    <template is="dom-repeat" items="{{tabs}}" as="tab">
+                        <a href="#profile">
+                            <paper-item name="{{tab}}">{{tab}}</paper-item>
+                        </a>
                     </template>
                 </paper-menu>
 
@@ -87,13 +89,14 @@
                     </app-toolbar>
 
                     <app-toolbar hidden$="{{!wideLayout}}" class="layout horizontal">
-                        <paper-tabs selected="{{page}}" attr-for-selected="name">
+                        <paper-tabs selected="{{path}}" attr-for-selected="name">
                             <template is="dom-repeat" items="{{tabs}}" as="tab">
-                                <paper-tab name="{{tab}}">{{localize(tab)}}</paper-tab>
+                                <paper-tab name="{{tab}}">{{localize(tab)}}</span>
+                                </paper-tab>
                             </template>
                         </paper-tabs>
                         <div class="flex"></div>
-                        <paper-tabs selected="{{page}}" attr-for-selected="name">
+                        <paper-tabs selected="{{path}}" attr-for-selected="name">
                             <paper-tab name="profile" class="flex">
                                 <paper-icon-button icon="account-box" alt="User Name"
                                                    title$="{{localize('signedInAs', 'name', profile.name, 'email', profile.email)}}"
@@ -118,26 +121,21 @@
                                      selected="{{page}}"
                                      entry-animation="fade-in-animation"
                                      exit-animation="fade-out-animation"
-                                     attr-for-selected="name"
+                                     attr-for-selected="id"
                                      class="flex">
-                    <profile-page name="profile" route="{{subroute}}" profile="{{profile}}"
+                    <profile-page id="profilePage" route="{{subroute}}" profile="{{profile}}"
                                   language="[[language]]"></profile-page>
-                    <events-page name="events" route="{{subroute}}"
-                                 language="[[language]]"></events-page>
+                    <event-list-page id="eventListPage" route="{{subroute}}"
+                                     language="[[language]]"></event-list-page>
+                    <event-page id="eventPage" route="{{subroute}}"
+                                language="[[language]]"></event-page>
                 </neon-animated-pages>
             </app-header-layout>
         </app-drawer-layout>
 
 
         <iron-media-query query="min-width: 600px" query-matches="{{wideLayout}}"></iron-media-query>
-        <iron-location hash="[[_computeUrlHash(page, tail)]]"></iron-location>
-        <app-location id="location" route="{{route}}" use-hash-as-path></app-location>
-        <app-route
-                id="route"
-                pattern="/:pageId"
-                route="{{route}}"
-                data="{{routeData}}"
-                tail="{{subroute}}"></app-route>
+        <iron-location hash="{{path}}"></iron-location>
     </template>
     <script>
         Polymer({
@@ -167,6 +165,15 @@
                 profiles: {
                     type: Array,
                     value: [],
+                },
+
+                path: {
+                    type: String,
+                    observer: '_onPathChanged'
+                },
+
+                "page": {
+                    type: String
                 }
             },
 
@@ -198,16 +205,24 @@
                 }
             },
 
-            _computeUrlHash: function (page, subroute) {
-                if (page && subroute) {
-                    if (subroute && subroute.path) {
-                        return subroute.path;
-                    } else {
-                        return page;
+            _onPathChanged: function (path) {
+                if (!path) {
+                    return;
+                }
+                var parts = _.compact(path.split("/"));
+
+                var part = parts.shift();
+                if (part === "profile") {
+                    this.set("page", "profilePage");
+                } else if (part === "events") {
+                    if (parts.length === 0) {
+                        this.set("page", "eventListPage");
+                    }
+                    if (parts.length === 1) {
+                        this.$.eventPage.eventId = parts[0];
+                        this.set("page", "eventPage");
                     }
                 }
-
-                return page;
             }
         });
 

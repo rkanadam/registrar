@@ -34,6 +34,7 @@
         },
 
         _isRouteChangeApplicableToMe: function () {
+            return true;
             if (this.parentElement) {
                 if (this.parentElement.attrForSelected) {
                     var myPageName = this.getAttribute(this.parentElement.attrForSelected);
@@ -52,7 +53,7 @@
             if (hash && hash[0] !== "/") {
                 hash = "/" + hash;
             }
-            if (this.$.route && this.$.route.route && this.$.route.route.path !== hash) {
+            if (this.$.route && this.$.route.route && this.$.route.route.path.indexOf(hash) !== -1){
                 this.$.route.set("route.path", hash);
             }
         },
