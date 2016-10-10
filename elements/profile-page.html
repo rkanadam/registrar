@@ -4,7 +4,7 @@
         <success-dialog id="saveDialog" msg-key="profileSavedMessage"></success-dialog>
         <div style="padding: 0px 20px 0px 20px;position: relative;height: 100%;">
             <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
-            <iron-form method="get" action="/" id="basic" class="layout vertical" style="height: 100%">
+            <iron-form method="post" action="/" id="basic" class="layout vertical" style="height: 100%">
                 <input type="hidden" name="_id" value="[[profile._id]]">
                 <paper-input name="firstName" label="{{localize('firstName')}}" required
                              value="{{profile.firstName}}"></paper-input>

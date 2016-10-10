@@ -1,14 +1,67 @@
 <dom-module id="event-page">
     <style include="app-theme">
+    </style>
+    <style>
+        label {
+            width: 200px;
+        }
 
+        iron-form {
+            padding: 20px;
+        }
     </style>
     <template>
-        <div class="layout vertical" style="height: 100%;padding: 0px 20px 0px 20px">
+        <success-dialog id="saveDialog" msg-key="eventSavedMessage"></success-dialog>
+        <div style="padding: 0px 20px 0px 20px;position: relative;height: 100%;">
             <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
             <div class="app-button-bar layout horizontal">
                 <paper-item class="flex">[[localize('eventPageDescription')]]</paper-item>
             </div>
+            <iron-form method="post" action="/" id="basic" class="layout vertical" style="height: 100%">
+                <input type="hidden" name="_id" value="[[event._id]]">
+                <div class="layout horizontal">
+                    <vaadin-date-picker
+                            label="[[localize('startDate')]]"
+                            value="{{event.startDate}}"></vaadin-date-picker>
+                    <time-picker
+                            value="{{event.startTime}}"
+                            label="[[localize('startTime')]]"></time-picker>
+                </div>
+                <div class="layout horizontal">
+                    <vaadin-date-picker
+                            label="[[localize('endDate')]]"
+                            value="{{event.endDate}}"></vaadin-date-picker>
+                    <time-picker
+                            value="{{event.endTime}}"
+                            label="[[localize('endTime')]]"></time-picker>
+                </div>
+                <div class="layout horizontal">
+                    <polymer-tinymce id="description"
+                                     tinytoolbar="insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+                                     tinyplugins='["advlist autolink lists link image charmap print preview anchor","searchreplace visualblocks code fullscreen","insertdatetime media table contextmenu paste"]'
+                                     value="{{event.description}}"
+                    ></polymer-tinymce>
+                </div>
+                <div class="flex layout horizontal center-center">
+                    <paper-button primary raised on-tap="_onSave">[[localize('save')]]
+                    </paper-button>
+                    <paper-button secondary raised on-tap="_onReset">[[localize('reset')]]</paper-button>
+                </div>
+            </iron-form>
         </div>
+
+        <iron-ajax
+                id="saveRequest"
+                method="POST"
+                url="[[_computeSaveUrl(event)]]"
+                content-type="application/json"
+                handle-as="json"
+                last-response="{{event}}"
+                on-response="_onSaveSuccess"
+                on-error="_onSaveError"
+                body="[[event]]"
+                bubbles
+        ></iron-ajax>
     </template>
     <script>
         Polymer({
@@ -20,10 +73,49 @@
             ],
 
             properties: {
-                "events": {
-                    type: Array
+                "eventId": {
+                    type: String
+                },
+                event: {
+                    type: Object,
+                    value: {}
                 }
+            },
+
+            observers: [
+                '_onEventChanged(event)'
+            ],
+
+            _onEventChanged: function (event) {
+                if (event) {
+                    this.previousEvent = JSON.stringify(event);
+                }
+            },
+
+            _onSave: function () {
+                this.$.saveRequest.generateRequest();
+            },
+
+            _onReset: function () {
+                if (this.previousEvent) {
+                    var event = JSON.parse(this.previousEvent);
+                    this.previousEvent = null;
+                    this.set("event", event);
+                }
+            },
+
+            _onSaveSuccess: function () {
+                this.$.saveDialog.open();
+            },
+
+            _onSaveError: function () {
+                debugger;
+            },
+
+            _computeSaveUrl: function (event) {
+                return "api.php/events/" + (event && event._id && event._id !== "new" ? event._id : "new");
             }
+
         });
     </script>
 </dom-module>

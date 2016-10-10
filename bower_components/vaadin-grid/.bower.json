@@ -1,6 +1,6 @@
 {
   "name": "vaadin-grid",
-  "version": "1.2.0-beta1",
+  "version": "1.1.2",
   "authors": [
     "Vaadin Ltd"
   ],
@@ -39,13 +39,13 @@
     "elements-demo-resources": "vaadin/elements-demo-resources#master"
   },
   "homepage": "https://github.com/vaadin/vaadin-grid",
-  "_release": "1.2.0-beta1",
+  "_release": "1.1.2",
   "_resolution": {
     "type": "version",
-    "tag": "v1.2.0-beta1",
-    "commit": "8d7ff4bdb7266eb4c48caba107051f0d1295713b"
+    "tag": "v1.1.2",
+    "commit": "2a2f8fd8e6af9de0e7c5df015a2f607479068c42"
   },
   "_source": "https://github.com/vaadin/vaadin-grid.git",
-  "_target": "^1.1.4",
+  "_target": "^1.1.2",
   "_originalSource": "vaadin-grid"
 }

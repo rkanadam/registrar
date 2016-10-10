@@ -87,9 +87,11 @@ class DB
     {
         $return = false;
         if (!empty($obj["_id"])) {
+            Log::log("Attempting to update object: \n", $obj);
             $return = $this->sag->put($obj["_id"], $obj);
             Log::log("Object update response: \n", $return);
         } else {
+            Log::log("Attempting to create object: \n", $obj);
             $return = $this->sag->post($obj);
             Log::log("Object create response: \n", $return);
         }

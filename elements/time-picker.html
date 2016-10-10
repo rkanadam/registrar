@@ -1,0 +1,368 @@
+<dom-module id="time-picker">
+    <template>
+        <style>
+            :host {
+                display: block;
+            }
+
+            #overlay {
+                height: 100vh;
+                width: 420px;
+            }
+
+            #inputcontainer {
+                padding-bottom: 0;
+            }
+
+            #inputcontainer,
+            #inputcontainer input {
+                cursor: pointer;
+            }
+
+            #inputcontainer:focus {
+                outline: none;
+            }
+
+            paper-input-container div[suffix] {
+                box-sizing: content-box;
+                position: absolute;
+                right: -4px;
+                bottom: -4px;
+                width: 24px;
+                height: 24px;
+                padding: 4px;
+                text-align: center;
+            }
+
+            paper-input-container iron-icon {
+                fill: rgba(0, 0, 0, .26);
+                cursor: pointer;
+                --iron-icon-width: 20px;
+                --iron-icon-height: 20px;
+                margin-top: -1px;
+                transition: fill 0.2s;
+            }
+
+            paper-input-container paper-ripple {
+                color: rgba(0, 0, 0, .54);
+            }
+
+            :host([opened]) paper-input-container {
+                --paper-input-container-underline-focus: {
+                    -webkit-transform: none;
+                    transform: none;
+                }
+            }
+
+            paper-input-container iron-icon:hover,
+            :host([opened]) paper-input-container iron-icon {
+                fill: rgba(0, 0, 0, .54);
+            }
+
+            :host([opened]) paper-input-container iron-icon:hover {
+                fill: rgba(0, 0, 0, .86);
+            }
+
+            #input {
+                pointer-events: none;
+            }
+
+            #clear {
+                right: 28px;
+            }
+
+            :host([disabled]) #calendar,
+            :host([readonly]) #calendar,
+            :host(:not([opened])) #clear,
+            :host(:not([has-value])) #clear,
+            :host([readonly]) #clear,
+            :host([disabled]) #clear {
+                display: none;
+            }
+
+            #input {
+                box-sizing: border-box;
+                padding-right: 28px;
+            }
+
+            :host([opened][has-value]) #input {
+                padding-right: 60px;
+                margin-right: -32px;
+            }
+        </style>
+
+        <paper-input-container id="inputcontainer"
+                               auto-validate$="[[autoValidate]]"
+                               tabindex$="[[_tabindex(disabled)]]"
+                               invalid$="[[invalid]]"
+                               disabled$="[[disabled]]">
+            <label id="label">[[label]]</label>
+            <input id="input"
+                   is="iron-input"
+                   autocomplete="off"
+                   tabindex="-1"
+                   type="text"
+                   on-focus="_focus"
+                   on-keydown="_onKeyDown"
+                   name$="[[name]]"
+                   invalid="{{invalid}}"
+                   required$="[[required]]"
+                   validator="[[validator]]"
+                   disabled$="[[disabled]]"
+            />
+            <div suffix id="clear" on-tap="_clear">
+                <iron-icon icon="clear"></iron-icon>
+                <paper-ripple class="circle" center></paper-ripple>
+            </div>
+            <div suffix id="calendar" on-tap="_toggle">
+                <iron-icon icon="schedule"></iron-icon>
+                <paper-ripple class="circle" center></paper-ripple>
+            </div>
+            <template is="dom-if" if="[[errorMessage]]">
+                <paper-input-error aria-live="assertive">[[errorMessage]]</paper-input-error>
+            </template>
+        </paper-input-container>
+        <paper-dialog id="dialog" modal class="paper-time-picker-dialog"
+                      on-iron-overlay-closed="dismissDialog">
+            <paper-time-picker id="timePicker" time="{{timePickerValue}}"></paper-time-picker>
+            <div class="buttons">
+                <paper-button dialog-dismiss>Cancel</paper-button>
+                <paper-button dialog-confirm>OK</paper-button>
+            </div>
+        </paper-dialog>
+        <iron-media-query
+                query="[[_fullscreenMediaQuery]]"
+                query-matches="{{_fullscreen}}">
+        </iron-media-query>
+    </template>
+
+    <script>
+        Polymer({
+            is: 'time-picker',
+
+            behvaiors: [
+                Polymer.IronFormElementBehavior,
+                Polymer.IronValidatableBehavior,
+                Polymer.IronA11yKeysBehavior
+            ],
+
+            listeners: {
+                'tap': 'open',
+                'touchend': '_preventDefault',
+                'keydown': '_onKeydown'
+            },
+
+            properties: {
+
+                _selectedDate: {
+                    type: Date
+                },
+
+                /**
+                 * The value for this element.
+                 *
+                 * Supported date formats:
+                 * - ISO 8601 `"YYYY-MM-DD"` (default)
+                 * - 6-digit extended ISO 8601 `"+YYYYYY-MM-DD"`, `"-YYYYYY-MM-DD"`
+                 *
+                 * @type {String}
+                 */
+                value: {
+                    type: String
+                },
+
+                /**
+                 * Indicates whether this date picker has a value.
+                 */
+                hasValue: {
+                    type: Boolean,
+                    computed: '_hasValue(value)',
+                    reflectToAttribute: true
+                },
+
+                /**
+                 * Date which should be visible when there is no value selected.
+                 *
+                 * The same date formats as for the `value` property are supported.
+                 */
+                initialPosition: String,
+
+                /**
+                 * The label for this element.
+                 */
+                label: String,
+
+                /**
+                 * Set true to open the date selector overlay.
+                 */
+                opened: {
+                    type: Boolean,
+                    reflectToAttribute: true,
+                    notify: true
+                },
+
+                _fullscreenMediaQuery: {
+                    value: '(max-width: 420px), (max-height: 420px)'
+                },
+
+                /**
+                 * Set to true to auto-validate the input value.
+                 */
+                autoValidate: {
+                    type: Boolean,
+                    value: false
+                },
+
+                /**
+                 * Set to true to disable this element.
+                 */
+                disabled: {
+                    type: Boolean,
+                    value: false,
+                    reflectToAttribute: true
+                },
+
+                /**
+                 * Set to true to make this element read-only.
+                 */
+                readonly: {
+                    type: Boolean,
+                    value: false,
+                    reflectToAttribute: true
+                },
+
+                /**
+                 * The error message to display when the input is invalid.
+                 */
+                errorMessage: String,
+
+                timePickerValue: {
+                    type: String,
+                    observer: "_timeChanged"
+                }
+            },
+
+            // TODO: revisit this in order to use validatable-behavior for both the full and
+            // the light component. Consider auto-validate, and validate(value) signature.
+            /**
+             * Override the IronValidatableBehavior._getValidity implementation, replacing
+             * it with the iron-input validation.
+             */
+            _getValidity: function () {
+                return this.inputElement.validate();
+            },
+
+            _clear: function (e) {
+                e.stopPropagation();
+                this.value = '';
+                this.close();
+            },
+
+            _toggle: function (e) {
+                e.stopPropagation();
+                this[this.$.dialog.opened ? 'close' : 'open']();
+            },
+
+            _tabindex: function (disabled) {
+                return disabled ? -1 : 0;
+            },
+
+            _onKeyDown: function (e) {
+                // The input element cannot be readonly as it would conflict with
+                // the required attribute. Both are not allowed on an input element.
+                // Therefore we prevent default on most keydown events.
+                var allowedKeys = [
+                    9 // tab
+                ];
+                if (allowedKeys.indexOf(e.keyCode) === -1) {
+                    e.preventDefault();
+                }
+            },
+
+            /**
+             * @property inputElement
+             * @type HTMLElement
+             */
+            get inputElement() {
+                return this._input();
+            },
+
+            _input: function () {
+                return this.$.input;
+            },
+
+            set _inputValue(value) {
+                this.inputElement.bindValue = value;
+            },
+
+            get _inputValue() {
+                return this.inputElement.bindValue;
+            },
+
+            _hasValue: function (value) {
+                return !!value;
+            },
+
+            _timeChanged: function () {
+                this._inputValue = this.timePickerValue;
+            },
+            _preventCancelOnComponentAccess: function (e) {
+                var event = Polymer.dom(e.detail);
+                if (/tap|mousedown|touchstart/.test(e.detail.type) && event.path.indexOf(this) > -1) {
+                    e.preventDefault();
+                }
+            },
+
+            _focus: function () {
+                this.inputElement.focus();
+            },
+
+            _preventDefault: function (e) {
+                e.preventDefault();
+            },
+
+            /**
+             * Keyboard Navigation
+             */
+            _eventKey: function (e) {
+                var keys = ['down', 'up'];
+
+                for (var i = 0; i < keys.length; i++) {
+                    var k = keys[i];
+                    if (Polymer.IronA11yKeysBehavior.keyboardEventMatchesKeys(e, k)) {
+                        return k;
+                    }
+                }
+            },
+
+            _onKeydown: function (e) {
+                switch (this._eventKey(e)) {
+                    case 'down':
+                    case 'up':
+                        // prevent scrolling the page with arrows
+                        e.preventDefault();
+
+                        if (!this.opened) {
+                            this.open();
+                        }
+                        break;
+                }
+            },
+            /**
+             * Opens the dropdown.
+             */
+            open: function (e) {
+                if (!this.disabled && !this.readonly && (!e || Polymer.dom(e).path.indexOf(this.$.overlay) < 0)) {
+                    this.$.dialog.open();
+                }
+            },
+
+            /**
+             * Closes the dropdown.
+             */
+            close: function () {
+                this.$.dialog.close();
+            },
+        });
+    </script>
+</dom-module>

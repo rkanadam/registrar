@@ -1,0 +1,152 @@
+<link rel="import" href="../polymer/polymer.html">
+<link rel="import" href="../import-tinymce/import-tinymce.html">
+
+<!--
+An element providing a solution to no problem in particular.
+
+Example:
+
+    <polymer-tinymce></polymer-tinymce>
+
+@group Seed Elements
+@element polymer-tinymce
+@demo demo/index.html
+@hero hero.svg
+-->
+
+<dom-module id="polymer-tinymce">
+
+  <template>
+    <textarea id="[[textareaId]]" name="content" style="width:100%" class="te"></textarea>
+  </template>
+
+</dom-module>
+
+<script>
+
+  Polymer({
+
+    is: 'polymer-tinymce',
+
+    properties:{
+
+      // "insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+      
+      tinytoolbar:{
+        type:String,
+        value:"undo | bullist"
+      },
+
+      // ["advlist autolink lists link image charmap print preview anchor","searchreplace visualblocks code fullscreen","insertdatetime media table contextmenu paste"]
+
+      tinyplugins:{
+        type:Array,
+        value:["advlist autolink lists link image charmap preview anchor fullscreen"]
+      },
+
+      /* Html or an url that can be loaded from the editor. */
+      // [{title: 'Some title 1', description: 'Some desc 1', content: 'My content'}, 
+      // {title: 'Some title 2', description: 'Some desc 2', url: 'development.html'}]
+      templates: {
+        type: Array,
+        value: function () { return [] }
+      },
+
+      height: {
+        type: Number,
+        value: 168
+      },
+
+      baseUrl: {
+        type: String,
+        value: ''
+      },
+
+      textareaId: {
+        type: String,
+        value: ''
+      },
+
+      value: {
+        type: String,
+        notify: true
+      }
+    },
+
+    attached: function(){
+      this.prepareInitEditor();
+      this.textareaId = this.guidGenerator();
+    },
+
+    prepareInitEditor: function () {
+      this.async(function () {
+        this.initEditor();
+      }.bind(this),100);
+    },
+
+    initEditor: function () {
+      
+      var _this = this;
+      if (this.baseUrl !== '') {
+        tinymce.baseURL = this.baseUrl;
+      }
+      
+      tinymce.init({
+        selector: '#' + this.textareaId,
+        menubar: false,
+        statusbar: false,
+        templates: this.templates,
+        plugins: this.tinyplugins,
+        toolbar: this.tinytoolbar,
+        height: this.height,
+        setup: function (ed) {
+              ed.on('init', function(args) {
+
+                this.fire('tiny-init');
+                  
+              });
+
+              ed.on('focus', function(e) {
+
+                  this.fire('tiny-focus');
+
+              });
+
+              ed.on('NodeChange', function(e) {
+                  this.fire('tiny-node');
+
+              });
+
+              ed.on('change', function () {
+                tinymce.triggerSave();
+                _this.set("value", this.getContent ());
+              });
+          }
+      });
+    },
+
+    execCommand: function(command){
+      tinyMCE.activeEditor.execCommand(command);
+    },
+
+    getContent: function(){
+      return tinyMCE.get(this.textareaId).getContent();
+    },
+
+    setContent: function(content){
+      if (tinyMCE && tinyMCE.get(this.textareaId)){
+        tinyMCE.get(this.textareaId).setContent(content);
+      }
+      
+    },
+
+    guidGenerator: function() {
+      var S4 = function() {
+         return (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+      };
+      return (S4()+S4()+"-"+S4()+"-"+S4()+"-"+S4()+"-"+S4()+S4()+S4());
+    }
+
+  });
+
+</script>
