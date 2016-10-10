@@ -73,7 +73,7 @@ $app->post('/me/profiles/select', function (Request $request, Response $response
 
 $app->get('/events', function (Request $request, Response $response) {
     $db = DB::getInstance();
-    $response->withJson($db->getEvents());
+    $response->withJson($db->getEvents ());
     return $response;
 });
 
@@ -91,17 +91,14 @@ $app->post('/profile/{id}', function (Request $request, Response $response) {
 $app->post('/events/{id}', function (Request $request, Response $response) {
     $id = $request->getAttribute("id");
     $event = $request->getParsedBody();
-    if (empty($id) || $id === "new") {
-        unset($event["_id"]);
-    } else {
-        $event["_id"] = $id;
-    }
+    $event["_id"] = empty($id) || $id === "new" ? "" : $id;
     $event["type"] = "event";
     //Now save it
     $db = DB::getInstance();
     $db->save($event);
     return $response->withJson($event);
 });
+
 
 
 $app->run();

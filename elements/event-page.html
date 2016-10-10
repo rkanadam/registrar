@@ -1,13 +1,7 @@
 <dom-module id="event-page">
     <style include="app-theme">
-    </style>
-    <style>
-        label {
-            width: 200px;
-        }
-
-        iron-form {
-            padding: 20px;
+        .pad {
+            padding-top: 30px;
         }
     </style>
     <template>
@@ -17,35 +11,56 @@
             <div class="app-button-bar layout horizontal">
                 <paper-item class="flex">[[localize('eventPageDescription')]]</paper-item>
             </div>
-            <iron-form method="post" action="/" id="basic" class="layout vertical" style="height: 100%">
+            <iron-form method="post" action="/" id="basic" style="height: 100%" class="container-fluid">
                 <input type="hidden" name="_id" value="[[event._id]]">
-                <div class="layout horizontal">
-                    <vaadin-date-picker
-                            label="[[localize('startDate')]]"
-                            value="{{event.startDate}}"></vaadin-date-picker>
-                    <time-picker
-                            value="{{event.startTime}}"
-                            label="[[localize('startTime')]]"></time-picker>
+                <div class="row bottom-xs bottom-sm center-sm">
+                    <div class="col-xs-12 col-sm-4 col-lg-3">
+                        <label>[[localize("eventStartDate")]]</label>
+                    </div>
+                    <div class="col-xs-12 col-sm-4">
+                        <vaadin-date-picker
+                                label="[[localize('startDate')]]"
+                                value="{{event.startDate}}"></vaadin-date-picker>
+                    </div>
+                    <div class="col-xs-12 col-sm-4">
+                        <time-picker
+                                value="{{event.startTime}}"
+                                label="[[localize('startTime')]]"></time-picker>
+                    </div>
                 </div>
-                <div class="layout horizontal">
-                    <vaadin-date-picker
-                            label="[[localize('endDate')]]"
-                            value="{{event.endDate}}"></vaadin-date-picker>
-                    <time-picker
-                            value="{{event.endTime}}"
-                            label="[[localize('endTime')]]"></time-picker>
+                <div class="row bottom-xs bottom-sm center-sm">
+                    <div class="col-xs-12 col-sm-4 col-lg-3">
+                        <label>[[localize("eventEndDate")]]</label>
+                    </div>
+                    <div class="col-xs-12 col-sm-4">
+                        <vaadin-date-picker
+                                label="[[localize('endDate')]]"
+                                value="{{event.endDate}}"></vaadin-date-picker>
+                    </div>
+                    <div class="col-xs-12 col-sm-4">
+                        <time-picker
+                                value="{{event.endTime}}"
+                                label="[[localize('endTime')]]"></time-picker>
+                    </div>
                 </div>
-                <div class="layout horizontal">
-                    <polymer-tinymce id="description"
-                                     tinytoolbar="insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
-                                     tinyplugins='["advlist autolink lists link image charmap print preview anchor","searchreplace visualblocks code fullscreen","insertdatetime media table contextmenu paste"]'
-                                     value="{{event.description}}"
-                    ></polymer-tinymce>
+                <div class="row bottom-xs middle-sm center-sm">
+                    <div class="col-xs-12 col-sm-4 col-lg-3">
+                        <label>[[localize("eventDescription")]]</label>
+                    </div>
+                    <div class="col-xs-12 col-sm-8 pad">
+                        <polymer-tinymce id="description"
+                                         tinytoolbar="insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+                                         tinyplugins='["advlist autolink lists link image charmap print preview anchor","searchreplace visualblocks code fullscreen","insertdatetime media table contextmenu paste"]'
+                                         value="{{event.description}}"
+                        ></polymer-tinymce>
+                    </div>
                 </div>
-                <div class="flex layout horizontal center-center">
-                    <paper-button primary raised on-tap="_onSave">[[localize('save')]]
-                    </paper-button>
-                    <paper-button secondary raised on-tap="_onReset">[[localize('reset')]]</paper-button>
+                <div class="row bottom-xs bottom-sm center-sm">
+                    <div class="col-xs-12 col-sm-4">
+                        <paper-button primary raised on-tap="_onSave">[[localize('save')]]
+                        </paper-button>
+                        <paper-button secondary raised on-tap="_onReset">[[localize('reset')]]</paper-button>
+                    </div>
                 </div>
             </iron-form>
         </div>

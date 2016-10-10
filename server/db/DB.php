@@ -92,6 +92,7 @@ class DB
             Log::log("Object update response: \n", $return);
         } else {
             Log::log("Attempting to create object: \n", $obj);
+            unset($obj["_id"]);
             $return = $this->sag->post($obj);
             Log::log("Object create response: \n", $return);
         }
