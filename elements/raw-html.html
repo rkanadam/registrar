@@ -1,0 +1,19 @@
+<dom-module id="raw-html">
+    <script>
+        Polymer({
+
+            is: 'raw-html',
+
+            properties: {
+                "html": {
+                    type: String,
+                    observer: '_htmlChanged'
+                }
+            },
+
+            _htmlChanged: function () {
+                this.innerHTML = this.html;
+            }
+        });
+    </script>
+</dom-module>

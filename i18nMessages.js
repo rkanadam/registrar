@@ -32,7 +32,7 @@ window.i18nMessages = {
         "endTime": "End Time",
         "eventDescription": "Event Description",
         "eventSavedMessage": "The event was successfully saved",
-
+        "clickToEdit": "Click to edit",
     },
     "fr": {}
 };

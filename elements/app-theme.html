@@ -1320,8 +1320,35 @@
             }
 
             paper-tab a, paper-tab a:hover, paper-tab a:visited {
-                color: white;
+                color: var(--paper-toolbar-color);
                 text-decoration: none;
+            }
+
+            paper-header-panel .paper-header {
+                background-color: var(--default-primary-color);
+                color: var(--paper-toolbar-color);
+            }
+
+            paper-header-panel paper-toolbar {
+                background-color: transparent;
+                color: var(--paper-toolbar-color);
+            }
+
+            paper-header-panel paper-toolbar paper-icon-button {
+                color: var(--paper-toolbar-color);
+            }
+
+
+            mat-header > .title{
+                background-color: transparent;
+            }
+
+            mat-header > mat-toolbar {
+                background: transparent;
+            }
+
+            paper-material {
+                @apply(--paper-font-common-base);
             }
 
         </style>

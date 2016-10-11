@@ -1,35 +1,68 @@
 <dom-module id="event-list-page">
     <style include="app-theme">
+        .event {
+            padding: 10px;
+            border-bottom: 1px var(--divider-color) solid;
+        }
 
+        .event:hover, iron-list .selected {
+            background: var(--dark-primary-color);
+            color: var(--text-primary-color);
+            cursor: pointer;
+        }
+
+        iron-list {
+            --iron-list-items-container: {
+                margin: auto;
+                width: 100%;
+            };
+        }
     </style>
     <template>
-        <div class="layout vertical" style="height: 100%;padding: 0px 20px 0px 20px">
-            <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
-            <div class="app-button-bar layout horizontal">
-                <paper-item class="flex">[[localize('eventPageDescription')]]</paper-item>
-                <a href="#events/new">
-                    <paper-button primary raised>
-                        <iron-icon icon="add-box"></iron-icon>
-                        &nbsp;&nbsp;[[localize('addNewEvent')]]
-                    </paper-button>
-                </a>
+        <neon-animated-pages style="height: 100%"
+                             selected="{{_page}}"
+                             entry-animation="fade-in-animation"
+                             exit-animation="fade-out-animation"
+                             attr-for-selected="name"
+                             fallback-selection="event-list"
+                             class="flex">
+            <div name="event-list-page" class="container" style="height: 100%;padding: 0px 20px 0px 20px">
+                <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
+                <div class="app-button-bar row">
+                    <paper-item class="col-xs-12 col-sm-9">[[localize('eventPageDescription')]]</paper-item>
+                    <a href="#events/new" class="col-xs-12 col-sm-3">
+                        <paper-button primary raised>
+                            <iron-icon icon="add-box"></iron-icon>
+                            &nbsp;&nbsp;[[localize('addNewEvent')]]
+                        </paper-button>
+                    </a>
+                </div>
+                <iron-list id="eventList" items="{{events}}" as="event" scroll-target="html" class="flex"
+                           selection-enabled selected-item="{{selectedEvent}}">
+                    <template>
+                        <paper-material class$="[[_computedClass(selected)]]"
+                                        tabindex$="[[tabindex]]"
+                                        elevation="0"
+                                        title$="[[localize('clickToEdit')]]"
+                        >
+                            <div class="col-xs-12 col-sm-9">
+                                <span><raw-html html="[[event.description]]"></raw-html></span>
+                            </div>
+                            <div class="toolbar col-xs-12 col-sm-3">
+                                <paper-icon-button icon="delete" on-tap="_deleteEvent"></paper-icon-button>
+                            </div>
+                        </paper-material>
+                    </template>
+                </iron-list>
+                <iron-ajax auto
+                           handle-as="json"
+                           url="../api.php/events"
+                           last-response="{{events}}"
+                           bubbles
+                ></iron-ajax>
             </div>
-            <iron-list id="eventList" items="events" as="event" scroll-target="html" class="flex">
-                <template>
-                    <div>
-                        <paper-item>
-                            [[event.name]]
-                        </paper-item>
-                    </div>
-                </template>
-            </iron-list>
-            <iron-ajax auto
-                       handle-as="json"
-                       url="api.php/events"
-                       last-response="{{events}}"
-                       bubbles
-            ></iron-ajax>
-        </div>
+            <event-page name="event-page" event="{{selectedEvent}}"></event-page>
+        </neon-animated-pages>
     </template>
     <script>
         Polymer({
@@ -43,8 +76,37 @@
             properties: {
                 "events": {
                     type: Array
+                },
+                "selectedEvent": {
+                    type: Object,
+                    value: null,
+                    observer: "_selectedEventChanged"
+                },
+
+                "_page": {
+                    type: String,
+                    value: "event-list-page"
                 }
+            },
+
+            _editEvent: function (e) {
+                this.selectedEvent = e.model.event;
+            },
+
+            _deleteEvent: function (e) {
+
+            },
+
+            _selectedEventChanged: function () {
+                if (this.selectedEvent) {
+                    this.set("_page", "event-page");
+                }
+            },
+
+            _computedClass: function (selected) {
+                return "row event" + (selected ? " selected" : "");
             }
+
         });
     </script>
 </dom-module>
