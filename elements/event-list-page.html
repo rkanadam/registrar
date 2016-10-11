@@ -19,8 +19,8 @@
         }
     </style>
     <template>
-        <neon-animated-pages style="height: 100%"
-                             selected="{{_page}}"
+        <neon-animated-pages id="pages"
+                             style="height: 100%"
                              entry-animation="fade-in-animation"
                              exit-animation="fade-out-animation"
                              attr-for-selected="name"
@@ -37,7 +37,7 @@
                         </paper-button>
                     </a>
                 </div>
-                <iron-list id="eventList" items="{{events}}" as="event" scroll-target="html" class="flex"
+                <iron-list items="{{events}}" as="event" scroll-target="html" class="flex"
                            selection-enabled selected-item="{{selectedEvent}}">
                     <template>
                         <paper-material class$="[[_computedClass(selected)]]"
@@ -89,12 +89,25 @@
                 }
             },
 
+            observers: [
+                "_onSelectedPageIdChanged(selectedPageId)"
+            ],
+
             _editEvent: function (e) {
                 this.selectedEvent = e.model.event;
             },
 
             _deleteEvent: function (e) {
 
+            },
+
+            _onSelectedPageIdChanged: function (selectedPageId) {
+                if (!this.selectedPageId) {
+                    this.$.pages.set("selected", "event-list-page");
+                } else if (this.selectedPageId === "new") {
+                    this.set("selectedEvent", {});
+                    this.$.pages.set("selected", "event-page");
+                }
             },
 
             _selectedEventChanged: function () {

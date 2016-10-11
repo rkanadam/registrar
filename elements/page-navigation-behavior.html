@@ -1,83 +1,56 @@
 <script>
     var PageNavigationBehavior = {
         properties: {
-            page: {
+            selectedPage: {
+                type: Object,
+                observer: '_selectedPageChanged'
+            },
+
+            path: {
                 type: String,
-                observer: "_pageChanged"
+                observer: "_pathChanged",
+                notify: true
+            },
+
+            pathHead: {
+                type: String
+            },
+
+            pathTail: {
+                type: String
+            },
+
+            selectedPageId: {
+                type: String,
+                notify: true
+            },
+
+            pageId: {
+                type: String,
             }
         },
 
-        observers: [
-            '_pageIdChanged(route, routeData.pageId)'
-        ],
-
-        attached: function () {
-            this._pageId = "";
+        _selectedPageChanged: function () {
+            if (!this.selectedPage) {
+                return;
+            }
+            this.selectedPage.set("path", this.pageTail);
+            this.selectedPage.set("pageId", this.selectedPageId);
         },
 
-        _pageIdChanged: function (route, pageId) {
-            if (route === undefined || pageId === undefined) {
+        _pathChanged: function (path) {
+            if (path === undefined || path === null) {
                 return;
             }
-            if (!this._isRouteChangeApplicableToMe()) {
-                return;
-            }
-            var pageId = route.path === "" ? "" : pageId;
-            this._pageId = pageId;
-            var page = this._getPage(pageId);
-            if (page === undefined) {
-                return;
-            }
-            if (this.page !== page) {
-                this.set("page", page);
-            }
-        },
-
-        _isRouteChangeApplicableToMe: function () {
-            return true;
-            if (this.parentElement) {
-                if (this.parentElement.attrForSelected) {
-                    var myPageName = this.getAttribute(this.parentElement.attrForSelected);
-                    return myPageName == this.parentElement.selected || myPageName == this.parentElement.fallbackSelection;
+            var parts = path.split("/");
+            var selectedPageId = parts.shift();
+            var tail = parts.join("/");
+            this.set("selectedPageId", selectedPageId);
+            this.set("pageTail", tail);
+            if (this.selectedPage) {
+                if (this.selectedPage.pageId === selectedPageId) {
+                    this.selectedPage.set("path", tail);
                 }
-            }
-            return false;
-        },
-
-        _pageChanged: function (page) {
-            if (page === undefined) {
-                return "";
-            }
-
-            var hash = this._getHash(page);
-            if (hash && hash[0] !== "/") {
-                hash = "/" + hash;
-            }
-            if (this.$.route && this.$.route.route && this.$.route.route.path.indexOf(hash) !== -1){
-                this.$.route.set("route.path", hash);
-            }
-        },
-
-        _getPage: function (pageId) {
-            if (!pageId) {
-                return "list";
-            }
-            if (pageId === "new") {
-                return "new";
-            }
-            return pageId;
-        },
-
-        _getHash: function (page) {
-            switch (page) {
-                case "list":
-                    return "";
-                case "new":
-                    return "new";
-                case "edit":
-                    return this._pageId ? this._pageId : "edit";
-                default:
-                    return page;
             }
         }
     };

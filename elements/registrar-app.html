@@ -118,17 +118,16 @@
                 <profile-selector-dialog id="profileSelector" auto-open selected-profile="{{profile}}"
                                          profiles="{{profiles}}"></profile-selector-dialog>
                 <neon-animated-pages style="height: 90vh"
-                                     selected="{{page}}"
+                                     selected="{{selectedPageId}}"
+                                     selected-item="{{selectedPage}}"
                                      entry-animation="fade-in-animation"
                                      exit-animation="fade-out-animation"
                                      attr-for-selected="id"
                                      class="flex">
-                    <profile-page id="profilePage" route="{{subroute}}" profile="{{profile}}"
+                    <profile-page id="profile" route="{{subroute}}" profile="{{profile}}"
                                   language="[[language]]"></profile-page>
-                    <event-list-page id="eventListPage" route="{{subroute}}"
+                    <event-list-page id="events" route="{{subroute}}"
                                      language="[[language]]"></event-list-page>
-                    <event-page id="eventPage" route="{{subroute}}"
-                                language="[[language]]"></event-page>
                 </neon-animated-pages>
             </app-header-layout>
         </app-drawer-layout>
@@ -167,11 +166,6 @@
                     value: [],
                 },
 
-                path: {
-                    type: String,
-                    observer: '_onPathChanged'
-                },
-
                 "page": {
                     type: String
                 }
@@ -205,7 +199,7 @@
                 }
             },
 
-            _onPathChanged: function (path) {
+            _onMyHashChanged: function (path) {
                 if (!path) {
                     return;
                 }
