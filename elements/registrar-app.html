@@ -91,8 +91,7 @@
                     <app-toolbar hidden$="{{!wideLayout}}" class="layout horizontal">
                         <paper-tabs selected="{{path}}" attr-for-selected="name">
                             <template is="dom-repeat" items="{{tabs}}" as="tab">
-                                <paper-tab name="{{tab}}">{{localize(tab)}}</span>
-                                </paper-tab>
+                                <paper-tab name="{{tab}}">{{localize(tab)}}</paper-tab>
                             </template>
                         </paper-tabs>
                         <div class="flex"></div>
@@ -195,26 +194,6 @@
                 if (this.profile) {
                     if (!this.page) {
                         this.set("page", "profile");
-                    }
-                }
-            },
-
-            _onMyHashChanged: function (path) {
-                if (!path) {
-                    return;
-                }
-                var parts = _.compact(path.split("/"));
-
-                var part = parts.shift();
-                if (part === "profile") {
-                    this.set("page", "profilePage");
-                } else if (part === "events") {
-                    if (parts.length === 0) {
-                        this.set("page", "eventListPage");
-                    }
-                    if (parts.length === 1) {
-                        this.$.eventPage.eventId = parts[0];
-                        this.set("page", "eventPage");
                     }
                 }
             }

@@ -13,7 +13,8 @@
             },
 
             pathHead: {
-                type: String
+                type: String,
+                value: ""
             },
 
             pathTail: {
@@ -26,7 +27,7 @@
             },
 
             pageId: {
-                type: String,
+                type: String
             }
         },
 
@@ -34,22 +35,27 @@
             if (!this.selectedPage) {
                 return;
             }
-            this.selectedPage.set("path", this.pageTail);
-            this.selectedPage.set("pageId", this.selectedPageId);
+            this.selectedPage.pathHead = this.pathHead ? (this.pathHead + "/" + this.selectedPageId) : this.selectedPageId;
+            this.selectedPage.path = this.pageTail;
+            this.selectedPage.pageId = this.selectedPageId;
         },
 
         _pathChanged: function (path) {
             if (path === undefined || path === null) {
                 return;
             }
+            if (path[0] === "/") {
+                path = path.substring(1);
+            }
             var parts = path.split("/");
             var selectedPageId = parts.shift();
             var tail = parts.join("/");
-            this.set("selectedPageId", selectedPageId);
-            this.set("pageTail", tail);
+            this.selectedPageId = selectedPageId;
+            this.pageTail = tail;
             if (this.selectedPage) {
                 if (this.selectedPage.pageId === selectedPageId) {
-                    this.selectedPage.set("path", tail);
+                    this.selectedPage.pathHead = this.pathHead ? (this.pathHead + "/" + this.selectedPageId) : this.selectedPageId;
+                    this.selectedPage.path = this.pageTail;
                 }
             }
         }

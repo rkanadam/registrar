@@ -11,64 +11,86 @@
             <paper-header-panel mode="waterfall" class="flex">
                 <div class="paper-header">
                     <paper-item class="title flex">[[localize('eventPageDescription')]]</paper-item>
-                    <paper-toolbar>
-                        <paper-icon-button icon="add">Add</paper-icon-button>
-                        <paper-icon-button icon="delete">Delete</paper-icon-button>
-                    </paper-toolbar>
                 </div>
+                <paper-tabs id="tabs" attr-for-selected="name">
+                    <paper-tab name="event-page"><a href="#events/new">{{localize('event')}}</a></paper-tab>
+                    <paper-tab name="track-list-page"><a href="#events/new/tracks">{{localize('tracks')}}</a>
+                    </paper-tab>
+                </paper-tabs>
                 <div>
-                    <iron-form method="post" action="/" id="basic" style="height: 100%" class="container-fluid">
-                        <input type="hidden" name="_id" value="[[event._id]]">
-                        <div class="row bottom-xs bottom-sm center-sm">
-                            <div class="col-xs-12 col-sm-4 col-lg-3">
-                                <label>[[localize("eventStartDate")]]</label>
-                            </div>
-                            <div class="col-xs-12 col-sm-4">
-                                <vaadin-date-picker
-                                        label="[[localize('startDate')]]"
-                                        value="{{event.startDate}}"></vaadin-date-picker>
-                            </div>
-                            <div class="col-xs-12 col-sm-4">
-                                <time-picker
-                                        value="{{event.startTime}}"
-                                        label="[[localize('startTime')]]"></time-picker>
-                            </div>
+                    <neon-animated-pages id="pages"
+                                         style="height: 100%"
+                                         entry-animation="fade-in-animation"
+                                         exit-animation="fade-out-animation"
+                                         attr-for-selected="name"
+                                         fallback-selection="event-list"
+                                         selected-item="{{selectedPage}}"
+                                         class="flex">
+                        <div name="event-page">
+                            <iron-form method="post" action="/" id="basic" style="height: 100%" class="container">
+                                <div class="row left-xs bottom-xs bottom-sm left-sm">
+                                    <div class="col-xs-12 col-sm-3 col-lg-3">
+                                        <label>[[localize("eventName")]]</label>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-8 pad">
+                                        <paper-input value="{{event.name}}"
+                                                     label="[[localize('eventName')]]"></paper-input>
+                                    </div>
+                                </div>
+                                <div class="row left-xs bottom-xs bottom-sm left-sm">
+                                    <div class="col-xs-12 col-sm-3">
+                                        <label>[[localize("eventStartDate")]]</label>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <vaadin-date-picker
+                                                label="[[localize('startDate')]]"
+                                                value="{{event.startDate}}"></vaadin-date-picker>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <time-picker
+                                                value="{{event.startTime}}"
+                                                label="[[localize('startTime')]]"></time-picker>
+                                    </div>
+                                </div>
+                                <div class="row left-xs bottom-xs bottom-sm left-sm">
+                                    <div class="col-xs-12 col-sm-3 col-lg-3">
+                                        <label>[[localize("eventEndDate")]]</label>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <vaadin-date-picker
+                                                label="[[localize('endDate')]]"
+                                                value="{{event.endDate}}"></vaadin-date-picker>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-4">
+                                        <time-picker
+                                                value="{{event.endTime}}"
+                                                label="[[localize('endTime')]]"></time-picker>
+                                    </div>
+                                </div>
+                                <div class="row left-xs bottom-xs middle-sm left-sm">
+                                    <div class="col-xs-12 col-sm-3 col-lg-3">
+                                        <label>[[localize("eventDescription")]]</label>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-8 pad">
+                                        <polymer-tinymce id="description"
+                                                         tinytoolbar="insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+                                                         tinyplugins='["advlist autolink lists link image charmap print preview anchor","searchreplace visualblocks code fullscreen","insertdatetime media table contextmenu paste"]'
+                                                         value="{{event.description}}"
+                                        ></polymer-tinymce>
+                                    </div>
+                                </div>
+                                <div class="row bottom-xs bottom-sm center-sm">
+                                    <div class="col-xs-12 col-sm-12 col-lg-12 center-xs center-sm">
+                                        <paper-button primary raised on-tap="_onSave">[[localize('save')]]
+                                        </paper-button>
+                                        <paper-button secondary raised on-tap="_onReset">[[localize('reset')]]
+                                        </paper-button>
+                                    </div>
+                                </div>
+                            </iron-form>
                         </div>
-                        <div class="row bottom-xs bottom-sm center-sm">
-                            <div class="col-xs-12 col-sm-4 col-lg-3">
-                                <label>[[localize("eventEndDate")]]</label>
-                            </div>
-                            <div class="col-xs-12 col-sm-4">
-                                <vaadin-date-picker
-                                        label="[[localize('endDate')]]"
-                                        value="{{event.endDate}}"></vaadin-date-picker>
-                            </div>
-                            <div class="col-xs-12 col-sm-4">
-                                <time-picker
-                                        value="{{event.endTime}}"
-                                        label="[[localize('endTime')]]"></time-picker>
-                            </div>
-                        </div>
-                        <div class="row bottom-xs middle-sm center-sm">
-                            <div class="col-xs-12 col-sm-4 col-lg-3">
-                                <label>[[localize("eventDescription")]]</label>
-                            </div>
-                            <div class="col-xs-12 col-sm-8 pad">
-                                <polymer-tinymce id="description"
-                                                 tinytoolbar="insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
-                                                 tinyplugins='["advlist autolink lists link image charmap print preview anchor","searchreplace visualblocks code fullscreen","insertdatetime media table contextmenu paste"]'
-                                                 value="{{event.description}}"
-                                ></polymer-tinymce>
-                            </div>
-                        </div>
-                        <div class="row bottom-xs bottom-sm center-sm">
-                            <div class="col-xs-12 col-sm-4">
-                                <paper-button primary raised on-tap="_onSave">[[localize('save')]]
-                                </paper-button>
-                                <paper-button secondary raised on-tap="_onReset">[[localize('reset')]]</paper-button>
-                            </div>
-                        </div>
-                    </iron-form>
+                        <track-list-page name="track-list-page" event="{{event}}"></track-list-page>
+                    </neon-animated-pages>
                 </div>
             </paper-header-panel>
         </div>
@@ -103,8 +125,19 @@
             },
 
             observers: [
-                '_onEventChanged(event)'
+                "_onEventChanged(event)",
+                "_onSelectedPageIdChanged(selectedPageId)"
             ],
+
+            _onSelectedPageIdChanged: function (selectedPageId) {
+                if (!this.selectedPageId) {
+                    this.$.pages.set("selected", "event-page");
+                    this.$.tabs.set("selected", "event-page");
+                } else if (this.selectedPageId === "tracks") {
+                    this.$.pages.set("selected", "track-list-page");
+                    this.$.tabs.set("selected", "track-list-page");
+                }
+            },
 
             _onEventChanged: function (event) {
                 if (event) {

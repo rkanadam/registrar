@@ -1,4 +1,4 @@
-<dom-module id="event-list-page">
+<dom-module id="track-list-page">
     <style include="app-theme">
         .event {
             padding: 10px;
@@ -30,7 +30,7 @@
             <div name="event-list-page" class="container" style="height: 100%;padding: 0px 20px 0px 20px">
                 <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
                 <div class="app-button-bar row">
-                    <paper-item class="col-xs-12 col-sm-9">[[localize('eventPageDescription')]]</paper-item>
+                    <paper-item class="col-xs-12 col-sm-9">[[localize('eventTrackListPageDescription')]]</paper-item>
                     <a href="#events/new" class="col-xs-12 col-sm-3">
                         <paper-button primary raised>
                             <iron-icon icon="add-box"></iron-icon>
@@ -38,7 +38,8 @@
                         </paper-button>
                     </a>
                 </div>
-                <iron-list items="{{events}}" as="event" scroll-target="html" class="flex">
+                <iron-list items="{{events}}" as="event" scroll-target="html" class="flex"
+                           selection-enabled selected-item="{{selectedEvent}}">
                     <template>
                         <paper-material class$="[[_computedClass(selected)]]"
                                         tabindex$="[[tabindex]]"
@@ -46,13 +47,7 @@
                                         title$="[[localize('clickToEdit')]]"
                         >
                             <div class="col-xs-12 col-sm-9">
-                                <a href="#[[pathHead]]/[[event._id]]">
-                                    <div>[[event.name]]</div>
-                                    <div>
-                                        <raw-html
-                                                html="[[event.description]]"></raw-html>
-                                    </div>
-                                </a>
+                                <span><raw-html html="[[event.description]]"></raw-html></span>
                             </div>
                             <div class="toolbar col-xs-12 col-sm-3">
                                 <paper-icon-button icon="delete" on-tap="_deleteEvent"></paper-icon-button>
@@ -68,13 +63,12 @@
                            bubbles
                 ></iron-ajax>
             </div>
-            <event-page id="eventEditPage" name="event-page" event="{{selectedEvent}}"></event-page>
         </neon-animated-pages>
     </template>
     <script>
         Polymer({
 
-            is: 'event-list-page',
+            is: 'track-list-page',
 
             behaviors: [
                 AppBehaviors.AppBehavior
@@ -83,12 +77,21 @@
             properties: {
                 "events": {
                     type: Array
+                },
+                "selectedEvent": {
+                    type: Object,
+                    value: null,
+                    observer: "_selectedEventChanged"
+                },
+
+                "_page": {
+                    type: String,
+                    value: "event-list-page"
                 }
             },
 
             observers: [
-                "_onSelectedPageIdChanged(selectedPageId)",
-                "_onEventsChanged(events)"
+                "_onSelectedPageIdChanged(selectedPageId)"
             ],
 
             _editEvent: function (e) {
@@ -100,23 +103,17 @@
             },
 
             _onSelectedPageIdChanged: function (selectedPageId) {
-                if (!selectedPageId) {
+                if (!this.selectedPageId) {
                     this.$.pages.set("selected", "event-list-page");
-                } else if (selectedPageId === "new") {
-                    this.$.eventEditPage.event = {};
+                } else if (this.selectedPageId === "new") {
+                    this.set("selectedEvent", {});
                     this.$.pages.set("selected", "event-page");
-                } else {
-                    var event = _.find(this.events, {"_id": selectedPageId});
-                    if (event) {
-                        this.$.eventEditPage.event = event;
-                        this.$.pages.set("selected", "event-page");
-                    }
                 }
             },
 
-            _onEventsChanged: function (events) {
-                if (this.selectedPageId && this.selectedPageId !== "new") {
-                    this._onSelectedPageIdChanged(this.selectedPageId);
+            _selectedEventChanged: function () {
+                if (this.selectedEvent) {
+                    this.set("_page", "event-page");
                 }
             },
 

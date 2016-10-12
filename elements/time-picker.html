@@ -168,7 +168,8 @@
                  * @type {String}
                  */
                 value: {
-                    type: String
+                    type: String,
+                    notify: true
                 },
 
                 /**
@@ -240,6 +241,14 @@
                     type: String,
                     observer: "_timeChanged"
                 }
+            },
+
+            observers: [
+                '_onTimePickerValueChanged(timePickerValue)'
+            ],
+
+            _onTimePickerValueChanged: function (time) {
+                this.value = time;
             },
 
             // TODO: revisit this in order to use validatable-behavior for both the full and

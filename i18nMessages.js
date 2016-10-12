@@ -26,6 +26,8 @@ window.i18nMessages = {
         "operationSuccessfulMessage": "Your operation was successful",
         "startDate": "Start Date",
         "startTime": "Start Time",
+        "event": "Event",
+        "eventName": "Event Name",
         "eventStartDate": "Event start date and time",
         "eventEndDate": "Event end date and time",
         "endDate": "End Date",
@@ -33,6 +35,9 @@ window.i18nMessages = {
         "eventDescription": "Event Description",
         "eventSavedMessage": "The event was successfully saved",
         "clickToEdit": "Click to edit",
+        "tracks": "Tracks",
+        "eventTrackListPageDescription": "Use this page to create tracks for your event. An event may have multiple tracks, for e.g. there could be an adult Track, a SSE track, a women only track or a music track. Each track can have its own activities and workshops.",
+
     },
     "fr": {}
 };
