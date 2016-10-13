@@ -32,11 +32,7 @@
                                 on-click="_showProfileSelector">
                         </paper-icon-button>
                     </paper-toolbar>
-                    <paper-menu selected="{{path}}" attr-for-selected="name">
-                        <template is="dom-repeat" items="{{tabs}}" as="tab">
-                            <paper-item name="{{tab}}"><a href$="#[[tab]]">[[localize(tab)]]</a></paper-item>
-                        </template>
-                    </paper-menu>
+                    <recursive-menu items="{{menus}}" selected-item="{{selectedMenuItem}}"></recursive-menu>
                 </paper-header-panel>
             </app-drawer>
             <div id="content">
@@ -81,11 +77,9 @@
                     observer: 'onLayoutChange'
                 },
 
-                tabs: {
+                menus: {
                     type: Array,
-                    value: function () {
-                        return ['notifications', 'events', 'reports', 'messages'];
-                    }
+                    value: []
                 },
 
                 profile: {
@@ -100,12 +94,39 @@
 
                 "page": {
                     type: String
+                },
+
+                selectedMenuItem: {
+                    type: Object,
+                    observer: "_onSelectedMenuItemChanged"
                 }
             },
 
             behaviors: [
                 AppBehaviors.AppBehavior
             ],
+
+            _onSelectedMenuItemChanged: function () {
+                if (this.selectedMenuItem) {
+                    this.set("path", this.selectedMenuItem.path);
+                }
+            },
+
+            attached: function () {
+                this.menus = [{
+                    label: this.localize('notifications'),
+                    path: "notifications"
+                }, {
+                    label: this.localize('events'),
+                    path: "events"
+                }, {
+                    label: this.localize('reports'),
+                    path: "reports"
+                }, {
+                    label: this.localize('messages'),
+                    path: "messages"
+                }];
+            },
 
             onLayoutChange: function (wide) {
                 var drawer = this.$.drawer;

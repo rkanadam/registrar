@@ -1,0 +1,61 @@
+<dom-module id="recursive-menu">
+    <template>
+        <style is="custom-style" include="app-theme"></style>
+        <paper-menu selected-item="{{selectedMenuItem}}">
+            <template is="dom-repeat" items="[[items]]" as="menu">
+                <template is="dom-if" if="[[!_hasChildren(menu)]]">
+                    <paper-item menu="[[menu]]">[[menu.label]]</paper-item>
+                </template>
+                <template is="dom-if" if="[[_hasChildren(menu)]]">
+                    <paper-submenu>
+                        <paper-item menu="[[menu]]" class="menu-trigger">[[menu.label]]</paper-item>
+                        <div style="padding-left: 10px" class="menu-content">
+                            <recursive-menu items="[[menu.children]]"
+                                            selected-item="{{selectedMenuItem}}"></recursive-menu>
+                        </div>
+                    </paper-submenu>
+                </template>
+            </template>
+        </paper-menu>
+    </template>
+    <script>
+        Polymer({
+            is: 'recursive-menu',
+
+            properties: {
+                items: {
+                    type: Array,
+                    value: [],
+                    notify: true
+                },
+                attrForSelected: {
+                    type: String,
+                    notify: true
+                },
+                selected: {
+                    type: Object,
+                    notify: true
+                },
+                selectedItem: {
+                    type: Object,
+                    notify: true
+                },
+
+                selectedMenuItem: {
+                    type: Object,
+                    observer: "_onSelectedMenuItemChanged"
+                }
+            },
+
+            _onSelectedMenuItemChanged: function () {
+                if (this.selectedMenuItem) {
+                    this.set("selectedItem", this.selectedMenuItem.menu);
+                }
+            },
+
+            _hasChildren: function (menu) {
+                return menu && menu.children && menu.children.length > 0;
+            }
+        });
+    </script>
+</dom-module>
