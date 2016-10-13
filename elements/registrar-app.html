@@ -3,16 +3,6 @@
     <template>
         <style include="app-theme"></style>
         <style include="iron-flex iron-flex-alignment">
-
-            .main-header {
-                box-shadow: 0px 5px 6px -3px rgba(0, 0, 0, 0.4);
-            }
-
-            app-toolbar#wideLayoutToolbar paper-icon-button {
-                padding: 5px;
-                margin: 3px 0px 5px 0px;
-            }
-
             paper-dialog.notificationAndInvites {
                 width: 80vw;
                 height: 60vh;
@@ -48,89 +38,87 @@
                 text-decoration: underline;
             }
 
+            #drawer paper-toolbar {
+                background-color: var(--paper-purple-700);
+                color: white;
+                min-height: 30px;
+                padding: 15px 5px;
+            }
+
+            #drawer paper-menu, #drawer paper-header-panel {
+                background-color: var(--paper-deep-purple-50);
+            }
+
+            #content paper-toolbar {
+                background-color: var(--paper-indigo-700);
+                color: white;
+                min-height: 40px;
+                padding: 15px 5px;
+            }
+
+            #drawer paper-menu, #drawer paper-header-panel {
+                background-color: var(--paper-deep-purple-50);
+            }
+
+            #drawer a, #drawer a:active, #drawer a:visited, #drawer a:focus, #drawer a:hover {
+                color: white;
+                text-decoration: none;
+                font-size: 16px;
+                cursor: pointer;
+            }
         </style>
 
-        <app-drawer-layout force-narrow>
-
+        <app-drawer-layout>
             <app-drawer id="drawer">
-
-                <app-toolbar></app-toolbar>
-
-                <!-- Nav on mobile: side nav menu -->
-                <paper-menu selected="{{page}}" attr-for-selected="name">
-                    <template is="dom-repeat" items="{{tabs}}" as="tab">
-                        <a href="#profile">
-                            <paper-item name="{{tab}}">{{tab}}</paper-item>
-                        </a>
-                    </template>
-                </paper-menu>
-
-            </app-drawer>
-
-            <app-header-layout>
-                <app-header class="main-header">
-
-                    <app-toolbar hidden$="{{wideLayout}}">
-                        <paper-icon-button class="menu-button" icon="menu" drawer-toggle></paper-icon-button>
-                        <div main-title></div>
-                        <a href="#profile" class="profile">
-                            <paper-icon-button icon="account-box" alt="User Name"
-                                               title$="{{localize('signedInAs', 'name', profile.name, 'email', profile.email)}}"
-                                               click="_showProfilePage()">Edit Profile
-                            </paper-icon-button>
-                        </a>
-                        <paper-icon-button
-                                hidden$="[[!_isProfileSelectorEnabled(profiles)]]"
-                                icon="arrow-drop-down"
-                                title="Show other profiles"
-                                on-click="_showProfileSelector">
-                        </paper-icon-button>
-
-                    </app-toolbar>
-
-                    <app-toolbar hidden$="{{!wideLayout}}" class="layout horizontal">
-                        <paper-tabs selected="{{path}}" attr-for-selected="name">
-                            <template is="dom-repeat" items="{{tabs}}" as="tab">
-                                <paper-tab name="{{tab}}">{{localize(tab)}}</paper-tab>
-                            </template>
-                        </paper-tabs>
-                        <div class="flex"></div>
-                        <paper-tabs selected="{{path}}" attr-for-selected="name">
-                            <paper-tab name="profile" class="flex">
+                <paper-header-panel style="height: 100vh">
+                    <paper-toolbar>
+                        <div class="middle title">
+                            <a href="#profile">
                                 <paper-icon-button icon="account-box" alt="User Name"
                                                    title$="{{localize('signedInAs', 'name', profile.name, 'email', profile.email)}}"
                                                    click="_showProfilePage()">Edit Profile
                                 </paper-icon-button>
                                 <span>[[profile.name]]</span>
-                            </paper-tab>
-                        </paper-tabs>
-                        <paper-icon-button
-                                hidden$="[[!_isProfileSelectorEnabled(profiles)]]"
-                                icon="arrow-drop-down"
-                                title="Show other profiles"
-                                on-click="_showProfileSelector">
-                        </paper-icon-button>
-                    </app-toolbar>
-
-
-                </app-header>
-                <profile-selector-dialog id="profileSelector" auto-open selected-profile="{{profile}}"
-                                         profiles="{{profiles}}"></profile-selector-dialog>
-                <neon-animated-pages style="height: 90vh"
-                                     selected="{{selectedPageId}}"
-                                     selected-item="{{selectedPage}}"
-                                     entry-animation="fade-in-animation"
-                                     exit-animation="fade-out-animation"
-                                     attr-for-selected="id"
-                                     class="flex">
-                    <profile-page id="profile" route="{{subroute}}" profile="{{profile}}"
-                                  language="[[language]]"></profile-page>
-                    <event-list-page id="events" route="{{subroute}}"
-                                     language="[[language]]"></event-list-page>
-                </neon-animated-pages>
-            </app-header-layout>
+                            </a>
+                            <paper-icon-button
+                                    hidden$="[[!_isProfileSelectorEnabled(profiles)]]"
+                                    icon="arrow-drop-down"
+                                    title="Show other profiles"
+                                    on-click="_showProfileSelector">
+                            </paper-icon-button>
+                        </div>
+                    </paper-toolbar>
+                    <paper-menu selected="{{path}}" attr-for-selected="name">
+                        <template is="dom-repeat" items="{{tabs}}" as="tab">
+                            <paper-item name="{{tab}}">[[localize(tab)]]</paper-item>
+                        </template>
+                    </paper-menu>
+                </paper-header-panel>
+            </app-drawer>
+            <div id="content">
+                <paper-header-panel style="height: 100vh">
+                    <paper-toolbar>
+                        <div class="middle title">
+                            [[selectedPageId]]
+                        </div>
+                    </paper-toolbar>
+                    <neon-animated-pages selected="{{selectedPageId}}"
+                                         selected-item="{{selectedPage}}"
+                                         entry-animation="fade-in-animation"
+                                         exit-animation="fade-out-animation"
+                                         attr-for-selected="id"
+                                         class="fit">
+                        <profile-page id="profile" route="{{subroute}}" profile="{{profile}}"
+                                      language="[[language]]"></profile-page>
+                        <event-list-page id="events" route="{{subroute}}"
+                                         language="[[language]]"></event-list-page>
+                    </neon-animated-pages>
+                </paper-header-panel>
+            </div>
         </app-drawer-layout>
 
+        <profile-selector-dialog id="profileSelector" auto-open selected-profile="{{profile}}"
+                                 profiles="{{profiles}}"></profile-selector-dialog>
 
         <iron-media-query query="min-width: 600px" query-matches="{{wideLayout}}"></iron-media-query>
         <iron-location hash="{{path}}"></iron-location>

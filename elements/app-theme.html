@@ -67,6 +67,7 @@
             }
 
             a, a:active, a:visited, a:focus {
+                @apply(--paper-font-common-base);
                 color: #5ca1d2;
                 text-decoration: none;
             }
@@ -1306,7 +1307,7 @@
             }
         </style>
         <style is="custom-style">
-            app-header {
+            app-header, app-toolbar {
                 background: var(--paper-toolbar-background);
             }
 
@@ -1319,18 +1320,8 @@
                 padding: 20px;
             }
 
-            paper-tab a, paper-tab a:hover, paper-tab a:visited {
-                color: var(--paper-toolbar-color);
-                text-decoration: none;
-            }
-
             paper-header-panel .paper-header {
                 background-color: var(--default-primary-color);
-                color: var(--paper-toolbar-color);
-            }
-
-            paper-header-panel paper-toolbar {
-                background-color: transparent;
                 color: var(--paper-toolbar-color);
             }
 
@@ -1339,16 +1330,12 @@
             }
 
 
-            mat-header > .title{
-                background-color: transparent;
-            }
-
-            mat-header > mat-toolbar {
-                background: transparent;
-            }
-
-            paper-material {
+            paper-material,paper-toolbar {
                 @apply(--paper-font-common-base);
+            }
+
+            paper-toolbar {
+                background-color: var(--google-grey-300);
             }
 
         </style>

@@ -20,46 +20,54 @@
     </style>
     <template>
         <neon-animated-pages id="pages"
-                             style="height: 100%"
                              entry-animation="fade-in-animation"
                              exit-animation="fade-out-animation"
                              attr-for-selected="name"
                              fallback-selection="event-list"
                              selected-item="{{selectedPage}}"
-                             class="flex">
-            <div name="event-list-page" class="container" style="height: 100%;padding: 0px 20px 0px 20px">
+                             style="height:100%"
+        >
+            <div name="event-list-page">
                 <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
-                <div class="app-button-bar row">
-                    <paper-item class="col-xs-12 col-sm-9">[[localize('eventPageDescription')]]</paper-item>
-                    <a href="#events/new" class="col-xs-12 col-sm-3">
-                        <paper-button primary raised>
-                            <iron-icon icon="add-box"></iron-icon>
-                            &nbsp;&nbsp;[[localize('addNewEvent')]]
-                        </paper-button>
-                    </a>
-                </div>
-                <iron-list items="{{events}}" as="event" scroll-target="html" class="flex">
-                    <template>
-                        <paper-material class$="[[_computedClass(selected)]]"
-                                        tabindex$="[[tabindex]]"
-                                        elevation="0"
-                                        title$="[[localize('clickToEdit')]]"
-                        >
+                <paper-header-panel>
+                    <paper-toolbar>
+                        <div class="row bottom-xs bottom-sm center-xs right-sm">
                             <div class="col-xs-12 col-sm-9">
-                                <a href="#[[pathHead]]/[[event._id]]">
-                                    <div>[[event.name]]</div>
-                                    <div>
-                                        <raw-html
-                                                html="[[event.description]]"></raw-html>
-                                    </div>
+                                <paper-item>[[localize('eventPageDescription')]]</paper-item>
+                            </div>
+                            <div class="col-xs-12 col-sm-3">
+                                <a href="#events/new">
+                                    <paper-button primary raised>
+                                        <iron-icon icon="add-box"></iron-icon>
+                                        &nbsp;&nbsp;[[localize('addNewEvent')]]
+                                    </paper-button>
                                 </a>
                             </div>
-                            <div class="toolbar col-xs-12 col-sm-3">
-                                <paper-icon-button icon="delete" on-tap="_deleteEvent"></paper-icon-button>
-                            </div>
-                        </paper-material>
-                    </template>
-                </iron-list>
+                        </div>
+                    </paper-toolbar>
+                    <iron-list items="{{events}}" as="event" scroll-target="html" class="fit">
+                        <template>
+                            <paper-material class$="[[_computedClass(selected)]]"
+                                            tabindex$="[[tabindex]]"
+                                            elevation="0"
+                                            title$="[[localize('clickToEdit')]]"
+                            >
+                                <div class="col-xs-12 col-sm-9">
+                                    <a href="#[[pathHead]]/[[event._id]]">
+                                        <div>[[event.name]]</div>
+                                        <div>
+                                            <raw-html
+                                                    html="[[event.description]]"></raw-html>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="toolbar col-xs-12 col-sm-3">
+                                    <paper-icon-button icon="delete" on-tap="_deleteEvent"></paper-icon-button>
+                                </div>
+                            </paper-material>
+                        </template>
+                    </iron-list>
+                </paper-header-panel>
                 <iron-ajax id="listAjax"
                            auto
                            handle-as="json"
