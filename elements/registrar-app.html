@@ -32,7 +32,7 @@
                                 on-click="_showProfileSelector">
                         </paper-icon-button>
                     </paper-toolbar>
-                    <recursive-menu items="{{menus}}" selected-item="{{selectedMenuItem}}"></recursive-menu>
+                    <recursive-menu id = "menu" items="{{menus}}" selected-item="{{selectedMenuItem}}" selected-path="[[path]]"></recursive-menu>
                 </paper-header-panel>
             </app-drawer>
             <div id="content">
@@ -108,24 +108,25 @@
 
             _onSelectedMenuItemChanged: function () {
                 if (this.selectedMenuItem) {
-                    this.set("path", this.selectedMenuItem.path);
+                    this.set("path", this.selectedMenuItem.id);
                 }
             },
 
             attached: function () {
                 this.menus = [{
                     label: this.localize('notifications'),
-                    path: "notifications"
+                    id: "notifications"
                 }, {
                     label: this.localize('events'),
-                    path: "events"
+                    id: "events"
                 }, {
                     label: this.localize('reports'),
-                    path: "reports"
+                    id: "reports"
                 }, {
                     label: this.localize('messages'),
-                    path: "messages"
+                    id: "messages"
                 }];
+                this.$.menu.set("selectedPath", this.path);
             },
 
             onLayoutChange: function (wide) {

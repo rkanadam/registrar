@@ -1,7 +1,7 @@
 <dom-module id="recursive-menu">
     <template>
         <style is="custom-style" include="app-theme"></style>
-        <paper-menu selected-item="{{selectedMenuItem}}">
+        <paper-menu id="menu" selected-item="{{selectedMenuItem}}">
             <template is="dom-repeat" items="[[items]]" as="menu">
                 <template is="dom-if" if="[[!_hasChildren(menu)]]">
                     <paper-item menu="[[menu]]">[[menu.label]]</paper-item>
@@ -10,7 +10,7 @@
                     <paper-submenu>
                         <paper-item menu="[[menu]]" class="menu-trigger">[[menu.label]]</paper-item>
                         <div style="padding-left: 10px" class="menu-content">
-                            <recursive-menu items="[[menu.children]]"
+                            <recursive-menu id="submenu" items="[[menu.children]]"
                                             selected-item="{{selectedMenuItem}}"></recursive-menu>
                         </div>
                     </paper-submenu>
@@ -32,9 +32,10 @@
                     type: String,
                     notify: true
                 },
-                selected: {
-                    type: Object,
-                    notify: true
+                selectedPath: {
+                    type: String,
+                    notify: true,
+                    observer: '_onSelectedPathChanged'
                 },
                 selectedItem: {
                     type: Object,
@@ -44,6 +45,25 @@
                 selectedMenuItem: {
                     type: Object,
                     observer: "_onSelectedMenuItemChanged"
+                }
+            },
+
+            _onSelectedPathChanged: function () {
+                if (this.selectedPath) {
+                    var parts = this.selectedPath.split("/");
+                    if (parts) {
+                        var first = parts.shift();
+                        var childIndex = _.findIndex(this.items, {id: first});
+                        if (childIndex >= 0) {
+                            this.$.menu.set("selected", childIndex);
+                            this.selectedMenuItem.set("active", true);
+                        }
+                        if (this.items.length) {
+                            if (parts.length) {
+                                this.$.submenu.set("selectedPath", parts.join("/"));
+                            }
+                        }
+                    }
                 }
             },
 
