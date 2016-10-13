@@ -2,95 +2,39 @@
 <dom-module id="registrar-app">
     <template>
         <style include="app-theme"></style>
-        <style include="iron-flex iron-flex-alignment">
-            paper-dialog.notificationAndInvites {
-                width: 80vw;
-                height: 60vh;
-                overflow: auto;
-                margin: 0px;
-                padding: 0px;
-                background: #EEE;
-            }
-
-            paper-dialog.notificationAndInvites .pink .paper-header {
-                background-color: var(--paper-pink-a200);
-                margin: -24px;
-                padding: 12px;
-                color: white;
-                transition: height 0.2s;
-            }
-
-            paper-dialog.notificationAndInvites .pink .content {
-                margin: 24px;
-                padding: 12px;
-                color: #000080;
-                transition: height 0.2s;
-            }
-
-            .profile {
-                @apply(--paper-font-body1);
-                color: white;
-                text-decoration: none;
-                text-transform: uppercase;
-            }
-
-            .profile:hover {
-                text-decoration: underline;
+        <style>
+            #drawer paper-header-panel {
+                background-color: var(--paper-menu-background-color);
             }
 
             #drawer paper-toolbar {
-                background-color: var(--paper-purple-700);
-                color: white;
-                min-height: 30px;
-                padding: 15px 5px;
+                background-color: var(--paper-pink-600);
             }
 
-            #drawer paper-menu, #drawer paper-header-panel {
-                background-color: var(--paper-deep-purple-50);
-            }
-
-            #content paper-toolbar {
-                background-color: var(--paper-indigo-700);
-                color: white;
-                min-height: 40px;
-                padding: 15px 5px;
-            }
-
-            #drawer paper-menu, #drawer paper-header-panel {
-                background-color: var(--paper-deep-purple-50);
-            }
-
-            #drawer a, #drawer a:active, #drawer a:visited, #drawer a:focus, #drawer a:hover {
-                color: white;
-                text-decoration: none;
-                font-size: 16px;
-                cursor: pointer;
-            }
         </style>
-
-        <app-drawer-layout>
+        <app-drawer-layout fullbleed>
             <app-drawer id="drawer">
                 <paper-header-panel style="height: 100vh">
                     <paper-toolbar>
-                        <div class="middle title">
-                            <a href="#profile">
+                        <a href="#profile">
+                            <paper-item>
                                 <paper-icon-button icon="account-box" alt="User Name"
                                                    title$="{{localize('signedInAs', 'name', profile.name, 'email', profile.email)}}"
                                                    click="_showProfilePage()">Edit Profile
                                 </paper-icon-button>
-                                <span>[[profile.name]]</span>
-                            </a>
-                            <paper-icon-button
-                                    hidden$="[[!_isProfileSelectorEnabled(profiles)]]"
-                                    icon="arrow-drop-down"
-                                    title="Show other profiles"
-                                    on-click="_showProfileSelector">
-                            </paper-icon-button>
-                        </div>
+                                [[profile.name]]
+                            </paper-item>
+                        </a>
+                        <paper-icon-button
+                                hidden$="[[!_isProfileSelectorEnabled(profiles)]]"
+                                icon="arrow-drop-down"
+                                title="Show other profiles"
+                                on-click="_showProfileSelector">
+                        </paper-icon-button>
                     </paper-toolbar>
                     <paper-menu selected="{{path}}" attr-for-selected="name">
                         <template is="dom-repeat" items="{{tabs}}" as="tab">
-                            <paper-item name="{{tab}}">[[localize(tab)]]</paper-item>
+                            <paper-item name="{{tab}}"><a href$="#[[tab]]">[[localize(tab)]]</a></paper-item>
                         </template>
                     </paper-menu>
                 </paper-header-panel>
@@ -98,8 +42,9 @@
             <div id="content">
                 <paper-header-panel style="height: 100vh">
                     <paper-toolbar>
+                        <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
                         <div class="middle title">
-                            [[selectedPageId]]
+                            [[localize(selectedPageId)]]
                         </div>
                     </paper-toolbar>
                     <neon-animated-pages selected="{{selectedPageId}}"
