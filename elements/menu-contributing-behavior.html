@@ -1,0 +1,55 @@
+<script>
+    var MenuContributingBehavior = {
+        properties: {
+            menu: {
+                type: Object,
+                value: {
+                    _id: "",
+                    label: "",
+                    children: []
+                },
+                notify: true
+            },
+
+            submenuIndex: {
+                type: Number,
+                value: undefined
+            }
+        },
+
+        observers: [
+            "_onSelectedPageChanged(selectedPage)"
+        ],
+
+        listeners: {
+            "page-select": "_onPageSelected"
+        },
+
+        _onPageSelected: function () {
+            if (typeof(this.buildMenu) === "function") {
+                this.buildMenu();
+            } else {
+                console.log("Could not find a menu build function for : ", this);
+            }
+        },
+
+        _onSelectedPageChanged: function (selectedPage) {
+            if (selectedPage && selectedPage.submenuIndex) {
+                var submenuIndex = selectedPage.submenuIndex;
+                var menu = this.menu;
+                if (menu && menu.children && menu.children[submenuIndex]) {
+                    selectedPage.menu = menu.children[submenuIndex];
+                }
+            }
+        },
+
+        _emptyMenu: function () {
+            return {
+                _id: "",
+                label: "",
+                children: []
+            };
+        }
+    };
+    AppBehaviors.MenuContributingBehavior = MenuContributingBehavior;
+</script>

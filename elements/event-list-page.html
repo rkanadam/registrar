@@ -76,7 +76,8 @@
                            bubbles
                 ></iron-ajax>
             </div>
-            <event-page id="eventEditPage" name="event-page" event="{{selectedEvent}}"></event-page>
+            <event-page id="eventEditPage" name="event-page"
+                        event="{{selectedEvent}}" submenu-index="0"></event-page>
         </neon-animated-pages>
     </template>
     <script>
@@ -99,6 +100,12 @@
                 "_onEventsChanged(events)"
             ],
 
+            buildMenu: function () {
+                this.set("menu.label", this.localize("events"));
+                this.set("menu.id", "events");
+                this.splice("menu.children", 0, this.menu.children.length);
+            },
+
             _editEvent: function (e) {
                 this.selectedEvent = e.model.event;
             },
@@ -109,14 +116,16 @@
 
             _onSelectedPageIdChanged: function (selectedPageId) {
                 if (!selectedPageId) {
+                    this.splice("menu.children", 0, this.menu.children.length);
                     this.$.pages.set("selected", "event-list-page");
                 } else if (selectedPageId === "new") {
-                    this.$.eventEditPage.event = {};
+                    this.splice("menu.children", 0, 0, this._emptyMenu());
                     this.$.pages.set("selected", "event-page");
                 } else {
                     var event = _.find(this.events, {"_id": selectedPageId});
                     if (event) {
                         this.$.eventEditPage.event = event;
+                        this.splice("menu.children", 0, 0, this._emptyMenu());
                         this.$.pages.set("selected", "event-page");
                     }
                 }

@@ -1,20 +1,15 @@
 <dom-module id="recursive-menu">
     <template>
         <style is="custom-style" include="app-theme"></style>
-        <paper-menu id="menu" selected-item="{{selectedMenuItem}}">
+        <paper-menu id="menu" selected-item="{{selectedPage}}" attr-for-selected="id" selected="{{selectedPageId}}">
             <template is="dom-repeat" items="[[items]]" as="menu">
-                <template is="dom-if" if="[[!_hasChildren(menu)]]">
-                    <paper-item menu="[[menu]]">[[menu.label]]</paper-item>
-                </template>
-                <template is="dom-if" if="[[_hasChildren(menu)]]">
-                    <paper-submenu>
-                        <paper-item menu="[[menu]]" class="menu-trigger">[[menu.label]]</paper-item>
-                        <div style="padding-left: 10px" class="menu-content">
-                            <recursive-menu id="submenu" items="[[menu.children]]"
-                                            selected-item="{{selectedMenuItem}}"></recursive-menu>
-                        </div>
-                    </paper-submenu>
-                </template>
+                <paper-submenu>
+                    <paper-item menu="[[menu]]" class="menu-trigger">[[menu.label]]</paper-item>
+                    <div style="padding-left: 10px" class="menu-content">
+                        <recursive-menu id="submenu" items="[[menu.children]]"
+                                        selected-item="{{selectedMenuItem}}"></recursive-menu>
+                    </div>
+                </paper-submenu>
             </template>
         </paper-menu>
     </template>
@@ -48,6 +43,19 @@
                 }
             },
 
+            behaviors: [
+                AppBehaviors.PageNavigationBehavior
+            ],
+
+            observers: [
+                "_childrenChanged(items.*)"
+            ],
+
+            _childrenChanged: function () {
+                console.log("items changed", this);
+            },
+
+
             _onSelectedPathChanged: function () {
                 if (this.selectedPath) {
                     var parts = this.selectedPath.split("/");
@@ -73,8 +81,8 @@
                 }
             },
 
-            _hasChildren: function (menu) {
-                return menu && menu.children && menu.children.length > 0;
+            _hasChildren: function (children) {
+                return children && children.length > 0;
             }
         });
     </script>

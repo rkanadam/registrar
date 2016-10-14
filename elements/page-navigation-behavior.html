@@ -35,6 +35,9 @@
             if (!this.selectedPage) {
                 return;
             }
+            if (typeof(this.selectedPage.fire) === "function") {
+                this.selectedPage.fire("page-select", true, {bubbles: false});
+            }
             this.selectedPage.pathHead = this.pathHead ? (this.pathHead + "/" + this.selectedPageId) : this.selectedPageId;
             this.selectedPage.path = this.pageTail;
             this.selectedPage.pageId = this.selectedPageId;
@@ -50,13 +53,11 @@
             var parts = path.split("/");
             var selectedPageId = parts.shift();
             var tail = parts.join("/");
-            this.selectedPageId = selectedPageId;
             this.pageTail = tail;
-            if (this.selectedPage) {
-                if (this.selectedPage.pageId === selectedPageId) {
-                    this.selectedPage.pathHead = this.pathHead ? (this.pathHead + "/" + this.selectedPageId) : this.selectedPageId;
-                    this.selectedPage.path = this.pageTail;
-                }
+            if (this.selectedPage && this.selectedPage.pageId === selectedPageId) {
+                this._selectedPageChanged();
+            } else {
+                this.selectedPageId = selectedPageId;
             }
         }
     };

@@ -32,7 +32,7 @@
                                 on-click="_showProfileSelector">
                         </paper-icon-button>
                     </paper-toolbar>
-                    <recursive-menu id = "menu" items="{{menus}}" selected-item="{{selectedMenuItem}}" selected-path="[[path]]"></recursive-menu>
+                    <recursive-menu id="menu" items="[[menu.children]]" path="[[path]]"></recursive-menu>
                 </paper-header-panel>
             </app-drawer>
             <div id="content">
@@ -43,15 +43,15 @@
                             [[localize(selectedPageId)]]
                         </div>
                     </paper-toolbar>
-                    <neon-animated-pages selected="{{selectedPageId}}"
+                    <neon-animated-pages id="pages"
+                                         selected="{{selectedPageId}}"
                                          selected-item="{{selectedPage}}"
                                          entry-animation="fade-in-animation"
                                          exit-animation="fade-out-animation"
-                                         attr-for-selected="id"
-                                         class="fit">
+                                         attr-for-selected="id">
                         <profile-page id="profile" route="{{subroute}}" profile="{{profile}}"
                                       language="[[language]]"></profile-page>
-                        <event-list-page id="events" route="{{subroute}}"
+                        <event-list-page id="events" route="{{subroute}}" submenu-index="1"
                                          language="[[language]]"></event-list-page>
                     </neon-animated-pages>
                 </paper-header-panel>
@@ -77,11 +77,6 @@
                     observer: 'onLayoutChange'
                 },
 
-                menus: {
-                    type: Array,
-                    value: []
-                },
-
                 profile: {
                     type: Object,
                     observer: '_onProfileChange'
@@ -89,16 +84,7 @@
 
                 profiles: {
                     type: Array,
-                    value: [],
-                },
-
-                "page": {
-                    type: String
-                },
-
-                selectedMenuItem: {
-                    type: Object,
-                    observer: "_onSelectedMenuItemChanged"
+                    value: []
                 }
             },
 
@@ -106,28 +92,23 @@
                 AppBehaviors.AppBehavior
             ],
 
-            _onSelectedMenuItemChanged: function () {
-                if (this.selectedMenuItem) {
-                    this.set("path", this.selectedMenuItem.id);
-                }
-            },
-
             attached: function () {
-                this.menus = [{
-                    label: this.localize('notifications'),
-                    id: "notifications"
-                }, {
-                    label: this.localize('events'),
-                    id: "events"
-                }, {
-                    label: this.localize('reports'),
-                    id: "reports"
-                }, {
-                    label: this.localize('messages'),
-                    id: "messages"
-                }];
-                this.$.menu.set("selectedPath", "");
-                this.$.menu.set("selectedPath", this.path);
+                this.menu = {
+                    children: [{
+                        label: this.localize('notifications'),
+                        id: "notifications"
+                    }, {
+                        label: this.localize('events'),
+                        id: "events",
+                        children: []
+                    }, {
+                        label: this.localize('reports'),
+                        id: "reports"
+                    }, {
+                        label: this.localize('messages'),
+                        id: "messages"
+                    }]
+                };
             },
 
             onLayoutChange: function (wide) {
@@ -148,8 +129,8 @@
 
             _onProfileChange: function () {
                 if (this.profile) {
-                    if (!this.page) {
-                        this.set("page", "profile");
+                    if (!this.path) {
+                        window.location.hash = "#profile";
                     }
                 }
             }
