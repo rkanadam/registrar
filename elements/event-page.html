@@ -89,8 +89,7 @@
                                 </div>
                             </iron-form>
                         </div>
-                        <track-list-page name="track-list-page" event="{{event}}"
-                                         submenu-index="0"></track-list-page>
+                        <track-list-page name="track-list-page" event="{{event}}"></track-list-page>
                     </neon-animated-pages>
                 </div>
             </paper-header-panel>
@@ -170,21 +169,18 @@
 
             buildMenu: function () {
                 this.splice("menu.children", 0, this.menu.children.length);
-
-                if (this.event) {
-                    if (!this.event._id) {
-                        this.set("menu.label", this.localize("newEvent"));
-                        this.set("menu.id", "new");
-                    } else {
-                        this.set("menu.label", this.event.name || this.event._id);
-                        this.set("menu.id", this.event._id);
-                    }
-                    this.splice("menu.children", 0, 0, {
-                        id: "tracks",
-                        label: this.localize('tracks'),
-                        children: []
-                    });
+                if (!event._id) {
+                    this.set("menu.label", this.localize("newEvent"));
+                    this.set("menu.id", "new");
+                } else {
+                    this.set("menu.label", event.name || event._id);
+                    this.set("menu.id", event._id);
                 }
+                this.splice("menu.children", 0, 0, {
+                    id: "tracks",
+                    label: this.localize('tracks'),
+                    children: []
+                });
             }
         });
     </script>

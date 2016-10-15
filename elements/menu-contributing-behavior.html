@@ -3,26 +3,15 @@
         properties: {
             menu: {
                 type: Object,
-                value: {
-                    _id: "",
-                    label: "",
-                    children: []
+                value: function () {
+                    return this._emptyMenu();
                 },
                 notify: true
-            },
-
-            submenuIndex: {
-                type: Number,
-                value: undefined
             }
         },
 
-        observers: [
-            "_onSelectedPageChanged(selectedPage)"
-        ],
-
         listeners: {
-            "page-select": "_onPageSelected"
+            "after-page-select": "_onPageSelected"
         },
 
         _onPageSelected: function () {
@@ -33,19 +22,9 @@
             }
         },
 
-        _onSelectedPageChanged: function (selectedPage) {
-            if (selectedPage && selectedPage.submenuIndex) {
-                var submenuIndex = selectedPage.submenuIndex;
-                var menu = this.menu;
-                if (menu && menu.children && menu.children[submenuIndex]) {
-                    selectedPage.menu = menu.children[submenuIndex];
-                }
-            }
-        },
-
         _emptyMenu: function () {
             return {
-                _id: "",
+                id: "",
                 label: "",
                 children: []
             };

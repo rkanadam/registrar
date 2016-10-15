@@ -51,7 +51,7 @@
                                          attr-for-selected="id">
                         <profile-page id="profile" route="{{subroute}}" profile="{{profile}}"
                                       language="[[language]]"></profile-page>
-                        <event-list-page id="events" route="{{subroute}}" submenu-index="1"
+                        <event-list-page id="events" route="{{subroute}}"
                                          language="[[language]]"></event-list-page>
                     </neon-animated-pages>
                 </paper-header-panel>
@@ -92,23 +92,15 @@
                 AppBehaviors.AppBehavior
             ],
 
-            attached: function () {
-                this.menu = {
-                    children: [{
-                        label: this.localize('notifications'),
-                        id: "notifications"
-                    }, {
-                        label: this.localize('events'),
-                        id: "events",
-                        children: []
-                    }, {
-                        label: this.localize('reports'),
-                        id: "reports"
-                    }, {
-                        label: this.localize('messages'),
-                        id: "messages"
-                    }]
-                };
+            listeners: {
+                "page-select": "buildMenu"
+            },
+
+            buildMenu: function () {
+                this.splice("menu.children", 0, this.menu.children.length);
+                if (this.selectedPage && this.selectedPage.menu) {
+                    this.splice("menu.children", 0, 0, this.selectedPage.menu);
+                }
             },
 
             onLayoutChange: function (wide) {

@@ -76,8 +76,9 @@
                            bubbles
                 ></iron-ajax>
             </div>
-            <event-page id="eventEditPage" name="event-page"
-                        event="{{selectedEvent}}" submenu-index="0"></event-page>
+            <event-page id="eventEditPage"
+                        name="event-page"
+                        event="{{selectedEvent}}"></event-page>
         </neon-animated-pages>
     </template>
     <script>
@@ -104,6 +105,9 @@
                 this.set("menu.label", this.localize("events"));
                 this.set("menu.id", "events");
                 this.splice("menu.children", 0, this.menu.children.length);
+                if (this.selectedPage && this.selectedPage.menu) {
+                    this.splice("menu.children", 0, 0, this.selectedPage.menu);
+                }
             },
 
             _editEvent: function (e) {
@@ -116,16 +120,18 @@
 
             _onSelectedPageIdChanged: function (selectedPageId) {
                 if (!selectedPageId) {
-                    this.splice("menu.children", 0, this.menu.children.length);
                     this.$.pages.set("selected", "event-list-page");
-                } else if (selectedPageId === "new") {
-                    this.splice("menu.children", 0, 0, this._emptyMenu());
-                    this.$.pages.set("selected", "event-page");
                 } else {
-                    var event = _.find(this.events, {"_id": selectedPageId});
+                    var event = null;
+                    if (selectedPageId === "new") {
+                        event = {};
+                    } else {
+                        event = _.find(this.events, {"_id": selectedPageId});
+                    }
+
                     if (event) {
-                        this.$.eventEditPage.event = event;
                         this.splice("menu.children", 0, 0, this._emptyMenu());
+                        this.$.eventEditPage.event = event;
                         this.$.pages.set("selected", "event-page");
                     }
                 }

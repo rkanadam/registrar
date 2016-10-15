@@ -10,6 +10,7 @@
     "tests"
   ],
   "dependencies": {
+    "polymer": "1.7.0",
     "app-elements": "PolymerElements/app-elements",
     "iron-elements": "PolymerElements/iron-elements",
     "paper-elements": "PolymerElements/paper-elements",

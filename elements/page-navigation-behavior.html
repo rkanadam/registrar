@@ -3,7 +3,8 @@
         properties: {
             selectedPage: {
                 type: Object,
-                observer: '_selectedPageChanged'
+                observer: '_selectedPageChanged',
+                value: null
             },
 
             path: {
@@ -35,12 +36,14 @@
             if (!this.selectedPage) {
                 return;
             }
-            if (typeof(this.selectedPage.fire) === "function") {
-                this.selectedPage.fire("page-select", true, {bubbles: false});
-            }
+            this.selectedPage.parentPage = this;
             this.selectedPage.pathHead = this.pathHead ? (this.pathHead + "/" + this.selectedPageId) : this.selectedPageId;
             this.selectedPage.path = this.pageTail;
             this.selectedPage.pageId = this.selectedPageId;
+            if (typeof(this.selectedPage.fire) === "function") {
+                this.selectedPage.fire("after-page-select", true, {bubbles: false});
+            }
+            this.fire("page-select", this.selectedPage, {bubbles: false});
         },
 
         _pathChanged: function (path) {
