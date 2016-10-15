@@ -104,6 +104,7 @@
             buildMenu: function () {
                 this.set("menu.label", this.localize("events"));
                 this.set("menu.id", "events");
+                this.set("menu.link", this.pathHead);
                 this.splice("menu.children", 0, this.menu.children.length);
                 if (this.selectedPage && this.selectedPage.menu) {
                     this.splice("menu.children", 0, 0, this.selectedPage.menu);

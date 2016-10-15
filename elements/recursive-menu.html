@@ -10,11 +10,20 @@
                     selected-class="selected">
             <template is="dom-repeat" items="[[items]]" as="menu" id="template">
                 <template is="dom-if" if="[[!_hasChildren(menu.children)]]">
-                    <paper-item id="[[menu.id]]" menu="[[menu]]">[[menu.label]]</paper-item>
+                    <paper-item id="[[menu.id]]" class="menu-trigger">
+                        <a href="#[[menu.link]]" class="flex">
+                            [[menu.label]]
+                        </a>
+                    </paper-item>
                 </template>
                 <template is="dom-if" if="[[_hasChildren(menu.children)]]">
-                    <paper-submenu id="[[menu.id]]" menu="[[menu]]">
-                        <paper-item id="[[menu.id]]" menu="[[menu]]" class="menu-trigger">[[menu.label]]</paper-item>
+                    <paper-submenu id="[[menu.id]]">
+                        <paper-item id="[[menu.id]]" class="menu-trigger">
+                            <a href="#[[menu.link]]" class="flex">
+                                [[menu.label]]
+                            </a>
+                            <paper-icon-button icon="arrow-drop-down-circle"></paper-icon-button>
+                        </paper-item>
                         <div style="padding-left: 20px" class="menu-content">
                             <recursive-menu items="[[menu.children]]"></recursive-menu>
                         </div>
@@ -58,6 +67,7 @@
                     var path = this.path;
                     this.path = "";
                     this.path = path;
+                    this.$.template.render ();
                 }
             },
 

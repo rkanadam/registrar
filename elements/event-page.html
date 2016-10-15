@@ -176,9 +176,11 @@
                     this.set("menu.label", event.name || event._id);
                     this.set("menu.id", event._id);
                 }
+                this.set("menu.link", this.pathHead);
                 this.splice("menu.children", 0, 0, {
                     id: "tracks",
                     label: this.localize('tracks'),
+                    link: this.get("menu.link") + "/tracks",
                     children: []
                 });
             }
