@@ -28,7 +28,8 @@
     "vaadin-date-picker": "^1.1.4",
     "polymer-tinymce": "^1.0.0",
     "polymer-bootstrap": "^0.1.2",
-    "flexboxgrid": "^6.3.2"
+    "flexboxgrid": "^6.3.2",
+    "jquery": "^2.3.0"
   },
   "resolutions": {
     "firebase": "^3.0"

@@ -92,21 +92,28 @@
 
             properties: {
                 "events": {
-                    type: Array
+                    type: Array,
+                    value: function () {
+                        return null;
+                    }
                 }
+            },
+
+            listeners: {
+                "after-page-select": "_loadPage"
             },
 
             observers: [
                 "_onSelectedPageIdChanged(selectedPageId)",
-                "_onEventsChanged(events)"
             ],
 
             buildMenu: function () {
                 this.set("menu.label", this.localize("events"));
                 this.set("menu.id", "events");
-                this.set("menu.link", this.pathHead);
+                this.set("menu.link", "events");
                 this.splice("menu.children", 0, this.menu.children.length);
-                if (this.selectedPage && this.selectedPage.menu) {
+                if (this.selectedPage && this.selectedPage.buildMenu) {
+                    this.selectedPage.buildMenu();
                     this.splice("menu.children", 0, 0, this.selectedPage.menu);
                 }
             },
@@ -119,7 +126,34 @@
 
             },
 
+            _loadPage: function () {
+                this.$.listAjax.generateRequest();
+            },
+
             _onSelectedPageIdChanged: function (selectedPageId) {
+                if (!this.events) {
+                    this.listen(this.$.listAjax, "response", "_selectPageAndRemoveListener");
+                    this.listen(this.$.listAjax, "error", "_selectPageAndRemoveListener");
+                    this.$.listAjax.generateRequest();
+                } else {
+                    this._selectPage();
+                }
+            },
+
+            _selectPageAndRemoveListener: function (e, request) {
+                if (e.type === "response" && !this.$.listAjax.loading) {
+                    this.unlisten(this.$.listAjax, "error", "_selectPageAndRemoveListener");
+                    this.unlisten(this.$.listAjax, "response", "_selectPageAndRemoveListener");
+                    this._selectPage();
+                } else if (e.type === "error") {
+                    console.error("Call to get events failed");
+                    this.unlisten(this.$.listAjax, "error", "_selectPageAndRemoveListener");
+                    this.unlisten(this.$.listAjax, "response", "_selectPageAndRemoveListener");
+                }
+            },
+
+            _selectPage: function () {
+                var selectedPageId = this.selectedPageId;
                 if (!selectedPageId) {
                     this.$.pages.set("selected", "event-list-page");
                 } else {
@@ -131,16 +165,9 @@
                     }
 
                     if (event) {
-                        this.splice("menu.children", 0, 0, this._emptyMenu());
                         this.$.eventEditPage.event = event;
                         this.$.pages.set("selected", "event-page");
                     }
-                }
-            },
-
-            _onEventsChanged: function (events) {
-                if (this.selectedPageId && this.selectedPageId !== "new") {
-                    this._onSelectedPageIdChanged(this.selectedPageId);
                 }
             },
 

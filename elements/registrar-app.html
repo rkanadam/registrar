@@ -32,7 +32,7 @@
                                 on-click="_showProfileSelector">
                         </paper-icon-button>
                     </paper-toolbar>
-                    <recursive-menu id="menu" items="[[menu.children]]" path="[[path]]"></recursive-menu>
+                    <recursive-menu id="menu" items="[[menu.children]]"></recursive-menu>
                 </paper-header-panel>
             </app-drawer>
             <div id="content">
@@ -48,10 +48,11 @@
                                          selected-item="{{selectedPage}}"
                                          entry-animation="fade-in-animation"
                                          exit-animation="fade-out-animation"
-                                         attr-for-selected="id">
-                        <profile-page id="profile" route="{{subroute}}" profile="{{profile}}"
+                                         attr-for-selected="id"
+                                         style="height: 100%">
+                        <profile-page id="profile" profile="{{profile}}"
                                       language="[[language]]"></profile-page>
-                        <event-list-page id="events" route="{{subroute}}"
+                        <event-list-page id="events"
                                          language="[[language]]"></event-list-page>
                     </neon-animated-pages>
                 </paper-header-panel>
@@ -93,14 +94,22 @@
             ],
 
             listeners: {
-                "page-select": "buildMenu"
+                "path-consumed": "buildMenu"
             },
 
-            buildMenu: function () {
-                this.splice("menu.children", 0, this.menu.children.length);
-                if (this.selectedPage && this.selectedPage.menu) {
-                    this.splice("menu.children", 0, 0, this.selectedPage.menu);
+            buildMenu: function (e) {
+                //Ignore any events from the menu
+                if (e.path.indexOf(this.$.menu) >= 0) {
+                    return;
                 }
+                this.splice("menu.children", 0, this.menu.children.length);
+                _.each(this.$.pages.children, function (page) {
+                    if (page.buildMenu) {
+                        page.buildMenu();
+                        this.push("menu.children", page.menu);
+                    }
+                }.bind(this));
+                this.$.menu.path = this.path;
             },
 
             onLayoutChange: function (wide) {

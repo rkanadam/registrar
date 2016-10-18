@@ -1,4 +1,4 @@
-<dom-module id="event-page">
+<dom-module id="track-page">
     <style include="app-theme">
         .pad {
             padding-top: 30px;
@@ -17,7 +17,7 @@
                                      fallback-selection="event-list"
                                      selected-item="{{selectedPage}}"
                                      class="flex">
-                    <div name="event-page">
+                    <div name="track-page">
                         <div class="paper-header">
                             <paper-item class="title flex">[[localize('eventPageDescription')]]</paper-item>
                         </div>
@@ -83,7 +83,7 @@
                             </div>
                         </iron-form>
                     </div>
-                    <!--track-list-page name="track-list-page" event="{{event}}"></track-list-page-->
+                    <track-list-page name="track-list-page" event="{{event}}"></track-list-page>
                 </neon-animated-pages>
         </div>
         </paper-header-panel>
@@ -105,14 +105,14 @@
     <script>
         Polymer({
 
-            is: 'event-page',
+            is: 'track-page',
 
             behaviors: [
                 AppBehaviors.AppBehavior
             ],
 
             properties: {
-                event: {
+                track: {
                     type: Object,
                     value: {}
                 }
@@ -125,7 +125,7 @@
 
             _onSelectedPageIdChanged: function (selectedPageId) {
                 if (!this.selectedPageId) {
-                    this.$.pages.set("selected", "event-page");
+                    this.$.pages.set("selected", "track-page");
                 } else if (this.selectedPageId === "tracks") {
                     this.$.pages.set("selected", "track-list-page");
                 }

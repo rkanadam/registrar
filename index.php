@@ -8,8 +8,8 @@ use util\Log;
 
 $user = User::get();
 
-Log::info ("Found the user allright: " . (json_encode($user)));
-if (!$user->isAuthenticated ()) {
+Log::info("Found the user allright: " . (json_encode($user)));
+if (!$user->isAuthenticated()) {
     header('Location: unauth/login.php');
     return;
 }
@@ -22,6 +22,7 @@ if (!$user->isAuthenticated ()) {
     <meta name="viewport" content="width=device-width, minimum-scale=1.0, initial-scale=1, user-scalable=yes">
 
     <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
     <script src="bower_components/lodash/dist/lodash.min.js"></script>
     <script src="i18nMessages.js"></script>
     <script type="text/javascript">window.AppBehaviors = {}</script>

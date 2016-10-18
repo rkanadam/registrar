@@ -62,13 +62,12 @@
                 }
             },
 
+            buildMenu: function (e) {
+                debugger;
+            },
+
             _onItemsChanged: function () {
-                if (this.path && this.items) {
-                    var path = this.path;
-                    this.path = "";
-                    this.path = path;
-                    this.$.template.render ();
-                }
+                this.$.template.render ();
             },
 
             _hasChildren: function (children) {

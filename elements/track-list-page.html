@@ -27,7 +27,7 @@
                              fallback-selection="event-list"
                              selected-item="{{selectedPage}}"
                              class="flex">
-            <div name="event-list-page" class="container" style="height: 100%;padding: 0px 20px 0px 20px">
+            <div name="track-list-page" class="container" style="height: 100%;padding: 0px 20px 0px 20px">
                 <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
                 <div class="app-button-bar row">
                     <paper-item class="col-xs-12 col-sm-9">[[localize('eventTrackListPageDescription')]]</paper-item>
@@ -55,14 +55,9 @@
                         </paper-material>
                     </template>
                 </iron-list>
-                <iron-ajax id="listAjax"
-                           auto
-                           handle-as="json"
-                           url="../api.php/events"
-                           last-response="{{events}}"
-                           bubbles
-                ></iron-ajax>
             </div>
+            <track-page id="trackEditPage"
+                        name="track-page"></track-page>
         </neon-animated-pages>
     </template>
     <script>
@@ -74,25 +69,15 @@
                 AppBehaviors.AppBehavior
             ],
 
-            properties: {
-                "events": {
-                    type: Array
-                },
-                "selectedEvent": {
-                    type: Object,
-                    value: null,
-                    observer: "_selectedEventChanged"
-                },
+            observers: [
+                "_onSelectedPageIdChanged(selectedPageId)",
+            ],
 
-                "_page": {
-                    type: String,
-                    value: "event-list-page"
+            properties: {
+                "event": {
+                    type: Object
                 }
             },
-
-            observers: [
-                "_onSelectedPageIdChanged(selectedPageId)"
-            ],
 
             _editEvent: function (e) {
                 this.selectedEvent = e.model.event;
@@ -119,8 +104,35 @@
 
             _computedClass: function (selected) {
                 return "row event" + (selected ? " selected" : "");
-            }
+            },
 
+            buildMenu: function () {
+                this.set("menu.label", this.localize("tracks"));
+                this.set("menu.id", "tracks");
+                this.set("menu.link", this.pathHead);
+                this.splice("menu.children", 0, this.menu.children.length);
+                if (this.selectedPage && this.selectedPage.menu) {
+                    this.splice("menu.children", 0, 0, this.selectedPage.menu);
+                }
+            },
+
+            _onSelectedPageIdChanged: function (selectedPageId) {
+                if (!selectedPageId) {
+                    this.$.pages.set("selected", "track-list-page");
+                } else {
+                    var track = null;
+                    if (selectedPageId === "new") {
+                        track = {};
+                    } else {
+                        track = _.find(this.events, {"_id": selectedPageId});
+                    }
+
+                    if (track) {
+                        this.$.trackEditPage.track = track;
+                        this.$.pages.set("selected", "track-page");
+                    }
+                }
+            },
         });
     </script>
 </dom-module>

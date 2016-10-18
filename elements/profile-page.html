@@ -182,6 +182,12 @@
 
             _computeSaveUrl: function (profile) {
                 return "api.php/profile/" + (profile && profile._id ? profile._id : "");
+            },
+
+            buildMenu: function () {
+                this.set("menu.label", this.localize("profile"));
+                this.set("menu.id", "profile");
+                this.set("menu.link", "profile");
             }
         });
     </script>

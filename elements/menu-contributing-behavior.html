@@ -10,16 +10,8 @@
             }
         },
 
-        listeners: {
-            "after-page-select": "_onPageSelected"
-        },
-
-        _onPageSelected: function () {
-            if (typeof(this.buildMenu) === "function") {
-                this.buildMenu();
-            } else {
-                console.log("Could not find a menu build function for : ", this);
-            }
+        buildMenu: function () {
+          return menu;
         },
 
         _emptyMenu: function () {

@@ -38,12 +38,16 @@
             }
             this.selectedPage.parentPage = this;
             this.selectedPage.pathHead = this.pathHead ? (this.pathHead + "/" + this.selectedPageId) : this.selectedPageId;
-            this.selectedPage.path = this.pageTail;
             this.selectedPage.pageId = this.selectedPageId;
+            this.selectedPage.path = this.pathTail;
             if (typeof(this.selectedPage.fire) === "function") {
-                this.selectedPage.fire("after-page-select", true, {bubbles: false});
+                this.selectedPage.fire("page-select", true, {bubbles: false});
             }
-            this.fire("page-select", this.selectedPage, {bubbles: false});
+            this.fire("after-page-select", this.selectedPage, {bubbles: false});
+
+            if (!this.pathTail) {
+                this.fire("path-consumed", true, {bubbles: true});
+            }
         },
 
         _pathChanged: function (path) {
@@ -56,7 +60,7 @@
             var parts = path.split("/");
             var selectedPageId = parts.shift();
             var tail = parts.join("/");
-            this.pageTail = tail;
+            this.pathTail = tail;
             if (this.selectedPage && this.selectedPage.pageId === selectedPageId) {
                 this._selectedPageChanged();
             } else {
