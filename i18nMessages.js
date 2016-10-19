@@ -46,8 +46,9 @@ window.i18nMessages = {
         "trackEndDate": "Track end date and time",
         "trackSavedMessage": "The track  was successfully saved",
         "trackDescription": "Track Description",
-        "workshops": "Workshops"
-
+        "workshops": "Workshops",
+        "eventTrackWorkshopListPageDescription": "Use this page to add workshops to your event. Workshops / Breakouts might require a list of items to bring or be prepared with. You can attach documents / action items here.",
+        "addNewWorkshop": "Add a new workshop/breakout"
     },
     "fr": {}
 };

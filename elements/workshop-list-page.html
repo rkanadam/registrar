@@ -1,0 +1,132 @@
+<dom-module id="workshop-list-page">
+    <style include="app-theme">
+        .track {
+            padding: 10px;
+            border-bottom: 1px var(--divider-color) solid;
+        }
+
+        .workshop:hover, iron-list .selected {
+            background: var(--dark-primary-color);
+            color: var(--text-primary-color);
+            cursor: pointer;
+        }
+
+        iron-list {
+            --iron-list-items-container: {
+                margin: auto;
+                width: 100%;
+            };
+        }
+    </style>
+    <template>
+        <neon-animated-pages id="pages"
+                             style="height: 100%"
+                             entry-animation="fade-in-animation"
+                             exit-animation="fade-out-animation"
+                             attr-for-selected="name"
+                             selected-item="{{selectedPage}}"
+                             class="flex">
+            <div name="workshop-list-page" class="container" style="height: 100%;padding: 0px 20px 0px 20px">
+                <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
+                <div class="app-button-bar row">
+                    <paper-item class="col-xs-12 col-sm-6">[[localize('eventTrackWorkshopListPageDescription')]]</paper-item>
+                    <a href="#[[pathHead]]/new" class="col-xs-12 col-sm-6" >
+                        <paper-button primary raised>
+                            <iron-icon icon="add-box"></iron-icon>
+                                &nbsp;&nbsp;[[localize('addNewWorkshop')]]
+                        </paper-button>
+                    </a>
+                </div>
+                <iron-list items="{{workshops}}" as="workshop" scroll-target="html" class="flex"
+                           selection-enabled selected-item="{{selectedWorkshop}}">
+                    <template>
+                        <paper-material class$="[[_computedClass(selected)]]"
+                                        tabindex$="[[tabindex]]"
+                                        elevation="0"
+                                        title$="[[localize('clickToEdit')]]"
+                        >
+                            <div class="col-xs-12 col-sm-9">
+                                <div>[[workshop.name]]</div>
+                                <div>
+                                    <raw-html
+                                            html="[[workshop.description]]"></raw-html>
+                                </div>
+                            </div>
+                            <div class="toolbar col-xs-12 col-sm-3">
+                                <paper-icon-button icon="delete" on-tap="_deleteWorkshop"></paper-icon-button>
+                            </div>
+                        </paper-material>
+                    </template>
+                </iron-list>
+            </div>
+            <workshop-page id="workshopEditPage"
+                        name="workshop-page"></workshop-page>
+        </neon-animated-pages>
+    </template>
+    <script>
+        Polymer({
+
+            is: 'workshop-list-page',
+
+            behaviors: [
+                AppBehaviors.AppBehavior
+            ],
+
+            observers: [
+                "_onSelectedPageIdChanged(selectedPageId)",
+            ],
+
+            properties: {
+                "track": {
+                    type: Object
+                }
+            },
+
+            _deleteWorkshop: function (e) {
+
+            },
+
+            _onSelectedPageIdChanged: function (selectedPageId) {
+                if (!this.selectedPageId) {
+                    this.$.pages.set("selected", "workshop-list-page");
+                } else if (this.selectedPageId === "new") {
+                    this.set("selectedWorkshop", {});
+                    this.$.pages.set("selected", "workshop-page");
+                }
+            },
+
+            _computedClass: function (selected) {
+                return "row workshop" + (selected ? " selected" : "");
+            },
+
+            buildMenu: function () {
+                this.set("menu.label", this.localize("workshops"));
+                this.set("menu.id", "workshops");
+                this.set("menu.link", this.pathHead);
+                this.splice("menu.children", 0, this.menu.children.length);
+                if (this.selectedPage && this.selectedPage.menu) {
+                    this.selectedPage.buildMenu();
+                    this.splice("menu.children", 0, 0, this.selectedPage.menu);
+                }
+            },
+
+            _onSelectedPageIdChanged: function (selectedPageId) {
+                if (!selectedPageId) {
+                    this.$.pages.set("selected", "workshop-list-page");
+                } else {
+                    var workshop = null;
+                    if (selectedPageId === "new") {
+                        workshop = {};
+                    } else {
+                        workshop = this.track.workshops[selectedPageId]
+                    }
+
+                    if (workshop) {
+                        this.$.workshopEditPage.workshop = workshop;
+                        this.$.pages.set("selected", "workshop-page");
+                    }
+                }
+            },
+        });
+    </script>
+</dom-module>

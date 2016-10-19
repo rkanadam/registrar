@@ -79,6 +79,7 @@
                         </div>
                     </iron-form>
                 </div>
+                <workshop-list-page name="workshop-list-page"></workshop-list-page>
             </neon-animated-pages>
         </div>
 
@@ -119,8 +120,8 @@
             _onSelectedPageIdChanged: function (selectedPageId) {
                 if (!this.selectedPageId) {
                     this.$.pages.set("selected", "track-page");
-                } else if (this.selectedPageId === "tracks") {
-                    this.$.pages.set("selected", "track-list-page");
+                } else if (this.selectedPageId === "workshops") {
+                    this.$.pages.set("selected", "workshop-list-page");
                 }
             },
 
