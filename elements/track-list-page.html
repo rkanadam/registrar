@@ -1,11 +1,11 @@
 <dom-module id="track-list-page">
     <style include="app-theme">
-        .event {
+        .track {
             padding: 10px;
             border-bottom: 1px var(--divider-color) solid;
         }
 
-        .event:hover, iron-list .selected {
+        .track:hover, iron-list .selected {
             background: var(--dark-primary-color);
             color: var(--text-primary-color);
             cursor: pointer;
@@ -24,22 +24,22 @@
                              entry-animation="fade-in-animation"
                              exit-animation="fade-out-animation"
                              attr-for-selected="name"
-                             fallback-selection="event-list"
+                             fallback-selection="track-list"
                              selected-item="{{selectedPage}}"
                              class="flex">
             <div name="track-list-page" class="container" style="height: 100%;padding: 0px 20px 0px 20px">
                 <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
                 <div class="app-button-bar row">
-                    <paper-item class="col-xs-12 col-sm-9">[[localize('eventTrackListPageDescription')]]</paper-item>
-                    <a href="#events/new" class="col-xs-12 col-sm-3">
+                    <paper-item class="col-xs-12 col-sm-7">[[localize('eventTrackListPageDescription')]]</paper-item>
+                    <a href="#[[pathHead]]/new" class="col-xs-12 col-sm-5" >
                         <paper-button primary raised>
                             <iron-icon icon="add-box"></iron-icon>
-                            &nbsp;&nbsp;[[localize('addNewEvent')]]
+                            &nbsp;&nbsp;[[localize('addNewTrack')]]
                         </paper-button>
                     </a>
                 </div>
-                <iron-list items="{{events}}" as="event" scroll-target="html" class="flex"
-                           selection-enabled selected-item="{{selectedEvent}}">
+                <iron-list items="{{tracks}}" as="track" scroll-target="html" class="flex"
+                           selection-enabled selected-item="{{selectedTrack}}">
                     <template>
                         <paper-material class$="[[_computedClass(selected)]]"
                                         tabindex$="[[tabindex]]"
@@ -47,10 +47,14 @@
                                         title$="[[localize('clickToEdit')]]"
                         >
                             <div class="col-xs-12 col-sm-9">
-                                <span><raw-html html="[[event.description]]"></raw-html></span>
+                                <div>[[track.name]]</div>
+                                <div>
+                                    <raw-html
+                                            html="[[track.description]]"></raw-html>
+                                </div>
                             </div>
                             <div class="toolbar col-xs-12 col-sm-3">
-                                <paper-icon-button icon="delete" on-tap="_deleteEvent"></paper-icon-button>
+                                <paper-icon-button icon="delete" on-tap="_deleteTrack"></paper-icon-button>
                             </div>
                         </paper-material>
                     </template>
@@ -79,31 +83,21 @@
                 }
             },
 
-            _editEvent: function (e) {
-                this.selectedEvent = e.model.event;
-            },
-
-            _deleteEvent: function (e) {
+            _deleteTrack: function (e) {
 
             },
 
             _onSelectedPageIdChanged: function (selectedPageId) {
                 if (!this.selectedPageId) {
-                    this.$.pages.set("selected", "event-list-page");
+                    this.$.pages.set("selected", "track-list-page");
                 } else if (this.selectedPageId === "new") {
-                    this.set("selectedEvent", {});
-                    this.$.pages.set("selected", "event-page");
-                }
-            },
-
-            _selectedEventChanged: function () {
-                if (this.selectedEvent) {
-                    this.set("_page", "event-page");
+                    this.set("selectedTrack", {});
+                    this.$.pages.set("selected", "track-page");
                 }
             },
 
             _computedClass: function (selected) {
-                return "row event" + (selected ? " selected" : "");
+                return "row track" + (selected ? " selected" : "");
             },
 
             buildMenu: function () {
@@ -112,6 +106,7 @@
                 this.set("menu.link", this.pathHead);
                 this.splice("menu.children", 0, this.menu.children.length);
                 if (this.selectedPage && this.selectedPage.menu) {
+                    this.selectedPage.buildMenu();
                     this.splice("menu.children", 0, 0, this.selectedPage.menu);
                 }
             },
@@ -124,7 +119,7 @@
                     if (selectedPageId === "new") {
                         track = {};
                     } else {
-                        track = _.find(this.events, {"_id": selectedPageId});
+                        track = this.event.tracks[selectedPageId]
                     }
 
                     if (track) {

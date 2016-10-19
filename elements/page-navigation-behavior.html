@@ -37,7 +37,7 @@
                 return;
             }
             this.selectedPage.parentPage = this;
-            this.selectedPage.pathHead = this.pathHead ? (this.pathHead + "/" + this.selectedPageId) : this.selectedPageId;
+            this.selectedPage.pathHead = this.pathHead ? (this.pathHead + (this.selectedPageId ? "/" + this.selectedPageId : this.selectedPageId)) : this.selectedPageId;
             this.selectedPage.pageId = this.selectedPageId;
             this.selectedPage.path = this.pathTail;
             if (typeof(this.selectedPage.fire) === "function") {

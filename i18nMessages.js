@@ -38,7 +38,16 @@ window.i18nMessages = {
         "tracks": "Tracks",
         "eventTrackListPageDescription": "Use this page to create tracks for your event. An event may have multiple tracks, for e.g. there could be an adult Track, a SSE track, a women only track or a music track. Each track can have its own activities and workshops.",
         "newEvent": "New Event",
-        "newTrack": "New Event Track"
+        "newTrack": "New Event Track",
+        "addNewTrack": "Add a new event track",
+        "track": "Track",
+        "trackName": "Track Name",
+        "trackStartDate": "Track start date and time",
+        "trackEndDate": "Track end date and time",
+        "trackSavedMessage": "The track  was successfully saved",
+        "trackDescription": "Track Description",
+        "workshops": "Workshops"
+
     },
     "fr": {}
 };

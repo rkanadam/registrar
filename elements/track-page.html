@@ -5,100 +5,93 @@
         }
     </style>
     <template>
-        <success-dialog id="saveDialog" msg-key="eventSavedMessage"></success-dialog>
+        <success-dialog id="saveDialog" msg-key="trackSavedMessage"></success-dialog>
         <div style="padding: 0px 20px 0px 20px;position: relative;height: 100%;">
-            <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
-            <paper-header-panel mode="waterfall" class="flex">
-                <neon-animated-pages id="pages"
-                                     style="height: 100%"
-                                     entry-animation="fade-in-animation"
-                                     exit-animation="fade-out-animation"
-                                     attr-for-selected="name"
-                                     fallback-selection="event-list"
-                                     selected-item="{{selectedPage}}"
-                                     class="flex">
-                    <div name="track-page">
-                        <div class="paper-header">
-                            <paper-item class="title flex">[[localize('eventPageDescription')]]</paper-item>
+            <neon-animated-pages id="pages"
+                                 entry-animation="fade-in-animation"
+                                 exit-animation="fade-out-animation"
+                                 attr-for-selected="name"
+                                 fallback-selection="event-list"
+                                 selected-item="{{selectedPage}}"
+                                 style="height:100%"
+            >
+                <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
+                <div name="track-page">
+                    <iron-form method="post" action="/" id="basic" style="height: 100%" class="container">
+                        <div class="row left-xs bottom-xs bottom-sm left-sm">
+                            <div class="col-xs-12 col-sm-3 col-lg-3">
+                                <label>[[localize("trackName")]]</label>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 pad">
+                                <paper-input value="{{track.name}}"
+                                             label="[[localize('trackName')]]"></paper-input>
+                            </div>
                         </div>
-                        <iron-form method="post" action="/" id="basic" style="height: 100%" class="container">
-                            <div class="row left-xs bottom-xs bottom-sm left-sm">
-                                <div class="col-xs-12 col-sm-3 col-lg-3">
-                                    <label>[[localize("eventName")]]</label>
-                                </div>
-                                <div class="col-xs-12 col-sm-8 pad">
-                                    <paper-input value="{{event.name}}"
-                                                 label="[[localize('eventName')]]"></paper-input>
-                                </div>
+                        <div class="row left-xs bottom-xs bottom-sm left-sm">
+                            <div class="col-xs-12 col-sm-3">
+                                <label>[[localize("trackStartDate")]]</label>
                             </div>
-                            <div class="row left-xs bottom-xs bottom-sm left-sm">
-                                <div class="col-xs-12 col-sm-3">
-                                    <label>[[localize("eventStartDate")]]</label>
-                                </div>
-                                <div class="col-xs-12 col-sm-4">
-                                    <vaadin-date-picker
-                                            label="[[localize('startDate')]]"
-                                            value="{{event.startDate}}"></vaadin-date-picker>
-                                </div>
-                                <div class="col-xs-12 col-sm-4">
-                                    <time-picker
-                                            value="{{event.startTime}}"
-                                            label="[[localize('startTime')]]"></time-picker>
-                                </div>
+                            <div class="col-xs-12 col-sm-4">
+                                <vaadin-date-picker
+                                        label="[[localize('startDate')]]"
+                                        value="{{track.startDate}}"></vaadin-date-picker>
                             </div>
-                            <div class="row left-xs bottom-xs bottom-sm left-sm">
-                                <div class="col-xs-12 col-sm-3 col-lg-3">
-                                    <label>[[localize("eventEndDate")]]</label>
-                                </div>
-                                <div class="col-xs-12 col-sm-4">
-                                    <vaadin-date-picker
-                                            label="[[localize('endDate')]]"
-                                            value="{{event.endDate}}"></vaadin-date-picker>
-                                </div>
-                                <div class="col-xs-12 col-sm-4">
-                                    <time-picker
-                                            value="{{event.endTime}}"
-                                            label="[[localize('endTime')]]"></time-picker>
-                                </div>
+                            <div class="col-xs-12 col-sm-4">
+                                <time-picker
+                                        value="{{track.startTime}}"
+                                        label="[[localize('startTime')]]"></time-picker>
                             </div>
-                            <div class="row left-xs bottom-xs middle-sm left-sm">
-                                <div class="col-xs-12 col-sm-3 col-lg-3">
-                                    <label>[[localize("eventDescription")]]</label>
-                                </div>
-                                <div class="col-xs-12 col-sm-8 pad">
-                                    <polymer-tinymce id="description"
-                                                     tinytoolbar="insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
-                                                     tinyplugins='["advlist autolink lists link image charmap print preview anchor","searchreplace visualblocks code fullscreen","insertdatetime media table contextmenu paste"]'
-                                                     value="{{event.description}}"
-                                    ></polymer-tinymce>
-                                </div>
+                        </div>
+                        <div class="row left-xs bottom-xs bottom-sm left-sm">
+                            <div class="col-xs-12 col-sm-3 col-lg-3">
+                                <label>[[localize("trackEndDate")]]</label>
                             </div>
-                            <div class="row bottom-xs bottom-sm center-sm">
-                                <div class="col-xs-12 col-sm-12 col-lg-12 center-xs center-sm">
-                                    <paper-button primary raised on-tap="_onSave">[[localize('save')]]
-                                    </paper-button>
-                                    <paper-button secondary raised on-tap="_onReset">[[localize('reset')]]
-                                    </paper-button>
-                                </div>
+                            <div class="col-xs-12 col-sm-4">
+                                <vaadin-date-picker
+                                        label="[[localize('endDate')]]"
+                                        value="{{track.endDate}}"></vaadin-date-picker>
                             </div>
-                        </iron-form>
-                    </div>
-                    <track-list-page name="track-list-page" event="{{event}}"></track-list-page>
-                </neon-animated-pages>
-        </div>
-        </paper-header-panel>
+                            <div class="col-xs-12 col-sm-4">
+                                <time-picker
+                                        value="{{track.endTime}}"
+                                        label="[[localize('endTime')]]"></time-picker>
+                            </div>
+                        </div>
+                        <div class="row left-xs bottom-xs middle-sm left-sm">
+                            <div class="col-xs-12 col-sm-3 col-lg-3">
+                                <label>[[localize("trackDescription")]]</label>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 pad">
+                                <polymer-tinymce id="description"
+                                                 tinytoolbar="insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+                                                 tinyplugins='["advlist autolink lists link image charmap print preview anchor","searchreplace visualblocks code fullscreen","insertdatetime media table contextmenu paste"]'
+                                                 value="{{track.description}}"
+                                ></polymer-tinymce>
+                            </div>
+                        </div>
+                        <div class="row bottom-xs bottom-sm center-sm">
+                            <div class="col-xs-12 col-sm-12 col-lg-12 center-xs center-sm">
+                                <paper-button primary raised on-tap="_onSave">[[localize('save')]]
+                                </paper-button>
+                                <paper-button secondary raised on-tap="_onReset">[[localize('reset')]]
+                                </paper-button>
+                            </div>
+                        </div>
+                    </iron-form>
+                </div>
+            </neon-animated-pages>
         </div>
 
         <iron-ajax
                 id="saveRequest"
                 method="POST"
-                url="[[_computeSaveUrl(event)]]"
+                url="[[_computeSaveUrl(track)]]"
                 content-type="application/json"
                 handle-as="json"
-                last-response="{{event}}"
+                last-response="{{track}}"
                 on-response="_onSaveSuccess"
                 on-error="_onSaveError"
-                body="[[event]]"
+                body="[[track]]"
                 bubbles
         ></iron-ajax>
     </template>
@@ -119,7 +112,7 @@
             },
 
             observers: [
-                "_onEventChanged(event)",
+                "_onTrackChanged(track)",
                 "_onSelectedPageIdChanged(selectedPageId)"
             ],
 
@@ -131,9 +124,9 @@
                 }
             },
 
-            _onEventChanged: function (event) {
-                if (event) {
-                    this.previousEvent = JSON.stringify(event);
+            _onTrackChanged: function (track) {
+                if (track) {
+                    this.previousTrack = JSON.stringify(track);
                 }
             },
 
@@ -142,10 +135,10 @@
             },
 
             _onReset: function () {
-                if (this.previousEvent) {
-                    var event = JSON.parse(this.previousEvent);
-                    this.previousEvent = null;
-                    this.set("event", event);
+                if (this.previousTrack) {
+                    var track = JSON.parse(this.previousTrack);
+                    this.previousTrack = null;
+                    this.set("track", track);
                 }
             },
 
@@ -157,24 +150,24 @@
                 debugger;
             },
 
-            _computeSaveUrl: function (event) {
+            _computeSaveUrl: function (track) {
                 return "api.php/events/" + (event && event._id && event._id !== "new" ? event._id : "new");
             },
 
             buildMenu: function () {
                 this.splice("menu.children", 0, this.menu.children.length);
-                if (!this.event._id) {
-                    this.set("menu.label", this.localize("newEvent"));
+                if (!this.track._id) {
+                    this.set("menu.label", this.localize("newTrack"));
                     this.set("menu.id", "new");
                 } else {
-                    this.set("menu.label", this.event.name || this.event._id);
-                    this.set("menu.id", this.event._id);
+                    this.set("menu.label", this.track.name || this.track._id);
+                    this.set("menu.id", this.track._id);
                 }
                 this.set("menu.link", this.pathHead);
                 this.splice("menu.children", 0, 0, {
                     id: "tracks",
-                    label: this.localize('tracks'),
-                    link: this.get("menu.link") + "/tracks",
+                    label: this.localize('workshops'),
+                    link: this.get("menu.link") + "/workshops",
                     children: []
                 });
             }
