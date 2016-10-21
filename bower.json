@@ -29,7 +29,7 @@
     "polymer-tinymce": "^1.0.0",
     "polymer-bootstrap": "^0.1.2",
     "flexboxgrid": "^6.3.2",
-    "jquery": "^2.3.0"
+    "jquery": "^3.1.1"
   },
   "resolutions": {
     "firebase": "^3.0"

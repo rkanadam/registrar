@@ -45,7 +45,7 @@
                             </div>
                         </div>
                     </paper-toolbar>
-                    <iron-list items="{{events}}" as="event" scroll-target="html" class="fit">
+                    <iron-list id = "list" items="{{events}}" as="event" class="fit">
                         <template>
                             <paper-material class$="[[_computedClass(selected)]]"
                                             tabindex$="[[tabindex]]"
@@ -100,8 +100,14 @@
             },
 
             listeners: {
-                "after-page-select": "_loadPage"
+                "after-page-select": "_loadPage",
+                "page-select": "_refreshList"
             },
+
+            _refreshList: function () {
+                this.$.list.fire("iron-resize");
+            },
+
 
             observers: [
                 "_onSelectedPageIdChanged(selectedPageId)",

@@ -11,7 +11,6 @@
                                  entry-animation="fade-in-animation"
                                  exit-animation="fade-out-animation"
                                  attr-for-selected="name"
-                                 fallback-selection="event-list"
                                  selected-item="{{selectedPage}}"
                                  style="height:100%"
             >
@@ -20,12 +19,12 @@
                     <div class="paper-header">
                         <paper-item class="title flex">[[localize('eventPageDescription')]]</paper-item>
                     </div>
-                    <iron-form method="post" action="/" id="basic" style="height: 100%" class="container">
+                    <iron-form method="post" action="/" id="basic">
                         <div class="row left-xs bottom-xs bottom-sm left-sm">
                             <div class="col-xs-12 col-sm-3 col-lg-3">
                                 <label>[[localize("eventName")]]</label>
                             </div>
-                            <div class="col-xs-12 col-sm-8 pad">
+                            <div class="col-xs-12 col-sm-8">
                                 <paper-input value="{{event.name}}"
                                              label="[[localize('eventName')]]"></paper-input>
                             </div>
@@ -110,7 +109,10 @@
             properties: {
                 event: {
                     type: Object,
-                    value: {}
+                    value: function () {
+                        return {};
+                    },
+                    notify: true
                 }
             },
 
@@ -118,6 +120,10 @@
                 "_onEventChanged(event)",
                 "_onSelectedPageIdChanged(selectedPageId)"
             ],
+
+            listeners: {
+                "save-event": "_onSave"
+            },
 
             _onSelectedPageIdChanged: function (selectedPageId) {
                 if (!this.selectedPageId) {

@@ -37,7 +37,7 @@
                         </paper-button>
                     </a>
                 </div>
-                <iron-list items="{{workshops}}" as="workshop" scroll-target="html" class="flex"
+                <iron-list id = "list" items="{{workshops}}" as="workshop" class="flex"
                            selection-enabled selected-item="{{selectedWorkshop}}">
                     <template>
                         <paper-material class$="[[_computedClass(selected)]]"
@@ -46,11 +46,13 @@
                                         title$="[[localize('clickToEdit')]]"
                         >
                             <div class="col-xs-12 col-sm-9">
-                                <div>[[workshop.name]]</div>
-                                <div>
-                                    <raw-html
-                                            html="[[workshop.description]]"></raw-html>
-                                </div>
+                                <a href="#[[pathHead]]/[[index]]">
+                                    <div>[[workshop.name]]</div>
+                                    <div>
+                                        <raw-html
+                                                html="[[workshop.description]]"></raw-html>
+                                    </div>
+                                </a>
                             </div>
                             <div class="toolbar col-xs-12 col-sm-3">
                                 <paper-icon-button icon="delete" on-tap="_deleteWorkshop"></paper-icon-button>
@@ -80,6 +82,14 @@
                 "track": {
                     type: Object
                 }
+            },
+
+            listeners: {
+                "page-select": "_refreshList"
+            },
+
+            _refreshList: function () {
+                this.$.list.fire("iron-resize");
             },
 
             _deleteWorkshop: function (e) {

@@ -82,19 +82,6 @@
                 <workshop-list-page name="workshop-list-page"></workshop-list-page>
             </neon-animated-pages>
         </div>
-
-        <iron-ajax
-                id="saveRequest"
-                method="POST"
-                url="[[_computeSaveUrl(track)]]"
-                content-type="application/json"
-                handle-as="json"
-                last-response="{{track}}"
-                on-response="_onSaveSuccess"
-                on-error="_onSaveError"
-                body="[[track]]"
-                bubbles
-        ></iron-ajax>
     </template>
     <script>
         Polymer({
@@ -132,7 +119,7 @@
             },
 
             _onSave: function () {
-                this.$.saveRequest.generateRequest();
+                this.fire("save-event", this.event, {bubbles: true});
             },
 
             _onReset: function () {

@@ -24,34 +24,35 @@
                              entry-animation="fade-in-animation"
                              exit-animation="fade-out-animation"
                              attr-for-selected="name"
-                             fallback-selection="track-list"
                              selected-item="{{selectedPage}}"
                              class="flex">
+            <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
             <div name="track-list-page" class="container" style="height: 100%;padding: 0px 20px 0px 20px">
-                <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
                 <div class="app-button-bar row">
-                    <paper-item class="col-xs-12 col-sm-7">[[localize('eventTrackListPageDescription')]]</paper-item>
-                    <a href="#[[pathHead]]/new" class="col-xs-12 col-sm-5" >
+                    <paper-item class="col-xs-12 col-sm-6">[[localize('eventTrackListPageDescription')]]</paper-item>
+                    <a href="#[[pathHead]]" class="col-xs-12 col-sm-6" on-tap="_addNewTrack" onclick="return false;">
                         <paper-button primary raised>
                             <iron-icon icon="add-box"></iron-icon>
                             &nbsp;&nbsp;[[localize('addNewTrack')]]
                         </paper-button>
                     </a>
                 </div>
-                <iron-list items="{{tracks}}" as="track" scroll-target="html" class="flex"
-                           selection-enabled selected-item="{{selectedTrack}}">
-                    <template>
+                <iron-list id="list" items="{{event.tracks}}" as="track" class="flex"
+                           selection-enabled>
+                <template>
                         <paper-material class$="[[_computedClass(selected)]]"
                                         tabindex$="[[tabindex]]"
                                         elevation="0"
                                         title$="[[localize('clickToEdit')]]"
                         >
                             <div class="col-xs-12 col-sm-9">
-                                <div>[[track.name]]</div>
-                                <div>
-                                    <raw-html
-                                            html="[[track.description]]"></raw-html>
-                                </div>
+                                <a href="#[[pathHead]]/[[index]]">
+                                    <div>{{track.name}}</div>
+                                    <div>
+                                        <raw-html
+                                                html="{{track.description}}"></raw-html>
+                                    </div>
+                                </a>
                             </div>
                             <div class="toolbar col-xs-12 col-sm-3">
                                 <paper-icon-button icon="delete" on-tap="_deleteTrack"></paper-icon-button>
@@ -74,13 +75,22 @@
             ],
 
             observers: [
-                "_onSelectedPageIdChanged(selectedPageId)",
+                "_onSelectedPageIdChanged(selectedPageId)"
             ],
 
             properties: {
                 "event": {
-                    type: Object
+                    type: Object,
+                    notify: true
                 }
+            },
+
+            listeners: {
+                "page-select": "_refreshList"
+            },
+
+            _refreshList: function () {
+                this.$.list.fire("iron-resize");
             },
 
             _deleteTrack: function (e) {
@@ -103,7 +113,7 @@
             buildMenu: function () {
                 this.set("menu.label", this.localize("tracks"));
                 this.set("menu.id", "tracks");
-                this.set("menu.link", this.pathHead);
+                this.set("menu.link", "events/" + (this.event._id || "new") + "/tracks");
                 this.splice("menu.children", 0, this.menu.children.length);
                 if (this.selectedPage && this.selectedPage.menu) {
                     this.selectedPage.buildMenu();
@@ -119,7 +129,12 @@
                     if (selectedPageId === "new") {
                         track = {};
                     } else {
-                        track = this.event.tracks[selectedPageId]
+                        var index = parseInt(selectedPageId);
+                        if (isNaN(index) || index < 0 || index >= this.event.tracks.length) {
+
+                        } else {
+                            track = this.event.tracks[index]
+                        }
                     }
 
                     if (track) {
@@ -128,6 +143,23 @@
                     }
                 }
             },
+
+            _addNewTrack: function (e) {
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                var href = e.currentTarget.getAttribute("href");
+                if (!this.event.tracks) {
+                    this.set("event.tracks", []);
+                }
+                this.push("event.tracks", {});
+                window.location.hash = href + "/" + (this.event.tracks.length - 1);
+                return false;
+            },
+
+            _getTracks: function (event) {
+                return this.event && this.event.tracks ? this.event.tracks : [{name: "Hello"}];
+            }
+
         });
     </script>
 </dom-module>

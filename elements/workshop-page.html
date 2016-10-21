@@ -1,0 +1,151 @@
+<dom-module id="workshop-page">
+    <style include="app-theme">
+        .pad {
+            padding-top: 30px;
+        }
+    </style>
+    <template>
+        <success-dialog id="saveDialog" msg-key="workshopSavedMessage"></success-dialog>
+        <div style="padding: 0px 20px 0px 20px;position: relative;height: 100%;">
+            <neon-animated-pages id="pages"
+                                 entry-animation="fade-in-animation"
+                                 exit-animation="fade-out-animation"
+                                 attr-for-selected="name"
+                                 fallback-selection="event-list"
+                                 selected-item="{{selectedPage}}"
+                                 style="height:100%"
+            >
+                <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
+                <div name="workshop-page">
+                    <iron-form method="post" action="/" id="basic" style="height: 100%" class="container">
+                        <div class="row left-xs bottom-xs bottom-sm left-sm">
+                            <div class="col-xs-12 col-sm-3 col-lg-3">
+                                <label>[[localize("workshopName")]]</label>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 pad">
+                                <paper-input value="{{workshop.name}}"
+                                             label="[[localize('workshopName')]]"></paper-input>
+                            </div>
+                        </div>
+                        <div class="row left-xs bottom-xs bottom-sm left-sm">
+                            <div class="col-xs-12 col-sm-3">
+                                <label>[[localize("workshopStartDate")]]</label>
+                            </div>
+                            <div class="col-xs-12 col-sm-4">
+                                <vaadin-date-picker
+                                        label="[[localize('startDate')]]"
+                                        value="{{workshop.startDate}}"></vaadin-date-picker>
+                            </div>
+                            <div class="col-xs-12 col-sm-4">
+                                <time-picker
+                                        value="{{workshop.startTime}}"
+                                        label="[[localize('startTime')]]"></time-picker>
+                            </div>
+                        </div>
+                        <div class="row left-xs bottom-xs bottom-sm left-sm">
+                            <div class="col-xs-12 col-sm-3 col-lg-3">
+                                <label>[[localize("workshopEndDate")]]</label>
+                            </div>
+                            <div class="col-xs-12 col-sm-4">
+                                <vaadin-date-picker
+                                        label="[[localize('endDate')]]"
+                                        value="{{workshop.endDate}}"></vaadin-date-picker>
+                            </div>
+                            <div class="col-xs-12 col-sm-4">
+                                <time-picker
+                                        value="{{workshop.endTime}}"
+                                        label="[[localize('endTime')]]"></time-picker>
+                            </div>
+                        </div>
+                        <div class="row left-xs bottom-xs middle-sm left-sm">
+                            <div class="col-xs-12 col-sm-3 col-lg-3">
+                                <label>[[localize("workshopDescription")]]</label>
+                            </div>
+                            <div class="col-xs-12 col-sm-8 pad">
+                                <polymer-tinymce id="description"
+                                                 tinytoolbar="insertfile undo redo | styleselect | bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image"
+                                                 tinyplugins='["advlist autolink lists link image charmap print preview anchor","searchreplace visualblocks code fullscreen","insertdatetime media table contextmenu paste"]'
+                                                 value="{{workshop.description}}"
+                                ></polymer-tinymce>
+                            </div>
+                        </div>
+                        <div class="row bottom-xs bottom-sm center-sm">
+                            <div class="col-xs-12 col-sm-12 col-lg-12 center-xs center-sm">
+                                <paper-button primary raised on-tap="_onSave">[[localize('save')]]
+                                </paper-button>
+                                <paper-button secondary raised on-tap="_onReset">[[localize('reset')]]
+                                </paper-button>
+                            </div>
+                        </div>
+                    </iron-form>
+                </div>
+                <workshop-list-page name="workshop-list-page"></workshop-list-page>
+            </neon-animated-pages>
+        </div>
+    </template>
+    <script>
+        Polymer({
+
+            is: 'workshop-page',
+
+            behaviors: [
+                AppBehaviors.AppBehavior
+            ],
+
+            properties: {
+                workshop: {
+                    type: Object,
+                    value: {}
+                }
+            },
+
+            observers: [
+                "_onWorkshopChanged(workshop)",
+                "_onSelectedPageIdChanged(selectedPageId)"
+            ],
+
+            _onSelectedPageIdChanged: function (selectedPageId) {
+            },
+
+            _onWorkshopChanged: function (workshop) {
+                if (workshop) {
+                    this.previousWorkshop = JSON.stringify(workshop);
+                }
+            },
+
+            _onSave: function () {
+                this.fire("save-event");
+            },
+
+            _onReset: function () {
+                if (this.previousWorkshop) {
+                    var workshop = JSON.parse(this.previousWorkshop);
+                    this.previousWorkshop = null;
+                    this.set("workshop", workshop);
+                }
+            },
+
+            _computeSaveUrl: function (workshop) {
+                return "api.php/events/" + (event && event._id && event._id !== "new" ? event._id : "new");
+            },
+
+            buildMenu: function () {
+                this.splice("menu.children", 0, this.menu.children.length);
+                if (!this.workshop._id) {
+                    this.set("menu.label", this.localize("newWorkshop"));
+                    this.set("menu.id", "new");
+                } else {
+                    this.set("menu.label", this.workshop.name || this.workshop._id);
+                    this.set("menu.id", this.workshop._id);
+                }
+                this.set("menu.link", this.pathHead);
+                this.splice("menu.children", 0, 0, {
+                    id: "workshops",
+                    label: this.localize('workshops'),
+                    link: this.get("menu.link") + "/workshops",
+                    children: []
+                });
+            }
+        });
+    </script>
+</dom-module>
