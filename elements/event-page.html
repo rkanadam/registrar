@@ -163,7 +163,7 @@
                 return "api.php/events/" + (event && event._id && event._id !== "new" ? event._id : "new");
             },
 
-            buildMenu: function () {
+            buildMenu: function (pathPrefix) {
                 this.splice("menu.children", 0, this.menu.children.length);
                 if (!this.event._id) {
                     this.set("menu.label", this.localize("newEvent"));
@@ -172,10 +172,10 @@
                     this.set("menu.label", this.event.name || this.event._id);
                     this.set("menu.id", this.event._id);
                 }
-                this.set("menu.link", this.pathHead);
+                this.set("menu.link", (pathPrefix ? pathPrefix + "/" : "") + this.get("menu.id"));
                 _.each(this.$.pages.children, function (page) {
                     if (page.buildMenu) {
-                        page.buildMenu();
+                        page.buildMenu(this.get("menu.link"));
                         this.push("menu.children", page.menu);
                     }
                 }.bind(this));

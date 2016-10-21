@@ -1,6 +1,6 @@
 <dom-module id="workshop-list-page">
     <style include="app-theme">
-        .track {
+        .workshop {
             padding: 10px;
             border-bottom: 1px var(--divider-color) solid;
         }
@@ -26,12 +26,12 @@
                              attr-for-selected="name"
                              selected-item="{{selectedPage}}"
                              class="flex">
-            <div name="workshop-list-page" class="container" style="height: 100%;padding: 0px 20px 0px 20px">
-                <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
+            <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
+            <div name="workshop-list-page" style="height: 100%;">
                 <div class="app-button-bar row">
-                    <paper-item class="col-xs-12 col-sm-6">[[localize('eventTrackWorkshopListPageDescription')]]
+                    <paper-item class="col-xs-12 col-sm-7">[[localize('eventTrackWorkshopListPageDescription')]]
                     </paper-item>
-                    <a href="#[[pathHead]]" class="col-xs-12 col-sm-6" on-tap="_addNewWorkshop" onclick="return false;">
+                    <a href="#[[pathHead]]" class="col-xs-12 col-sm-5" on-tap="_addNewWorkshop" onclick="return false;">
                         <paper-button primary raised>
                             <iron-icon icon="add-box"></iron-icon>
                             &nbsp;&nbsp;[[localize('addNewWorkshop')]]
@@ -41,21 +41,21 @@
                 <iron-list id="list" items="{{track.workshops}}" as="workshop" class="flex"
                            selection-enabled>
                     <template>
-                        <paper-material class$="[[_computedClass(selected)]]"
+                        <paper-material class="row workshop"
                                         tabindex$="[[tabindex]]"
                                         elevation="0"
                                         title$="[[localize('clickToEdit')]]"
                         >
-                            <div class="col-xs-12 col-sm-9">
+                            <div class="col-xs-10 col-sm-11">
                                 <a href="#[[pathHead]]/[[index]]">
-                                    <div>[[workshop.name]]</div>
+                                    <div>{{workshop.name}}</div>
                                     <div>
                                         <raw-html
-                                                html="[[workshop.description]]"></raw-html>
+                                                html="{{workshop.description}}"></raw-html>
                                     </div>
                                 </a>
                             </div>
-                            <div class="toolbar col-xs-12 col-sm-3">
+                            <div class="toolbar col-xs-2 col-sm-1 end-sm end-xs">
                                 <paper-icon-button icon="delete" on-tap="_deleteWorkshop"></paper-icon-button>
                             </div>
                         </paper-material>
@@ -107,17 +107,13 @@
                 }
             },
 
-            _computedClass: function (selected) {
-                return "row workshop" + (selected ? " selected" : "");
-            },
-
-            buildMenu: function () {
+            buildMenu: function (pathPrefix) {
                 this.set("menu.label", this.localize("workshops"));
                 this.set("menu.id", "workshops");
-                this.set("menu.link", this.pathHead);
+                this.set("menu.link", (pathPrefix ? pathPrefix + "/" : "") + this.get("menu.id"));
                 this.splice("menu.children", 0, this.menu.children.length);
                 if (this.selectedPage && this.selectedPage.menu) {
-                    this.selectedPage.buildMenu();
+                    this.selectedPage.buildMenu(this.get("menu.link"));
                     this.splice("menu.children", 0, 0, this.selectedPage.menu);
                 }
             },
@@ -126,14 +122,9 @@
                 if (!selectedPageId) {
                     this.$.pages.set("selected", "workshop-list-page");
                 } else {
-                    var workshop = null;
-                    if (selectedPageId === "new") {
-                        workshop = {};
-                    } else {
-                        workshop = this.track.workshops[selectedPageId]
-                    }
-
+                    var workshop = this.track.workshops[selectedPageId]
                     if (workshop) {
+                        this.$.workshopEditPage.workshopIndex = selectedPageId;
                         this.$.workshopEditPage.workshop = workshop;
                         this.$.pages.set("selected", "workshop-page");
                     }

@@ -89,7 +89,16 @@
                         return {};
                     },
                     notify: true
+                },
+
+                workshopIndex: {
+                    type: Number,
+                    value: function () {
+                        return -1;
+                    },
+                    notify: false
                 }
+
             },
 
             observers: [
@@ -122,22 +131,11 @@
                 return "api.php/events/" + (event && event._id && event._id !== "new" ? event._id : "new");
             },
 
-            buildMenu: function () {
+            buildMenu: function (pathPrefix) {
                 this.splice("menu.children", 0, this.menu.children.length);
-                if (!this.workshop._id) {
-                    this.set("menu.label", this.localize("newWorkshop"));
-                    this.set("menu.id", "new");
-                } else {
-                    this.set("menu.label", this.workshop.name || this.workshop._id);
-                    this.set("menu.id", this.workshop._id);
-                }
-                this.set("menu.link", this.pathHead);
-                this.splice("menu.children", 0, 0, {
-                    id: "workshops",
-                    label: this.localize('workshops'),
-                    link: this.get("menu.link") + "/workshops",
-                    children: []
-                });
+                this.set("menu.label", this.workshop.name || this.localize("newWorkshop"));
+                this.set("menu.id", this.workshopIndex);
+                this.set("menu.link", (pathPrefix ? pathPrefix + "/" : "") + this.get("menu.id"));
             }
         });
     </script>

@@ -105,7 +105,7 @@
                 this.splice("menu.children", 0, this.menu.children.length);
                 _.each(this.$.pages.children, function (page) {
                     if (page.buildMenu) {
-                        page.buildMenu();
+                        page.buildMenu(this.pathHead);
                         this.push("menu.children", page.menu);
                     }
                 }.bind(this));
