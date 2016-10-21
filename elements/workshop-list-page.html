@@ -29,16 +29,17 @@
             <div name="workshop-list-page" class="container" style="height: 100%;padding: 0px 20px 0px 20px">
                 <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
                 <div class="app-button-bar row">
-                    <paper-item class="col-xs-12 col-sm-6">[[localize('eventTrackWorkshopListPageDescription')]]</paper-item>
-                    <a href="#[[pathHead]]/new" class="col-xs-12 col-sm-6" >
+                    <paper-item class="col-xs-12 col-sm-6">[[localize('eventTrackWorkshopListPageDescription')]]
+                    </paper-item>
+                    <a href="#[[pathHead]]" class="col-xs-12 col-sm-6" on-tap="_addNewWorkshop" onclick="return false;">
                         <paper-button primary raised>
                             <iron-icon icon="add-box"></iron-icon>
-                                &nbsp;&nbsp;[[localize('addNewWorkshop')]]
+                            &nbsp;&nbsp;[[localize('addNewWorkshop')]]
                         </paper-button>
                     </a>
                 </div>
-                <iron-list id = "list" items="{{workshops}}" as="workshop" class="flex"
-                           selection-enabled selected-item="{{selectedWorkshop}}">
+                <iron-list id="list" items="{{track.workshops}}" as="workshop" class="flex"
+                           selection-enabled>
                     <template>
                         <paper-material class$="[[_computedClass(selected)]]"
                                         tabindex$="[[tabindex]]"
@@ -62,7 +63,7 @@
                 </iron-list>
             </div>
             <workshop-page id="workshopEditPage"
-                        name="workshop-page"></workshop-page>
+                           name="workshop-page"></workshop-page>
         </neon-animated-pages>
     </template>
     <script>
@@ -80,7 +81,8 @@
 
             properties: {
                 "track": {
-                    type: Object
+                    type: Object,
+                    notify: true
                 }
             },
 
@@ -137,6 +139,19 @@
                     }
                 }
             },
+
+            _addNewWorkshop: function (e) {
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                var href = e.currentTarget.getAttribute("href");
+                if (!this.track.workshops) {
+                    this.set("track.workshops", []);
+                }
+                this.push("track.workshops", {});
+                window.location.hash = href + "/" + (this.track.workshops.length - 1);
+                return false;
+            },
+
         });
     </script>
 </dom-module>

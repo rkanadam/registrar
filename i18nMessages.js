@@ -48,7 +48,13 @@ window.i18nMessages = {
         "trackDescription": "Track Description",
         "workshops": "Workshops",
         "eventTrackWorkshopListPageDescription": "Use this page to add workshops to your event. Workshops / Breakouts might require a list of items to bring or be prepared with. You can attach documents / action items here.",
-        "addNewWorkshop": "Add a new workshop/breakout"
+        "addNewWorkshop": "Add a new workshop/breakout",
+        "workshopName": "Workshop Name",
+        "workshopStartDate": "Workshop start date and time",
+        "workshopEndDate": "Workshop end date and time",
+        "workshopSavedMessage": "The workshop  was successfully saved",
+        "workshopDescription": "Workshop Description",
+
     },
     "fr": {}
 };
