@@ -54,8 +54,8 @@ window.i18nMessages = {
         "workshopEndDate": "Workshop end date and time",
         "workshopSavedMessage": "The workshop  was successfully saved",
         "workshopDescription": "Workshop Description",
-        "newWorkshop": "New Workshop"
-
+        "newWorkshop": "New Workshop",
+        "appliesTo": "Applies To"
     },
     "fr": {}
 };

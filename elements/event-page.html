@@ -81,6 +81,7 @@
                         </div>
                     </iron-form>
                 </div>
+                <applies-to-page name="applies-to-page" profile="{{event.profile}}"></applies-to-page>
                 <track-list-page name="track-list-page" event="{{event}}"></track-list-page>
             </neon-animated-pages>
         </div>
@@ -130,6 +131,11 @@
                     this.$.pages.set("selected", "event-page");
                 } else if (this.selectedPageId === "tracks") {
                     this.$.pages.set("selected", "track-list-page");
+                } else if (this.selectedPageId === "appliesTo") {
+                    if (this.event && !this.event.profile) {
+                        this.set("event.profile", {});
+                    }
+                    this.$.pages.set("selected", "applies-to-page");
                 }
             },
 

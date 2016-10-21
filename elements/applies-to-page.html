@@ -1,0 +1,30 @@
+<dom-module id="applies-to-page">
+    <template>
+        <profile-page profile="{{profile}}"></profile-page>
+    </template>
+    <script>
+        Polymer({
+            is: 'applies-to-page',
+            behaviors: [
+                AppBehaviors.AppBehavior
+            ],
+
+            properties: {
+                profile: {
+                    type: Object,
+                    value: function () {
+                        return {};
+                    },
+                    notify: true
+                }
+            },
+
+            buildMenu: function (pathPrefix) {
+                this.set("menu.label", this.localize("appliesTo"));
+                this.set("menu.id", "appliesTo");
+                this.set("menu.link", (pathPrefix ? pathPrefix + "/" : "") + this.get("menu.id"));
+                this.splice("menu.children", 0, this.menu.children.length);
+            }
+        });
+    </script>
+</dom-module>
