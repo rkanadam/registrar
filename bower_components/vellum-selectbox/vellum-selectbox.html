@@ -1,0 +1,509 @@
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="../paper-styles/paper-styles.html">
+<link rel="import" href="../paper-item/paper-item.html">
+<link rel="import" href="../paper-item/paper-item-body.html">
+<link rel="import" href="../paper-item/paper-icon-item.html">
+<link rel="import" href="../paper-ripple/paper-ripple.html">
+
+<link rel="import" href="../iron-icon/iron-icon.html">
+
+<link rel="import" href="../vellum-chip/vellum-chiplist.html">
+
+<!--
+Turns a `<select>` into a functional combobox.
+
+Example:
+
+    <vellum-selectbox>
+      <select multiple>
+        <option value="1">One</option>
+        <option value="2">Two</option>
+        <option value="3">Three</option>
+      </select>
+    </vellum-selectbox>
+
+    <vellum-selectbox>
+      <select multiple>
+        <option value="1" icon="room">One</option>
+        <option value="2" icon="send">Two</option>
+        <option value="3" icon="okay">Three</option>
+      </select>
+    </vellum-selectbox>
+
+@demo demo/index.html
+-->
+<dom-module id="vellum-selectbox">
+
+    <style>
+        :host {
+            position: relative;
+            display: block;
+        }
+
+        #box {
+            background: #fff;
+            border: 1px solid #eee;
+            border-radius: 5px;
+
+            overflow: auto;
+            padding: 3px;
+        }
+
+        #box.active {
+            border-color: var(--paper-blue-50);
+        }
+
+        #dropdown {
+            position: absolute;
+            left: 5px;
+            right: 5px;
+            top: 100%;
+            background-color: #fff;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            z-index: 100;
+            height: auto;
+            visibility: hidden;
+            max-height: 0px;
+
+            overflow: hidden;
+
+            transition: max-height 0.10s ease-out,
+            visibility 0.10s linear,
+            overflow 0.10s linear;
+        }
+
+        #dropdown > [selected] {
+            color: var(--paper-grey-400);
+        }
+
+        #dropdown > [highlighted] {
+            background-color: var(--paper-blue-400);
+            color: #fff;
+        }
+
+        #dropdown > [selected][highlighted] {
+            color: var(--paper-grey-200);
+        }
+
+        #box.active + #dropdown {
+            visibility: visible;
+            max-height: 500px;
+            overflow: auto;
+            z-index: 101;
+        }
+
+        #textbox {
+            border: none;
+            background: none;
+            flex: 1;
+            @apply(--paper-font-body2);
+            min-width: 150px;
+            margin: 4px 0 4px 4px;
+        }
+
+        #textbox:focus {
+            outline: none;
+        }
+
+        #dropdown paper-item, #dropdown paper-icon-item {
+            cursor: default;
+            position: relative;
+        }
+
+        #dropdown > :hover {
+            background-color: var(--paper-grey-100);
+        }
+
+        #dropdown > [highlighted]:hover {
+            background-color: var(--paper-blue-200);
+        }
+
+        .texthl {
+            background: yellow;
+        }
+
+        #dropdown > [highlighted] .texthl {
+            background: steelblue;
+        }
+    </style>
+
+    <template>
+        <array-selector id="selector" items="{{data}}" selected="{{selected}}" multi toggle></array-selector>
+
+        <div id="box">
+            <vellum-chiplist data="[[selected]]">
+                <input
+                        is="iron-input"
+                        id="textbox"
+                        bind-value="{{searchText}}"
+                        value="{{searchText::input}}"
+                        type="text"
+                        on-focus="_focusBox"
+                        on-blur="_blurBox"
+                        on-keydown="_keyPressed"
+                        placeholder="{{placeholder}}">
+            </vellum-chiplist>
+        </div>
+        <div id="dropdown">
+            <template is="dom-if" if="{{_showDropdown}}">
+                <template is="dom-if" if="{{_simple(data.0)}}">
+                    <template is="dom-repeat" items="{{data}}" as="item" filter="_search" id="simpleList">
+                        <paper-item on-tap="_selectItem" selected$="{{item.selected}}"
+                                    highlighted$="{{item.highlighted}}">
+                            <div inner-h-t-m-l="{{_textHighlight(item.text, searchText)}}"></div>
+                            <paper-ripple></paper-ripple>
+                        </paper-item>
+                    </template>
+                </template>
+
+                <template is="dom-if" if="{{_twoLine(data.0)}}">
+                    <template is="dom-repeat" items="{{data}}" as="item" filter="_search" id="twoLineList">
+                        <paper-item on-tap="_selectItem" selected$="{{item.selected}}"
+                                    highlighted$="{{item.highlighted}}">
+                            <paper-item-body two-line>
+                                <div inner-h-t-m-l="{{_textHighlight(item.text, searchText)}}"></div>
+                                <div secondary inner-h-t-m-l="{{_textHighlight(item.subtext, searchText)}}"></div>
+                            </paper-item-body>
+                            <paper-ripple></paper-ripple>
+                        </paper-item>
+                    </template>
+                </template>
+
+                <template is="dom-if" if="{{_simpleIcon(data.0)}}">
+                    <template is="dom-repeat" items="{{data}}" as="item" filter="_search" id="simpleIconList">
+                        <paper-icon-item on-tap="_selectItem" selected$="{{item.selected}}"
+                                         highlighted$="{{item.highlighted}}">
+                            <iron-icon icon="{{item.icon}}" src="{{item.src}}" item-icon></iron-icon>
+                            <div inner-h-t-m-l="{{_textHighlight(item.text, searchText)}}"></div>
+                            <paper-ripple></paper-ripple>
+                        </paper-icon-item>
+                    </template>
+                </template>
+
+                <template is="dom-if" if="{{_twoLineIcon(data.0)}}">
+                    <template is="dom-repeat" items="{{data}}" as="item" filter="_search" id="twoLineIconList">
+                        <paper-icon-item on-tap="_selectItem" selected$="{{item.selected}}"
+                                         highlighted$="{{item.highlighted}}">
+                            <iron-icon icon="{{item.icon}}" src="{{item.src}}" item-icon></iron-icon>
+                            <paper-item-body two-line>
+                                <div inner-h-t-m-l="{{_textHighlight(item.text, searchText)}}"></div>
+                                <div secondary inner-h-t-m-l="{{_textHighlight(item.subtext, searchText)}}"></div>
+                            </paper-item-body>
+                            <paper-ripple></paper-ripple>
+                        </paper-icon-item>
+                    </template>
+                </template>
+            </template>
+        </div>
+    </template>
+
+    <script>
+        (function () {
+            "use strict";
+
+            Polymer({
+                is: 'vellum-selectbox',
+
+                properties: {
+                    data: {
+                        type: Array,
+                        notify: true,
+                        value: function () {
+                            return []
+                        }
+                    },
+                    searchText: {
+                        type: String,
+                        value: "",
+                        notify: true,
+                        observer: '_updateSearch'
+                    },
+                    _currentItem: {
+                        type: Number,
+                        observer: '_highlightItem'
+                    },
+                    multi: {
+                        type: Boolean,
+                        value: function () {
+                            return true;
+                        }
+                    },
+                    value: {
+                        type: Array,
+                        notify: true,
+                        value: function () {
+                            return []
+                        }
+                    },
+                },
+
+                observers: ['dataChanged(data.splices)', '_selectedChanged(selected.*)', '_selectedSplicesChanged(selected.splices)', '_onValueChanged(value)'],
+
+                _onValueChanged: function (value) {
+                    if (this.data && value) {
+                        this.data.forEach(function (itm, idx) {
+                            if (this.$.selector.selected.indexOf(itm) !== -1) {
+                                if (value.indexOf(itm.value) === -1) {
+                                    this.set('data.' + idx + '.selected', false);
+                                    itm.selected = false;
+                                    this.$.selector.select(itm);
+                                }
+                            } else {
+                                if (value.indexOf(itm.value) !== -1) {
+                                    this.set('data.' + idx + '.selected', true);
+                                    itm.selected = true;
+                                    this.$.selector.select(itm);
+                                }
+                            }
+                        }, this);
+                    }
+                },
+
+                _selectedChanged: function () {
+                    this.fire("select");
+                },
+
+                _selectedSplicesChanged: function (rec) {
+                    if (rec && rec.indexSplices && rec.indexSplices.length) {
+                        for (var i = 0, splices = rec.indexSplices, len = splices.length; i < len; ++i) {
+                            var splice = splices[i];
+                            var added = [];
+                            if (splice.addedCount) {
+                                for (var j = 0; j < splice.addedCount; ++j) {
+                                    added.push(splice.object[splice.index + j].value);
+                                }
+                            }
+                            this.splice.apply(this, ["value", splice.index, splice.removed.length].concat(added));
+                        }
+                    }
+                },
+
+                dataChanged: function (rec) {
+                    this.data.forEach(function (itm, idx) {
+                        if (
+                                (itm.selected && this.$.selector.selected.indexOf(itm) === -1)
+                                ||
+                                (!itm.selected && this.$.selector.selected.indexOf(itm) !== -1)
+                                ||
+                                (this.value && this.value.indexOf(itm.value) !== -1)
+                        ) {
+                            this.$.selector.select(itm);
+                        }
+                    }, this);
+                },
+
+                _clearHighlighted: function () {
+                    this.data.forEach(function (itm, idx) {
+                        this.set('data.' + idx + '.highlighted', false);
+                    }, this);
+                },
+
+                _highlightItem: function () {
+                    this._clearHighlighted();
+                    this.set('data.' + this._currentItem + '.highlighted', true);
+                    this._scrollDropdown();
+                },
+
+                _keyPressed: function (event) {
+                    var item;
+
+                    var searchList = this.data.filter(this._search, this);
+                    var currentSearchIndex = this._currentItem !== undefined ? searchList.indexOf(this.data[this._currentItem]) : undefined;
+
+                    // Backspace
+                    if (event.keyCode === 8) {
+                        // Make sure the user is not intending to delete text
+                        // by ensuring the caret is at the start of the input.
+                        if (this.$.textbox.selectionStart === 0 && this.$.textbox.selectionEnd === 0) {
+                            if (this.selected.length === 0) return;
+
+                            item = this.selected[this.selected.length - 1];
+                            this.set('data.' + this.data.indexOf(item) + '.selected', false);
+                            item.selected = false;
+                            this.$.selector.select(item);
+
+                        }
+                    }
+
+                    // Up Arrow
+                    if (event.keyCode === 38) {
+                        this._focusBox();
+                        if (this._currentItem === undefined || this._currentItem === 0) {
+                            this._currentItem = this.data.indexOf(searchList[0]);
+                        } else {
+                            if (currentSearchIndex > 0) {
+                                this._currentItem = this.data.indexOf(searchList[currentSearchIndex - 1]);
+                            } else {
+                                this._currentItem = this.data.indexOf(searchList[0]);
+                            }
+                        }
+                    }
+
+                    // Down Arrow
+                    if (event.keyCode === 40) {
+                        this._focusBox();
+                        if (this._currentItem === undefined) {
+                            this._currentItem = this.data.indexOf(searchList[0]);
+                        } else if (currentSearchIndex === searchList.indexOf(searchList[searchList.length - 1])) {
+                            return;
+                        } else {
+                            if (currentSearchIndex < searchList.length - 1) {
+                                this._currentItem = this.data.indexOf(searchList[currentSearchIndex + 1]);
+                            } else {
+                                this._currentItem = this.data.indexOf(searchList[searchList.length - 1]);
+                            }
+                        }
+                    }
+
+                    // Enter
+                    if (event.keyCode === 13) {
+                        if (this._currentItem === undefined) return;
+                        if (this.data[this._currentItem]) {
+                            this.set('data.' + this._currentItem + '.selected', !this.data[this._currentItem].selected);
+                            this.$.selector.select(this.data[this._currentItem]);
+                        }
+                    }
+
+                    // Escape
+                    if (event.keyCode === 27) {
+                        this._blurBox();
+                    }
+                },
+
+                _scrollDropdown: function () {
+                    var item = this.$.dropdown.querySelector('[highlighted]');
+                    if (!item) return;
+                    var itemTop = item.offsetTop;
+                    var itemBottom = itemTop + item.offsetHeight;
+                    var scrollTop = this.$.dropdown.scrollTop;
+                    var scrollBottom = this.$.dropdown.clientHeight + scrollTop;
+
+                    if (itemBottom > scrollBottom) {
+                        this.$.dropdown.scrollTop = itemTop + item.offsetHeight - this.$.dropdown.clientHeight;
+                    }
+                    if (itemTop < scrollTop) {
+                        this.$.dropdown.scrollTop = itemTop;
+                    }
+                },
+
+                _focusBox: function () {
+                    this.$.box.classList.add('active');
+                    this._showDropdown = true;
+                },
+                _blurBox: function () {
+                    this._blurHandle = this.async((function () {
+                        this.$.box.classList.remove('active');
+                        this._clearHighlighted();
+                        this._currentItem = undefined;
+                    }).bind(this), 100);
+                },
+                _cancelBlur: function () {
+                    this.cancelAsync(this._blurHandle);
+                    this.$.textbox.focus();
+                },
+
+                created: function () {
+                    var data = [];
+                    var select = Polymer.dom(this).querySelector('select');
+                    if (!select) return;
+                    var children = Array.prototype.slice.call(select.childNodes);
+                    children.forEach(function (el) {
+                        if (el.nodeType === 3) return;
+                        if (el.nodeName.toLowerCase() === 'option') {
+                            data.push({
+                                value: el.value,
+                                text: el.textContent,
+                                subtext: el.getAttribute('subtext') || undefined,
+                                icon: el.getAttribute('icon') || undefined,
+                                src: el.getAttribute('src') || undefined,
+                                selected: el.selected
+                            });
+                        }
+                    }, this);
+
+                    this._data = data;
+                },
+
+                ready: function () {
+                    if (this._data && this._data.length > 0) this.data = this._data;
+                },
+
+                _selectItem: function (e) {
+                    this._cancelBlur();
+                    this.$.selector.select(e.model.item);
+                    e.model.set('item.selected', !e.model.item.selected);
+                },
+
+                // Layout Helpers
+                _dataHasGroups: function (data) {
+                    return data.some(function (item) {
+                        return item.group !== undefined
+                    });
+                },
+                _notDataHasGroups: function (data) {
+                    return !this._dataHasGroups(data) && data.length > 0;
+                },
+                _dataGroups: function (data) {
+                    return data.reduce(function (p, c) {
+                        if (p.indexOf(c.group) === -1) p.push(c.group);
+                        return p;
+                    }, []);
+                },
+                _itemsForGroup: function (group) {
+                    return this.data.filter(function (item) {
+                        return item.group === group;
+                    });
+                },
+                _simple: function (item) {
+                    return item && item.src === undefined && item.icon === undefined && item.subtext === undefined;
+                },
+                _twoLine: function (item) {
+                    return item && item.src === undefined && item.icon === undefined && item.subtext !== undefined;
+                },
+                _simpleIcon: function (item) {
+                    return item && (item.src !== undefined || item.icon !== undefined) && item.subtext === undefined;
+                },
+                _twoLineIcon: function (item) {
+                    return item && (item.src !== undefined || item.icon !== undefined) && item.subtext !== undefined;
+                },
+                _iconItem: function (item) {
+                    return item.src !== undefined || item.icon !== undefined;
+                },
+
+                _search: function (itm) {
+                    return this.searchText === ""
+                            || itm.text.toLowerCase().indexOf(this.searchText.toLowerCase()) > -1
+                            || (itm.subtext && itm.subtext.toLowerCase().indexOf(this.searchText.toLowerCase()) > -1);
+                },
+                _updateSearch: function () {
+                    if (this._simple(this.data[0])) {
+                        Polymer.dom(this.root).querySelector('#simpleList')._filterChanged();
+                    } else if (this._twoLine(this.data[0])) {
+                        Polymer.dom(this.root).querySelector('#twoLineList')._filterChanged();
+                    } else if (this._simpleIcon(this.data[0])) {
+                        Polymer.dom(this.root).querySelector('#simpleIconList')._filterChanged();
+                    } else if (this._twoLineIcon(this.data[0])) {
+                        Polymer.dom(this.root).querySelector('#twoLineIconList')._filterChanged();
+                    }
+
+                    if (arguments[1] !== undefined) {
+                        this._focusBox();
+                        this.async(this._scrollDropdown);
+                    }
+                },
+                _textHighlight: function (str, searchText) {
+                    return (searchText === "" || searchText === undefined) ? str : str.replace(new RegExp(searchText, 'i'), function (f) {
+                        return '<span class="texthl vellum-selectbox">' + f + '</span>'
+                    });
+                }
+
+            });
+
+        })();
+    </script>
+</dom-module>
+

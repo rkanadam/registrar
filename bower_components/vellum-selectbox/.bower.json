@@ -1,0 +1,39 @@
+{
+  "name": "vellum-selectbox",
+  "description": "Turns a `<select>` into a functional combobox.",
+  "keywords": [
+    "web-component",
+    "web-components",
+    "polymer"
+  ],
+  "main": "vellum-selectbox.html",
+  "homepage": "https://github.com/zikes/vellum-selectbox",
+  "ignore": [
+    "/.*",
+    "/test/",
+    "/demo/"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0",
+    "vellum-chip": "zikes/vellum-chip",
+    "paper-styles": "PolymerElements/paper-styles#^1.0.0",
+    "paper-item": "PolymerElements/paper-item#^1.0.0",
+    "iron-input": "PolymerElements/iron-input#^1.0.0",
+    "iron-icon": "PolymerElements/iron-icon#^1.0.0"
+  },
+  "devDependencies": {
+    "iron-component-page": "PolymerElements/iron-component-page#^1.0.0",
+    "iron-icons": "PolymerElements/iron-icons#^1.0.0",
+    "web-component-tester": "*"
+  },
+  "_release": "2b3d248aa0",
+  "_resolution": {
+    "type": "branch",
+    "branch": "master",
+    "commit": "2b3d248aa0ded04a17dde93b8b11063d52b918f2"
+  },
+  "_source": "https://github.com/zikes/vellum-selectbox.git",
+  "_target": "*",
+  "_originalSource": "vellum-selectbox",
+  "_direct": true
+}

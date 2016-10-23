@@ -51,7 +51,18 @@
                                          attr-for-selected="id"
                                          style="height: 100%">
                         <profile-page id="profile" profile="{{profile}}"
-                                      language="[[language]]"></profile-page>
+                                      language="[[language]]" on-save="_saveProfile">
+                            <iron-ajax
+                                    id="saveProfileRequest"
+                                    method="POST"
+                                    url="[[_computeSaveProfileUrl(profile)]]"
+                                    content-type="application/json"
+                                    handle-as="json"
+                                    last-response="{{profile}}"
+                                    body="[[profile]]"
+                                    bubbles
+                            ></iron-ajax>
+                        </profile-page>
                         <event-list-page id="events"
                                          language="[[language]]"></event-list-page>
                     </neon-animated-pages>
@@ -134,6 +145,14 @@
                         window.location.hash = "#profile";
                     }
                 }
+            },
+
+            _computeSaveProfileUrl: function (profile) {
+                return "api.php/profile/" + (profile && profile._id ? profile._id : "");
+            },
+
+            _saveProfile: function () {
+                this.$.saveProfileRequest.generateRequest ();
             }
         });
 

@@ -1,0 +1,172 @@
+<!doctype html>
+<head>
+    <meta charset="utf-8">
+    <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <link href="bower_components/polymer/polymer.html" rel="import">
+    <link rel="import" href="bower_components/vellum-selectbox/vellum-selectbox.html">
+    <link rel="import" href="bower_components/iron-icons/iron-icons.html">
+    <link rel="import" href="bower_components/paper-styles/paper-styles.html">
+
+</head>
+
+<body>
+<dom-module id="employee-list">
+
+    <template>
+
+        <array-selector id="selector"
+                        items="{{employees}}"
+                        selected="{{selected}}"
+                        toggle
+                        multi></array-selector>
+
+        <div><strong>Employees</strong>:</div>
+        <template is="dom-repeat"
+                  id="employeeList"
+                  items="{{employees}}">
+            <div on-tap="_toggleSelection">
+                <span>{{item.first}}</span>
+                <span>{{item.last}}</span>
+            </div>
+        </template>
+        <br/>
+        <div><strong>Selected</strong>:</div>
+        <template is="dom-repeat" items="{{selected}}">
+            <div on-tap="_toggleSelection">
+                <span>{{item.first}}</span>
+                <span>{{item.last}}</span>
+            </div>
+        </template>
+
+    </template>
+
+    <script>
+        Polymer({
+            is: 'employee-list',
+            properties: {
+                employees: {
+                    type: Array,
+                    value: function () {
+                        return [
+                            {first: 'Vince', last: 'Lombardi'},
+                            {first: 'Weeb', last: 'Ewbank'},
+                            {first: 'Hank', last: 'Stram'},
+                            {first: 'Don', last: 'McCafferty'},
+                            {first: 'Tom', last: 'Landry'},
+                            {first: 'Don', last: 'Shula'},
+                            {first: 'Chuck', last: 'Knoll'},
+                            {first: 'John', last: 'Madden'},
+                        ]
+                    },
+                },
+            },
+            _toggleSelection: function (e) {
+                console.log(e.target);
+                var item = this.$.employeeList.itemForElement(e.target);
+                this.$.selector.select(item);
+            },
+        });
+    </script>
+
+    <table>
+        <tr>
+            <td><label>Simple</label></td>
+            <td>
+                <vellum-selectbox placeholder="Simple">
+                    <select multiple>
+                        <option value="1" selected>One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                        <option value="A">AAAAA</option>
+                        <option value="B">BBBBB</option>
+                        <option value="C">CCCCC</option>
+                    </select>
+                </vellum-selectbox>
+            </td>
+        </tr>
+        <tr>
+            <td><label>Simple Icon</label></td>
+            <td>
+                <vellum-selectbox placeholder="Simple Icon">
+                    <select multiple>
+                        <option value="1" icon="room" selected>One</option>
+                        <option value="2" icon="done">Two</option>
+                        <option value="3" icon="favorite">Three</option>
+                        <option value="4" icon="attachment">Four</option>
+                        <option value="5" icon="cancel" selected>Five</option>
+                        <option value="6" icon="chevron-left">Six</option>
+                        <option value="7" icon="chevron-right">Seven</option>
+                        <option value="8" icon="class">Eight</option>
+                        <option value="9" icon="drafts">Nine</option>
+                        <option value="10" icon="grade">Ten</option>
+                        <option value="11" icon="cached">Eleven</option>
+                        <option value="12" icon="bookmark-border">Twelve</option>
+                        <option value="A" icon="error">AAAAA</option>
+                        <option value="B" icon="cloud">BBBBB</option>
+                        <option value="C" icon="alarm">CCCCC</option>
+                        <option value="D" icon="build">DDDDD</option>
+                        <option value="E" icon="language">EEEEE</option>
+                        <option value="F" icon="launch">FFFFF</option>
+                        <option value="G" icon="font-download">GGGGG</option>
+                        <option value="H" icon="help">HHHHH</option>
+                        <option value="I" icon="shopping-cart">IIIII</option>
+                        <option value="J" icon="search">JJJJJ</option>
+                        <option value="K" icon="schedule">KKKKK</option>
+                        <option value="L" icon="view-agenda">LLLLL</option>
+                    </select>
+                </vellum-selectbox>
+            </td>
+        </tr>
+        <tr>
+            <td><label>Multiline</label></td>
+            <td>
+                <vellum-selectbox placeholder="Multiline">
+                    <select multiple>
+                        <option value="1" subtext="The Number One">One</option>
+                        <option value="2" subtext="The Number Two">Two</option>
+                        <option value="3" subtext="The Number Three">Three</option>
+                        <option value="A" subtext="The Letter A">AAAAA</option>
+                        <option value="B" subtext="The Letter B">BBBBB</option>
+                        <option value="C" subtext="The Letter C">CCCCC</option>
+                    </select>
+                </vellum-selectbox>
+            </td>
+        </tr>
+        <tr>
+            <td><label>Icon + Multiline</label></td>
+            <td>
+                <vellum-selectbox placeholder="Icon + Multiline">
+                    <select multiple>
+                        <option value="1" subtext="The Number One" icon="account-circle">One</option>
+                        <option value="2" subtext="The Number Two" icon="send">Two</option>
+                        <option value="3" subtext="The Number Three" icon="help-outline">Three</option>
+                        <option value="A" subtext="The Letter A" icon="language">AAAAA</option>
+                        <option value="B" subtext="The Letter B" icon="assignment-turned-in">BBBBB</option>
+                        <option value="C" subtext="The Letter C" icon="assessment">CCCCC</option>
+                    </select>
+                </vellum-selectbox>
+            </td>
+        </tr>
+        <tr>
+            <td><label>Src + Multiline</label></td>
+            <td>
+                <vellum-selectbox placeholder="Src + Multiline">
+                    <select multiple>
+                        <option value="1" subtext="The Number One" src="http://placekitten.com/g/32/32">One</option>
+                        <option value="2" subtext="The Number Two" src="http://placekitten.com/g/32/32">Two</option>
+                        <option value="3" subtext="The Number Three" src="http://placekitten.com/g/32/32">Three</option>
+                        <option value="A" subtext="The Letter A" src="http://placekitten.com/g/32/32">AAAAA</option>
+                        <option value="B" subtext="The Letter B" src="http://placekitten.com/g/32/32">BBBBB</option>
+                        <option value="C" subtext="The Letter C" src="http://placekitten.com/g/32/32">CCCCC</option>
+                    </select>
+                </vellum-selectbox>
+            </td>
+        </tr>
+    </table>
+
+
+</dom-module>
+
+<employee-list></employee-list>
+
+</body>

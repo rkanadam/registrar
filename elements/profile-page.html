@@ -2,77 +2,120 @@
     <style include="app-theme"></style>
     <template>
         <success-dialog id="saveDialog" msg-key="profileSavedMessage"></success-dialog>
-        <div style="padding: 0px 20px 0px 20px;position: relative;height: 100%;">
-            <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
-            <iron-form method="post" action="/" id="basic" class="layout vertical" style="height: 100%">
-                <input type="hidden" name="_id" value="[[profile._id]]">
+        <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
+        <iron-form method="post" action="/" id="basic" class="container" style="height: 100%">
+            <div class="row">
                 <paper-input name="firstName" label="{{localize('firstName')}}" required
-                             value="{{profile.firstName}}"></paper-input>
+                             value="{{profile.firstName}}" class="col-xs-12 col-sm-12"></paper-input>
+            </div>
+            <div class="row">
                 <paper-input name="lastName" label="{{localize('lastName')}}" required
-                             value="{{profile.lastName}}"></paper-input>
-                <div>
+                             value="{{profile.lastName}}" class="col-xs-12 col-sm-12"></paper-input>
+            </div>
+            <div class="row">
+                <div class="col-sm-1 col-xs-12">
                     <label id="gender">[[localize('gender')]]</label>
-                    <paper-radio-group aria-labelledby="gender" selected="{{profile.gender}}">
-                        <paper-radio-button name="male">[[localize('male')]]</paper-radio-button>
-                        <paper-radio-button name="female">[[localize('female')]]</paper-radio-button>
-                    </paper-radio-group>
                 </div>
-                <paper-dropdown-menu label="[[localize('age')]]" name="age" required horizontal-align="left"
-                                     value="{{profile.age}}" attr-for-selected="value">
-                    <paper-listbox class="dropdown-content" selected="[[profile.age]]" attr-for-selected="label">
-                        <paper-item label="0-4">0 - 4 [[localize('years')]]</paper-item>
-                        <paper-item label="4-10">4 - 10 [[localize('years')]]</paper-item>
-                        <paper-item label="11-14">11 - 14 [[localize('years')]]</paper-item>
-                        <paper-item label="14-17">14 - 17 [[localize('years')]]</paper-item>
-                        <paper-item label="18-25">18 - 25 [[localize('years')]]</paper-item>
-                        <paper-item label="26-35">26 - 35 [[localize('years')]]</paper-item>
-                        <paper-item label="36-60">36 - 60 [[localize('years')]]</paper-item>
-                        <paper-item label="60-99">60+ [[localize('years')]]</paper-item>
-                    </paper-listbox>
-                </paper-dropdown-menu>
-                <vaadin-combo-box label="[[localize('country')]]"
-                                  name="country"
-                                  items="[[_getCountries(countries)]]"
-                                  item-label-path="label"
-                                  item-value-path="name"
-                                  selected-item="{{country}}"
-                                  value="{{profile.country}}"
-                ></vaadin-combo-box>
-                <paper-input name="zone" label="{{localize('zone')}}" required
-                             value="[[_computeZoneLabel(profile.zone)]]" readonly></paper-input>
-                <paper-checkbox checked="{{profile.primary}}">[[localize('primaryProfile')]]</paper-checkbox>
-                <div class="flex layout horizontal center-center">
-                    <paper-button primary raised onclick="saveRequest.generateRequest ()">[[localize('save')]]
+                <div class="col-sm-11 col-xs-12">
+                    <template is="dom-if" if="[[!multiple]]">
+                        <paper-radio-group aria-labelledby="gender" selected="{{profile.gender}}">
+                            <paper-radio-button name="male">[[localize('male')]]</paper-radio-button>
+                            <paper-radio-button name="female">[[localize('female')]]</paper-radio-button>
+                        </paper-radio-group>
+                    </template>
+                    <template is="dom-if" if="[[multiple]]">
+                        <paper-checkbox value="{{profile.gender.0}}">[[localize('male')]]</paper-checkbox>
+                        <paper-checkbox value="{{profile.gender.1}}">[[localize('female')]]</paper-checkbox>
+                    </template>
+                </div>
+            </div>
+            <div class="row">
+                <template is="dom-if" if="[[!multiple]]">
+                    <div class="col-sm-12 col-xs-12">
+                        <paper-dropdown-menu label="[[localize('age')]]" name="age" required horizontal-align="left"
+                                             value="{{profile.age}}" attr-for-selected="value">
+                            <paper-listbox class="dropdown-content" selected="[[profile.age]]"
+                                           attr-for-selected="label">
+                                <paper-item label="0-4">0 - 4 [[localize('years')]]</paper-item>
+                                <paper-item label="4-10">4 - 10 [[localize('years')]]</paper-item>
+                                <paper-item label="11-14">11 - 14 [[localize('years')]]</paper-item>
+                                <paper-item label="14-17">14 - 17 [[localize('years')]]</paper-item>
+                                <paper-item label="18-25">18 - 25 [[localize('years')]]</paper-item>
+                                <paper-item label="26-35">26 - 35 [[localize('years')]]</paper-item>
+                                <paper-item label="36-60">36 - 60 [[localize('years')]]</paper-item>
+                                <paper-item label="60-99">60+ [[localize('years')]]</paper-item>
+                            </paper-listbox>
+                        </paper-dropdown-menu>
+                    </div>
+                </template>
+                <template is="dom-if" if="[[multiple]]">
+                    <div class="col-sm-1 col-xs-12">
+                        <label>[[localize('age')]]</label>
+                    </div>
+                    <div class="col-sm-11 col-xs-12">
+                        <vellum-selectbox value="{{profile.age}}">
+                            <select multiple>
+                                <option value="0-4">0 - 4 [[localize('years')]]</option>
+                                <option value="4-10">4 - 10 [[localize('years')]]</option>
+                                <option value="11-14">11 - 14 [[localize('years')]]</option>
+                                <option value="14-17">14 - 17 [[localize('years')]]</option>
+                                <option value="18-25">18 - 25 [[localize('years')]]</option>
+                                <option value="26-35">26 - 35 [[localize('years')]]</option>
+                                <option value="36-60">36 - 60 [[localize('years')]]</option>
+                                <option value="60-99">60+ [[localize('years')]]</option>
+                            </select>
+                        </vellum-selectbox>
+                    </div>
+                </template>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-xs-12">
+
+                    <vaadin-combo-box label="[[localize('country')]]"
+                                      name="country"
+                                      items="[[_getCountries(countries)]]"
+                                      item-label-path="label"
+                                      item-value-path="name"
+                                      selected-item="{{country}}"
+                                      value="{{profile.country}}"
+                    ></vaadin-combo-box>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-xs-12">
+                    <paper-input name="zone" label="{{localize('zone')}}" required
+                                 value="[[_computeZoneLabel(profile.zone)]]" readonly></paper-input>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 col-xs-12">
+                    <paper-checkbox checked="{{profile.primary}}">[[localize('primaryProfile')]]</paper-checkbox>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 col-xs-6 end-sm end-xs">
+                    <paper-button primary raised on-tap="_onSave">[[localize('save')]]
                     </paper-button>
-                    <paper-button secondary raised on-click="_onReset">[[localize('reset')]]</paper-button>
                 </div>
-            </iron-form>
-            <iron-ajax auto
-                       handle-as="json"
-                       url="../bower_components/Countries/countries.min.json"
-                       on-response="_onCountriesFetch"
-                       last-response="{{countries}}"
-                       bubbles
-            ></iron-ajax>
-            <iron-ajax id="zonesRequest"
-                       handle-as="json"
-                       url="../zones.json"
-                       last-response="{{zones}}"
-                       bubbles
-            ></iron-ajax>
-            <iron-ajax
-                    id="saveRequest"
-                    method="POST"
-                    url="[[_computeSaveUrl(profile)]]"
-                    content-type="application/json"
-                    handle-as="json"
-                    last-response="{{profile}}"
-                    on-response="_onSave"
-                    on-error="_onSaveError"
-                    body="[[profile]]"
-                    bubbles
-            ></iron-ajax>
-        </div>
+                <div class="col-sm-6 col-xs-6 start-sm start-xs">
+                    <paper-button secondary raised on-tap="_onReset">[[localize('reset')]]
+                    </paper-button>
+                </div>
+            </div>
+        </iron-form>
+        <iron-ajax auto
+                   handle-as="json"
+                   url="../bower_components/Countries/countries.min.json"
+                   on-response="_onCountriesFetch"
+                   last-response="{{countries}}"
+                   bubbles
+        ></iron-ajax>
+        <iron-ajax id="zonesRequest"
+                   handle-as="json"
+                   url="../zones.json"
+                   last-response="{{zones}}"
+                   bubbles
+        ></iron-ajax>
     </template>
     <script>
         Polymer({
@@ -103,7 +146,17 @@
 
                 loading: {
                     type: Boolean,
-                    value: false
+                    value: function () {
+                        return false;
+                    }
+                },
+
+                multiple: {
+                    type: Boolean,
+                    value: function () {
+                        return false;
+                    },
+                    notify: true
                 }
             },
 
@@ -160,8 +213,15 @@
 
             _onProfileChanged: function (profile) {
                 if (profile) {
+                    if (profile.age && !(profile.age instanceof Array)) {
+                        profile.age = [profile.age];
+                    }
                     this.previousProfile = JSON.stringify(profile);
                 }
+            },
+
+            _onSave: function () {
+                this.fire("save-event", this.event, {bubbles: true});
             },
 
             _onReset: function () {
@@ -170,18 +230,6 @@
                     this.previousProfile = null;
                     this.set("profile", profile);
                 }
-            },
-
-            _onSave: function () {
-                this.$.saveDialog.open();
-            },
-
-            _onSaveError: function () {
-                debugger;
-            },
-
-            _computeSaveUrl: function (profile) {
-                return "api.php/profile/" + (profile && profile._id ? profile._id : "");
             },
 
             buildMenu: function () {
