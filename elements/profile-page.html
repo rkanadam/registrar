@@ -24,8 +24,10 @@
                         </paper-radio-group>
                     </template>
                     <template is="dom-if" if="[[multiple]]">
-                        <paper-checkbox value="{{profile.gender.0}}">[[localize('male')]]</paper-checkbox>
-                        <paper-checkbox value="{{profile.gender.1}}">[[localize('female')]]</paper-checkbox>
+                        <paper-checkbox value="male" checked="{{profile.gender.0}}">[[localize('male')]]
+                        </paper-checkbox>
+                        <paper-checkbox value="female" checked="{{profile.gender.1}}">[[localize('female')]]
+                        </paper-checkbox>
                     </template>
                 </div>
             </div>
@@ -162,7 +164,8 @@
 
             observers: [
                 '_onCountryChanged(country)',
-                '_onProfileChanged(profile)'
+                '_onProfileChanged(profile)',
+                '_onMultipleChanged(multiple)'
             ],
 
             behaviors: [
@@ -213,10 +216,43 @@
 
             _onProfileChanged: function (profile) {
                 if (profile) {
-                    if (profile.age && !(profile.age instanceof Array)) {
-                        profile.age = [profile.age];
-                    }
+                    this._onMultipleChanged();
                     this.previousProfile = JSON.stringify(profile);
+                }
+            },
+
+            _onMultipleChanged: function () {
+                if (!this.profile) return;
+                if (this.multiple === true) {
+                    if (this.profile.age !== undefined) {
+                        if (!(this.profile.age instanceof Array)) {
+                            this.profile.age = [this.profile.age];
+                        }
+                    } else {
+                        this.profile.age = [];
+                    }
+                    if (this.profile.gender !== undefined) {
+                        if (!(this.profile.gender instanceof Array)) {
+                            this.profile.gender = [this.profile.gender];
+                        }
+                    } else {
+                        this.profile.gender = [];
+                    }
+                } else if (this.multiple === false) {
+                    if (this.profile.age !== undefined) {
+                        if (this.profile.age instanceof Array) {
+                            this.profile.age = this.profile.age[0];
+                        }
+                    } else {
+                        this.profile.age = undefined;
+                    }
+                    if (this.profile.gender !== undefined) {
+                        if (this.profile.gender instanceof Array) {
+                            this.profile.gender = this.profile.gender[0];
+                        }
+                    } else {
+                        this.profile.gender = undefined;
+                    }
                 }
             },
 

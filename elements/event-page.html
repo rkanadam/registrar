@@ -133,7 +133,7 @@
                     this.$.pages.set("selected", "track-list-page");
                 } else if (this.selectedPageId === "appliesTo") {
                     if (this.event && !this.event.profile) {
-                        this.set("event.profile", {age: []});
+                        this.set("event.profile", {age: [], gender: [false, false]});
                     }
                     this.$.pages.set("selected", "applies-to-page");
                 }
