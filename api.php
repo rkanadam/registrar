@@ -64,6 +64,15 @@ $app->any('/me/profiles', function (Request $request, Response $response) {
     return $response;
 });
 
+$app->any('/me/notifications[/{skip}]', function (Request $request, Response $response) {
+    $user = User::get();
+    $db = DB::getInstance();
+    $start = empty ($request->getAttribute("id")) ? 0 : $request->getAttribute("id");
+    $response->withJson($db->getNotifications($user, $start));
+    return $response;
+});
+
+
 $app->post('/me/profiles/select', function (Request $request, Response $response) {
     $user = User::get();
     $profile = $request->getParsedBody();

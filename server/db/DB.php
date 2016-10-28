@@ -18,8 +18,8 @@ class DB
     private function __construct()
     {
         try {
-            $sag = new Sag("rkanadam.cloudant.com");
-            list($userName, $password) = Passwords::forDB();
+            list($host, $userName, $password) = Passwords::forDB();
+            $sag = new Sag($host);
             $sag->login($userName, $password);
             $sag->setDatabase("registrar");
             $this->sag = $sag;
@@ -60,6 +60,13 @@ class DB
         return [];
     }
 
+    public function getNotifications($user, $start = 0)
+    {
+        $response = $this->sag->get(
+            "_design/profiles/_view/notifications?limit=100&reduce=false&include_docs=true&descending=true&skip=$start");
+        return $this->collectRows($response);
+    }
+
     public function getEvents()
     {
         $response = $this->sag->get(
@@ -77,6 +84,18 @@ class DB
         }
         return $docs;
     }
+
+    private function collectRows($response)
+    {
+        $rows = [];
+        if (!empty ($response) && !empty($response->body)) {
+            foreach ($response->body->rows as $row) {
+                $rows[] = $row;
+            }
+        }
+        return $rows;
+    }
+
 
     private function getViewRows($response)
     {

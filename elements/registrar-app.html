@@ -42,6 +42,13 @@
                         <div class="middle title">
                             [[localize(selectedPageId)]]
                         </div>
+                        <div class="middle" style="padding: 0em 20px">
+                            <a href="#notifications">
+                                <paper-icon-button id="notifications" icon="social:notifications-active"
+                                                   alt="inbox"></paper-icon-button>
+                                <paper-badge for="notifications" label="4"></paper-badge>
+                            </a>
+                        </div>
                     </paper-toolbar>
                     <neon-animated-pages id="pages"
                                          selected="{{selectedPageId}}"
@@ -152,7 +159,7 @@
             },
 
             _saveProfile: function () {
-                this.$.saveProfileRequest.generateRequest ();
+                this.$.saveProfileRequest.generateRequest();
             }
         });
 

@@ -1,0 +1,1 @@
+exports.parse=\"function (str) {var parts = str.split(' ');var p1 = parts[0].split('-');var p2 = parts[1].split(':');if (parts[2].toLowerCase() === 'pm') {p2[0] = parseInt(p2[0] + 12);}return new Date (p1[0], parseInt(p1[1]) - 1, p1[2], p2[0], p2[1]);}\"
