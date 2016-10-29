@@ -1,0 +1,63 @@
+<dom-module id="app-notification">
+    <template>
+        <style include="app-theme"></style>
+        <a href="#notifications">
+            <paper-icon-button id="notifications" icon="social:notifications-active"
+                               alt="inbox"></paper-icon-button>
+            <paper-badge for="notifications" label="{{_numNotifications(notifications)}}"></paper-badge>
+        </a>
+        <iron-ajax
+                id="notificationRequest"
+                method="POST"
+                url="../api.php/me/notifications"
+                content-type="application/json"
+                handle-as="json"
+                last-response="{{newNotifications}}"
+        ></iron-ajax>
+    </template>
+    <script>
+        Polymer({
+            is: 'app-notification',
+
+            observers: [
+                "_onNewNotificationsReceived(newNotifications)"
+            ],
+
+            properties: {
+                notifications: {
+                    type: Array,
+                    value: function () {
+                        return [];
+                    }
+                }
+            },
+
+            ready: function () {
+                this.$.notificationRequest.generateRequest();
+            },
+
+            _getParams: function () {
+                return;
+            },
+
+            _numNotifications: function () {
+                if (this.notifications) {
+                    return this.notifications.length;
+                }
+            },
+
+            _onNewNotificationsReceived: function (newNotifications) {
+                if (newNotifications) {
+                    this.set("notifications", this.notifications.concat(newNotifications));
+                    this.skip += newNotifications.length;
+                }
+                this.$.notificationRequest.params = {"skip": this.notifications.length};
+                this.debounce("getNotifications", function () {
+                    this.$.notificationRequest.generateRequest();
+                }, 5000);
+            }
+
+        });
+    </script>
+
+</dom-module>

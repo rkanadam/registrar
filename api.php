@@ -64,10 +64,11 @@ $app->any('/me/profiles', function (Request $request, Response $response) {
     return $response;
 });
 
-$app->any('/me/notifications[/{skip}]', function (Request $request, Response $response) {
+$app->any('/me/notifications', function (Request $request, Response $response) {
     $user = User::get();
     $db = DB::getInstance();
-    $start = empty ($request->getAttribute("id")) ? 0 : $request->getAttribute("id");
+    $params = $request->getQueryParams();
+    $start = empty ($params) || empty($params["skip"]) ? 0 : $params["skip"];
     $response->withJson($db->getNotifications($user, $start));
     return $response;
 });
@@ -82,7 +83,7 @@ $app->post('/me/profiles/select', function (Request $request, Response $response
 
 $app->get('/events', function (Request $request, Response $response) {
     $db = DB::getInstance();
-    $response->withJson($db->getEvents ());
+    $response->withJson($db->getEvents());
     return $response;
 });
 
@@ -107,7 +108,6 @@ $app->post('/events/{id}', function (Request $request, Response $response) {
     $db->save($event);
     return $response->withJson($event);
 });
-
 
 
 $app->run();
