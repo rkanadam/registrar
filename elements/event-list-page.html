@@ -1,23 +1,5 @@
 <dom-module id="event-list-page">
-    <style include="app-theme">
-        .event {
-            padding: 10px;
-            border-bottom: 1px var(--divider-color) solid;
-        }
-
-        .event:hover, iron-list .selected {
-            background: var(--dark-primary-color);
-            color: var(--text-primary-color);
-            cursor: pointer;
-        }
-
-        iron-list {
-            --iron-list-items-container: {
-                margin: auto;
-                width: 100%;
-            };
-        }
-    </style>
+    <style include="app-theme"></style>
     <template>
         <neon-animated-pages id="pages"
                              entry-animation="fade-in-animation"

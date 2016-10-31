@@ -1,23 +1,5 @@
 <dom-module id="notification-list-page">
-    <style include="app-theme">
-        .notification {
-            padding: 10px;
-            border-bottom: 1px var(--divider-color) solid;
-        }
-
-        .notification:hover, iron-list .selected {
-            background: var(--dark-primary-color);
-            color: var(--text-primary-color);
-            cursor: pointer;
-        }
-
-        iron-list {
-            --iron-list-items-container: {
-                margin: auto;
-                width: 100%;
-            };
-        }
-    </style>
+    <style include="app-theme"></style>
     <template>
         <neon-animated-pages id="pages"
                              entry-animation="fade-in-animation"
@@ -39,7 +21,7 @@
                     </paper-toolbar>
                     <iron-list id="list" items="{{notifications}}" as="notification">
                         <template>
-                            <paper-material class$="[[_computedClass(selected)]]"
+                            <paper-material class="row"
                                             tabindex$="[[tabindex]]"
                                             elevation="0"
                                             title$="[[localize('clickToEdit')]]"
@@ -56,9 +38,9 @@
                                     </div>
                                     <div class="toolbar col-xs-12 col-sm-3">
                                         <a href="#[[pathHead]]/register/[[notification.id]]">
-                                            <paper-button title="[[localize('registerForEvent')]]">
-                                                <iron-icon icon="assignment-ind"></iron-icon>
-                                                &nbsp;&nbsp;[[localize('register')]]
+                                            <paper-button info title="[[localize('registerForEvent')]]">
+                                                <iron-icon icon="card-membership"></iron-icon>
+                                                [[localize('register')]]
                                             </paper-button>
                                         </a>
                                     </div>
@@ -131,12 +113,7 @@
                     this.set("notification", notification);
                     this.$.pages.set("selected", "event-registration-page");
                 }
-            },
-
-            _computedClass: function (selected) {
-                return "row notification" + (selected ? " selected" : "");
             }
-
         });
     </script>
 </dom-module>

@@ -1307,6 +1307,28 @@
             label {
                 @apply(--paper-font-common-base)
             }
+
+            iron-list .row {
+                padding: 10px;
+                border-bottom: 1px var(--divider-color) solid;
+            }
+
+            iron-list a:visited, iron-list a {
+                color: var(--primary-text-color);
+            }
+
+            iron-list .row:hover, iron-list .row.selected, iron-list a:hover, iron-list .row:hover a, iron-list .row:hover paper-button {
+                background: var(--dark-primary-color);
+                color: var(--paper-toolbar-color);
+                cursor: pointer;
+            }
+
+            iron-list {
+                --iron-list-items-container: {
+                    margin: auto;
+                    width: 100%;
+                };
+            }
         </style>
     </template>
 </dom-module>
