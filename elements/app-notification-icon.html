@@ -1,4 +1,4 @@
-<dom-module id="app-notification">
+<dom-module id="app-notification-icon">
     <template>
         <style include="app-theme"></style>
         <a href="#notifications">
@@ -17,7 +17,7 @@
     </template>
     <script>
         Polymer({
-            is: 'app-notification',
+            is: 'app-notification-icon',
 
             observers: [
                 "_onNewNotificationsReceived(newNotifications)"
@@ -28,7 +28,8 @@
                     type: Array,
                     value: function () {
                         return [];
-                    }
+                    },
+                    notify: true
                 }
             },
 

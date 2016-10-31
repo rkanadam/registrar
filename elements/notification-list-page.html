@@ -1,0 +1,142 @@
+<dom-module id="notification-list-page">
+    <style include="app-theme">
+        .notification {
+            padding: 10px;
+            border-bottom: 1px var(--divider-color) solid;
+        }
+
+        .notification:hover, iron-list .selected {
+            background: var(--dark-primary-color);
+            color: var(--text-primary-color);
+            cursor: pointer;
+        }
+
+        iron-list {
+            --iron-list-items-container: {
+                margin: auto;
+                width: 100%;
+            };
+        }
+    </style>
+    <template>
+        <neon-animated-pages id="pages"
+                             entry-animation="fade-in-animation"
+                             exit-animation="fade-out-animation"
+                             attr-for-selected="name"
+                             fallback-selection="notification-list"
+                             selected-item="{{selectedPage}}"
+                             style="height:100%"
+        >
+            <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
+            <div name="notification-list-page">
+                <paper-header-panel>
+                    <paper-toolbar>
+                        <div class="row bottom-xs bottom-sm center-xs right-sm">
+                            <div class="col-xs-12 col-sm-12">
+                                <paper-item>[[localize('notificationPageDescription')]]</paper-item>
+                            </div>
+                        </div>
+                    </paper-toolbar>
+                    <iron-list id="list" items="{{notifications}}" as="notification">
+                        <template>
+                            <paper-material class$="[[_computedClass(selected)]]"
+                                            tabindex$="[[tabindex]]"
+                                            elevation="0"
+                                            title$="[[localize('clickToEdit')]]"
+                            >
+                                <template is="dom-if" if="[[notification.value.type]]=='event'">
+                                    <div class="col-xs-12 col-sm-9">
+                                        <a href="#[[pathHead]]/register/[[notification.id]]">
+                                            <div>[[notification.doc.name]]</div>
+                                            <div>
+                                                <raw-html
+                                                        html="[[notification.doc.description]]"></raw-html>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="toolbar col-xs-12 col-sm-3">
+                                        <a href="#[[pathHead]]/register/[[notification.id]]">
+                                            <paper-button title="[[localize('registerForEvent')]]">
+                                                <iron-icon icon="assignment-ind"></iron-icon>
+                                                &nbsp;&nbsp;[[localize('register')]]
+                                            </paper-button>
+                                        </a>
+                                    </div>
+                                </template>
+                            </paper-material>
+                        </template>
+                    </iron-list>
+                </paper-header-panel>
+            </div>
+            <event-registration-page id="eventRegistrationPage"
+                                     name="event-registration-page"
+                                     notification="[[notification]]"></event-registration-page>
+        </neon-animated-pages>
+    </template>
+    <script>
+        Polymer({
+
+            is: 'notification-list-page',
+
+            behaviors: [
+                AppBehaviors.AppBehavior
+            ],
+
+            properties: {
+                "notifications": {
+                    type: Array,
+                    value: function () {
+                        return null;
+                    }
+                },
+                "notification": {
+                    type: Object,
+                    value: function () {
+                        return {};
+                    }
+                }
+            },
+
+            listeners: {
+                "page-select": "_refreshList"
+            },
+
+            _refreshList: function () {
+                this.$.list.fire("iron-resize");
+            },
+
+
+            observers: [
+                "_onSelectedPageIdChanged(selectedPageId)"
+            ],
+
+            buildMenu: function (pathPrefix) {
+                this.set("menu.label", this.localize("notifications"));
+                this.set("menu.id", "notifications");
+                this.set("menu.link", (pathPrefix ? pathPrefix + "/" : "") + this.get("menu.id"));
+                this.splice("menu.children", 0, this.menu.children.length);
+                if (this.selectedPage && this.selectedPage.buildMenu) {
+                    this.selectedPage.buildMenu(this.get("menu.link"));
+                    this.splice("menu.children", 0, 0, this.selectedPage.menu);
+                }
+            },
+
+
+            _onSelectedPageIdChanged: function (selectedPageId) {
+                var selectedPageId = this.selectedPageId;
+                if (!selectedPageId) {
+                    this.$.pages.set("selected", "notification-list-page");
+                } else {
+                    var notification = _.find(this.notifications, {"_id": selectedPageId});
+                    this.set("notification", notification);
+                    this.$.pages.set("selected", "event-registration-page");
+                }
+            },
+
+            _computedClass: function (selected) {
+                return "row notification" + (selected ? " selected" : "");
+            }
+
+        });
+    </script>
+</dom-module>

@@ -43,7 +43,7 @@
                             [[localize(selectedPageId)]]
                         </div>
                         <div class="middle" style="padding: 0em 20px">
-                            <app-notification></app-notification>
+                            <app-notification-icon notifications="{{notifications}}"></app-notification-icon>
                         </div>
                     </paper-toolbar>
                     <neon-animated-pages id="pages"
@@ -68,6 +68,9 @@
                         </profile-page>
                         <event-list-page id="events"
                                          language="[[language]]"></event-list-page>
+                        <notification-list-page id="notifications"
+                                                language="[[language]]"
+                                                notifications="[[notifications]]"></notification-list-page>
                     </neon-animated-pages>
                 </paper-header-panel>
             </div>

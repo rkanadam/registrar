@@ -55,7 +55,11 @@ window.i18nMessages = {
         "workshopSavedMessage": "The workshop  was successfully saved",
         "workshopDescription": "Workshop Description",
         "newWorkshop": "New Workshop",
-        "appliesTo": "Applies To"
+        "appliesTo": "Applies To",
+        "notificationPageDescription": "This page shows you all the notifications for the current e-mail profile.",
+        "notifications": "Notifications",
+        "registerForEvent": "Register for the event",
+        "register": "Register"
     },
     "fr": {}
 };
