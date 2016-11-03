@@ -59,7 +59,8 @@ window.i18nMessages = {
         "notificationPageDescription": "This page shows you all the notifications for the current e-mail profile.",
         "notifications": "Notifications",
         "registerForEvent": "Register for the event",
-        "register": "Register"
+        "register": "Register",
+        "to": "To"
     },
     "fr": {}
 };

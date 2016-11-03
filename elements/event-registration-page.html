@@ -1,0 +1,61 @@
+<dom-module id="event-registration-page">
+    <style include="app-theme"></style>
+    <template>
+        <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
+        <div name="event-page">
+            <iron-form method="post" action="/" id="basic">
+                <div class="row left-xs bottom-xs bottom-sm left-sm">
+                    <div class="col-xs-12 col-sm-7">
+                        <label>{{event.name}}</label>
+                    </div>
+                    <div class="col-xs-2 col-sm-5">
+                        <label>
+                            <span>{{event.startDate}} @ {{event.startTime}}</span>
+                            &nbsp;[[localize("to")]]&nbsp;
+                            <span>{{event.endDate}} @ {{event.endTime}}</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="row left-xs bottom-xs bottom-sm left-sm">
+                    <div class="col-xs-12 col-sm-12">
+                        <label>{{event.description}}</label>
+                    </div>
+                </div>
+                <div class="row bottom-xs bottom-sm center-sm">
+                    <div class="col-xs-12 col-sm-12 col-lg-12 center-xs center-sm">
+                        <paper-button primary raised on-tap="_onSave">[[localize('save')]]
+                        </paper-button>
+                        <paper-button secondary raised on-tap="_onReset">[[localize('reset')]]
+                        </paper-button>
+                    </div>
+                </div>
+            </iron-form>
+        </div>
+    </template>
+    <script>
+        Polymer({
+            is: "event-registration-page",
+            behaviors: [
+                AppBehaviors.AppBehavior
+            ],
+
+            properties: {
+                "notification": {
+                    type: Object,
+                    value: function () {
+                        return {};
+                    }
+                }
+            },
+
+            observers: [
+                "_onNotificationChanged(notification)"
+            ],
+
+            _onNotificationChanged: function () {
+                this.event = this.notification.doc;
+            }
+        });
+    </script>
+
+</dom-module>

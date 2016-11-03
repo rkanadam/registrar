@@ -28,7 +28,7 @@
                             >
                                 <template is="dom-if" if="[[notification.value.type]]=='event'">
                                     <div class="col-xs-12 col-sm-9">
-                                        <a href="#[[pathHead]]/register/[[notification.id]]">
+                                        <a href="#[[pathHead]]/[[notification.id]]">
                                             <div>[[notification.doc.name]]</div>
                                             <div>
                                                 <raw-html
@@ -50,7 +50,7 @@
                     </iron-list>
                 </paper-header-panel>
             </div>
-            <event-registration-page id="eventRegistrationPage"
+            <event-registration-page name="event"
                                      name="event-registration-page"
                                      notification="[[notification]]"></event-registration-page>
         </neon-animated-pages>
@@ -109,9 +109,9 @@
                 if (!selectedPageId) {
                     this.$.pages.set("selected", "notification-list-page");
                 } else {
-                    var notification = _.find(this.notifications, {"_id": selectedPageId});
+                    var notification = _.find(this.notifications, {"id": selectedPageId});
                     this.set("notification", notification);
-                    this.$.pages.set("selected", "event-registration-page");
+                    this.$.pages.set("selected", notification.value.type);
                 }
             }
         });
