@@ -5,10 +5,10 @@
         <div name="event-page">
             <iron-form method="post" action="/" id="basic">
                 <div class="row left-xs bottom-xs bottom-sm left-sm">
-                    <div class="col-xs-12 col-sm-7">
+                    <div class="col-xs-12 col-sm-6">
                         <label>{{event.name}}</label>
                     </div>
-                    <div class="col-xs-2 col-sm-5">
+                    <div class="col-xs-2 col-sm-6">
                         <label>
                             <span>{{event.startDate}} @ {{event.startTime}}</span>
                             &nbsp;[[localize("to")]]&nbsp;
@@ -21,6 +21,56 @@
                         <label>{{event.description}}</label>
                     </div>
                 </div>
+                <template is="dom-if" if="[[_hasTracks(event)]]">
+                    <div class="row left-xs bottom-xs bottom-sm left-sm">
+                        <div class="col-xs-12 col-sm-12">
+                            <h3>Tracks</h3>
+                            <template is="dom-repeat" items="[[event.tracks]]" as="track">
+                                <div class="row left-xs bottom-xs bottom-sm left-sm">
+                                    <div class="col-xs-12 col-sm-6">
+                                        <paper-checkbox><label>{{track.name}}</label></paper-checkbox>
+                                    </div>
+                                    <div class="col-xs-2 col-sm-6">
+                                        <label>
+                                            <span>{{track.startDate}} @ {{track.startTime}}</span>
+                                            &nbsp;[[localize("to")]]&nbsp;
+                                            <span>{{track.endDate}} @ {{track.endTime}}</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="row left-xs bottom-xs bottom-sm left-sm">
+                                    <div class="col-xs-12 col-sm-12">
+                                        <label>{{track.description}}</label>
+                                    </div>
+                                </div>
+                                <template is="dom-if" if="[[_hasWorkshops(track)]]">
+                                    <div class="col-xs-12 col-sm-12">
+                                        <h4>Workshops</h4>
+                                        <template is="dom-repeat" items="[[track.workshops]]" as="workshop">
+                                            <div class="row left-xs bottom-xs bottom-sm left-sm">
+                                                <div class="col-xs-10 col-sm-5">
+                                                    <paper-checkbox><label>{{workshop.name}}</label></paper-checkbox>
+                                                </div>
+                                                <div class="col-xs-2 col-sm-6">
+                                                    <label>
+                                                        <span>{{workshop.startDate}} @ {{workshop.startTime}}</span>
+                                                        &nbsp;[[localize("to")]]&nbsp;
+                                                        <span>{{workshop.endDate}} @ {{workshop.endTime}}</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="row left-xs bottom-xs bottom-sm left-sm">
+                                                <div class="col-xs-12 col-sm-12">
+                                                    <label>{{workshop.description}}</label>
+                                                </div>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                            </template>
+                        </div>
+                    </div>
+                </template>
                 <div class="row bottom-xs bottom-sm center-sm">
                     <div class="col-xs-12 col-sm-12 col-lg-12 center-xs center-sm">
                         <paper-button primary raised on-tap="_onSave">[[localize('save')]]
@@ -54,7 +104,16 @@
 
             _onNotificationChanged: function () {
                 this.event = this.notification.doc;
+            },
+
+            _hasWorkshops: function (track) {
+                return track && track.workshops && track.workshops.length > 0;
+            },
+
+            _hasTracks: function (event) {
+                return event && event.tracks && event.tracks.length > 0;
             }
+
         });
     </script>
 
