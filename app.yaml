@@ -1,5 +1,15 @@
 runtime: php
 vm: true
 
-runtime_config:
-  document_root: .
+handlers:
+- url: /
+  script: index.php
+
+- url: /index\.html
+  script: index.php
+
+- url: /(.*\.(gif|png|jpg|js))$
+  static_files: \1
+
+- url: /(.+\.php)$
+  script: \1
