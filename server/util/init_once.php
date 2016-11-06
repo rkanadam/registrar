@@ -4,6 +4,7 @@ namespace util;
 
 session_start();
 session_write_close();
+date_default_timezone_set("America/Los_Angeles");
 
 use \Logger;
 

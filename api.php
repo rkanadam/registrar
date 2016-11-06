@@ -1,10 +1,11 @@
 <?php
+
+$base = realpath(dirname($_SERVER["SCRIPT_FILENAME"]));
+require_once "$base/vendor/autoload.php";
+require_once "$base/server/util/init_once.php";
+
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
-
-require_once __DIR__ . '/vendor/autoload.php';
-require_once __DIR__ . '/server/util/init_once.php';
-
 use auth\Authenticator;
 use db\DB;
 use model\User;
