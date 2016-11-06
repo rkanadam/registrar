@@ -45,5 +45,4 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
-/server/util/Passwords.php
 *.log

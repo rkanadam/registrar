@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PublishConfigData">
+    <serverData>
+      <paths name="CSJ">
+        <serverdata>
+          <mappings>
+            <mapping deploy="/registrar" local="$PROJECT_DIR$" web="/csj/registrar" />
+          </mappings>
+        </serverdata>
+      </paths>
+    </serverData>
+  </component>
+</project>
