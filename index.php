@@ -6,7 +6,6 @@ require_once "$base/server/util/init_once.php";
 use model\User;
 use util\Log;
 $user = User::get();
-return;
 if (!$user->isAuthenticated()) {
     header('Location: unauth/login.php');
     return;
