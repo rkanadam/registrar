@@ -60,7 +60,9 @@ window.i18nMessages = {
         "notifications": "Notifications",
         "registerForEvent": "Register for the event",
         "register": "Register",
-        "to": "To"
+        "to": "To",
+        "eventRegistrationSuccessfulMessage": "Your event registration was successfull. You should receive an e-mail shortly.",
+        "cancel": "Cancel"
     },
     "fr": {}
 };

@@ -75,7 +75,7 @@ class User
         $profileId = Session::get(Session::SELECTED_PROFILE_ID);
         if (empty($profileId)) return null;
         foreach ($this->profiles as $profile) {
-            if ($profile["_id"] === $profileId) {
+            if ($profile->{"_id"} === $profileId) {
                 return $profile;
             }
         }

@@ -2,6 +2,7 @@
     <style include="app-theme"></style>
     <template>
         <spinner-backdrop id="spinner" loading="[[loading]]"></spinner-backdrop>
+        <success-dialog id="successDialog" msg-key="eventRegistrationSuccessfulMessage"></success-dialog>
         <div name="event-page">
             <iron-form method="post" action="/" id="basic">
                 <div class="row left-xs bottom-xs bottom-sm left-sm">
@@ -28,7 +29,8 @@
                             <template is="dom-repeat" items="[[event.tracks]]" as="track">
                                 <div class="row left-xs bottom-xs bottom-sm left-sm">
                                     <div class="col-xs-12 col-sm-6">
-                                        <paper-checkbox><label>{{track.name}}</label></paper-checkbox>
+                                        <paper-checkbox checked="{{track.selected}}"><label>{{track.name}}</label>
+                                        </paper-checkbox>
                                     </div>
                                     <div class="col-xs-2 col-sm-6">
                                         <label>
@@ -49,7 +51,8 @@
                                         <template is="dom-repeat" items="[[track.workshops]]" as="workshop">
                                             <div class="row left-xs bottom-xs bottom-sm left-sm">
                                                 <div class="col-xs-10 col-sm-5">
-                                                    <paper-checkbox><label>{{workshop.name}}</label></paper-checkbox>
+                                                    <paper-checkbox checked="{{workshop.selected}}"><label>{{workshop.name}}</label>
+                                                    </paper-checkbox>
                                                 </div>
                                                 <div class="col-xs-2 col-sm-6">
                                                     <label>
@@ -73,14 +76,27 @@
                 </template>
                 <div class="row bottom-xs bottom-sm center-sm">
                     <div class="col-xs-12 col-sm-12 col-lg-12 center-xs center-sm">
-                        <paper-button primary raised on-tap="_onSave">[[localize('save')]]
+                        <paper-button primary raised on-tap="_onRegister">[[localize('register')]]
                         </paper-button>
-                        <paper-button secondary raised on-tap="_onReset">[[localize('reset')]]
+                        <paper-button secondary raised on-tap="_onCancel">[[localize('cancel')]]
                         </paper-button>
                     </div>
                 </div>
             </iron-form>
         </div>
+
+        <iron-ajax
+                id="registerRequest"
+                method="POST"
+                url="api.php/events/[[event._id]]/register"
+                content-type="application/json"
+                handle-as="json"
+                on-response="_onRegistrationSuccess"
+                on-error="_onRegistrationError"
+                body="[[event]]"
+                bubbles
+        ></iron-ajax>
+
     </template>
     <script>
         Polymer({
@@ -112,6 +128,21 @@
 
             _hasTracks: function (event) {
                 return event && event.tracks && event.tracks.length > 0;
+            },
+
+            _onRegister: function () {
+                this.$.registerRequest.generateRequest();
+            },
+
+            _onRegistrationError: function () {
+            },
+
+            _onRegistrationSuccess: function () {
+                this.$.successDialog.open();
+            },
+
+            _onCancel: function () {
+                window.location.hash = "notifications";
             }
 
         });

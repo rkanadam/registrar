@@ -30,6 +30,12 @@
                         return [];
                     },
                     notify: true
+                },
+                profile: {
+                    type: Object,
+                    value: function () {
+                        return null;
+                    }
                 }
             },
 
@@ -49,6 +55,11 @@
 
             _onNewNotificationsReceived: function (newNotifications) {
                 if (newNotifications) {
+                    if (this.profile) {
+                        _.map(newNotifications, function (n) {
+                            //TODO
+                        });
+                    }
                     this.set("notifications", this.notifications.concat(newNotifications));
                     this.skip += newNotifications.length;
                 }
@@ -56,7 +67,8 @@
                 this.debounce("getNotifications", function () {
                     this.$.notificationRequest.generateRequest();
                 }, 5000);
-            }
+            },
+
 
         });
     </script>

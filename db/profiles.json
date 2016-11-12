@@ -1,23 +1,26 @@
 {
-    "_id":"_design/profiles",
-    "_rev":"93-ec618dea60099ce6dd406ab8860da22f",
-    "views":{
-    "profiles":{
-        "map":"function (doc) {\n  if (doc.type === \"profile\") {\n    emit (doc.email);\n  }\n}"
+  "_id": "_design/profiles",
+  "_rev": "97-754ea9d235363c8745873af883335f2f",
+  "views": {
+    "profiles": {
+      "map": "function (doc) {\n  if (doc.type === \"profile\") {\n    emit (doc.email);\n  }\n}"
     },
-    "profilesByPrimaryKey":{
-        "map":"function (doc) {\n  if (doc.type === \"profile\" && doc.primary && doc.primaryKey) {\n    emit (doc.primaryKey);\n  }\n}"
+    "profilesByPrimaryKey": {
+      "map": "function (doc) {\n  if (doc.type === \"profile\" && doc.primary && doc.primaryKey) {\n    emit (doc.primaryKey);\n  }\n}"
     },
-    "events":{
-        "map":"function (doc) {\n  if (doc.type === \"event\") {\n    emit (doc.email);\n  }\n}"
+    "events": {
+      "map": "function (doc) {\n  if (doc.type === \"event\") {\n    emit (doc.email);\n  }\n}"
     },
-    "notifications":{
-        "map":"(function (doc) {\n    require(\"views/lib/moment\");\n    if (doc.type === \"event\") {\n        var start = null, end = null;\n        if (doc.startDate) {\n            start = Date.parse(doc.startDate + \" \" + (doc.startTime || \"00:00\"));\n        }\n\n        if (doc.endDate) {\n            end = Date.parse(doc.endDate + \" \" + (doc.endTime || \"00:00\"));\n        }\n\n        log(\"rk:\");\n        log(doc.startDate + \" \" + (doc.startTime || \"00:00\"));\n        log (doc.endDate + \" \" + (doc.endTime || \"00:00\"));\n        if (start && end && doc.profile) {\n            emit([\n                start,\n                end\n            ], {\n                \"type\": \"event\",\n                \"profile\": doc.profile,\n                \"event\": doc\n            });\n        }\n    }\n})"
+    "notifications": {
+      "map": "(function (doc) {\n    var date = require(\"views/lib/date\");\n    if (doc.type === \"event\") {\n        var start = null, end = null;\n        if (doc.startDate) {\n            start = doc.startDate + \" \" + (doc.startTime || \"00:00 AM\");\n        }\n\n        if (doc.endDate) {\n            end = doc.endDate + \" \" + (doc.endTime || \"00:00 AM\");\n        }\n\n        if (start && end && doc.profile) {\n            emit([\n                date.parse(start).getTime (),\n                date.parse(end).getTime ()\n            ], {\n                \"type\": \"event\",\n                \"profile\": doc.profile\n            });\n        }\n    }\n})"
     },
-    "lib":{
-        "foo": "exports.bar = 42;",
-            "date": "exports.parse=function (str) {var parts = str.split(' ');var p1 = parts[0].split('-');var p2 = parts[1].split(':');if (parts[2].toLowerCase() === 'pm') {p2[0] = parseInt(p2[0] + 12);}return new Date (p1[0], parseInt(p1[1]) - 1, p1[2], p2[0], p2[1]);}"
+    "lib": {
+      "foo": "exports.bar = 42;",
+      "date": "exports.parse=function (str) {var parts = str.split(' ');var p1 = parts[0].split('-');var p2 = parts[1].split(':');if (parts[2].toLowerCase() === 'pm') {p2[0] = parseInt(p2[0] + 12);}return new Date (p1[0], parseInt(p1[1]) - 1, p1[2], p2[0], p2[1]);}"
+    },
+    "registrations": {
+      "map": "function (doc) {\n  if (doc.type === \"registration\") {\n    emit (doc.profile._id);\n  }\n}"
     }
-},
-    "language":"javascript"
+  },
+  "language": "javascript"
 }

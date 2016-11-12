@@ -89,7 +89,6 @@ $app->get('/events', function (Request $request, Response $response) {
 });
 
 $app->post('/profile/{id}', function (Request $request, Response $response) {
-    $user = User::get();
     $id = $request->getAttribute("id");
     $profile = $request->getParsedBody();
     $profile["_id"] = $id;
@@ -104,6 +103,18 @@ $app->post('/events/{id}', function (Request $request, Response $response) {
     $event = $request->getParsedBody();
     $event["_id"] = empty($id) || $id === "new" ? "" : $id;
     $event["type"] = "event";
+    //Now save it
+    $db = DB::getInstance();
+    $db->save($event);
+    return $response->withJson($event);
+});
+
+$app->post('/events/{id}/register', function (Request $request, Response $response) {
+    $user = User::get();
+    $event = $request->getParsedBody();
+    $event["_id"] = "";
+    $event["type"] = "registration";
+    $event["profile"] = $user->getSelectedProfile();
     //Now save it
     $db = DB::getInstance();
     $db->save($event);
