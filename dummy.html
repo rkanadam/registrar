@@ -1,0 +1,30 @@
+<html>
+<head>
+    <script src="bower_components/webcomponentsjs/webcomponents-lite.js"></script>
+    <script type="text/javascript">window.AppBehaviors = {}</script>
+    <script src="bower_components/jquery/dist/jquery.min.js"></script>
+    <link rel="import" href="elements/imports.html">
+    <link rel="import" href="elements/common/app-model-list.html">
+</head>
+<body>
+<app-model-list id="modelList">
+    <div id="list1">
+        <span>
+        1. Hello List World!;
+        </span>
+    </div>
+    <div id="list2">
+        <span>
+        2. Hello List World!;
+        </span>
+    </div>
+    <div id="delete">
+        <paper-icon-button icon="delete" on-tap="_deleteItem"></paper-icon-button>
+    </div>
+</app-model-list>
+<script type="text/javascript">
+    var list = $("#modelList").get(0);
+    list.items = [{name: "Hello"}, {name: "World!"}, {name: "Again"}];
+</script>
+</body>
+</html>

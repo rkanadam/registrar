@@ -113,6 +113,7 @@ $app->post('/events/{id}/register', function (Request $request, Response $respon
     $user = User::get();
     $event = $request->getParsedBody();
     $event["_id"] = "";
+    $event["notificationId"] = $request->
     $event["type"] = "registration";
     $event["profile"] = $user->getSelectedProfile();
     //Now save it

@@ -1,0 +1,103 @@
+<dom-module id="app-model-list">
+    <style include="app-theme"></style>
+    <template>
+        <neon-animated-pages id="pages"
+                             entry-animation="fade-in-animation"
+                             exit-animation="fade-out-animation"
+                             attr-for-selected="name"
+                             fallback-selection="list"
+                             selected-item="{{selectedPage}}"
+                             style="height:100%"
+        >
+            <div name="list">
+                <template is="dom-if" if="[[isTemplateProvided(listSelector)]]">
+                    <content select="[[listSelector]]"></content>
+                </template>
+                <template is="dom-if" if="[[!isTemplateProvided(listSelector)]]">
+                    <iron-list id="list" items="{{items}}" as="item">
+                        <template>
+                            <paper-material class$="[[_computedClass(selected)]]"
+                                            tabindex$="[[tabindex]]"
+                                            elevation="0"
+                                            title$="[[localize('clickToEdit')]]"
+                            >
+                                <div class="col-xs-12 col-sm-9">
+                                    <a href="#[[pathHead]]/[[item._id]]">
+                                        <div>[[item.name]]</div>
+                                        <div>
+                                            <raw-html
+                                                    html="[[item.description]]"></raw-html>
+                                        </div>
+                                    </a>
+                                </div>
+                                <div class="toolbar col-xs-12 col-sm-3">
+                                    <content select="#delete"></content>
+                                </div>
+                            </paper-material>
+                        </template>
+                    </iron-list>
+                </template>
+            </div>
+        </neon-animated-pages>
+    </template>
+    <script>
+        Polymer({
+            is: 'app-model-list',
+
+            properties: {
+                "items": {
+                    type: Array,
+                    value: function () {
+                        return [];
+                    }
+                },
+
+                "selectedPage": {
+                    type: String,
+                    value: function () {
+                        return "list";
+                    }
+                },
+
+                "listSelector": {
+                    type: String,
+                    value: function () {
+                        return "#list";
+                    }
+                },
+
+                "tools": {
+                    type: Array,
+                    value: function () {
+                        return ["#delete"];
+                    }
+                }
+            },
+
+            behaviors: [
+                Polymer.Templatizer
+            ],
+
+
+            isTemplateProvided: function (selector) {
+                var list = this.queryAllEffectiveChildren(selector);
+                return list && list.length > 0;
+            },
+
+            _computedClass: function (selected) {
+                return "row " + (selected ? " selected" : "");
+            },
+
+            getHTML: function (selector, item) {
+                var template = this.queryAllEffectiveChildren(selector);
+                if (template && template.length) {
+                    template = template[0];
+                    this.templatize(template);
+                    return this.stamp (item).root;
+                }
+                return "";
+
+            }
+        });
+    </script>
+</dom-module>

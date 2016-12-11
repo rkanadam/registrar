@@ -969,13 +969,13 @@
         </style>
         <style is="custom-style">
             /*
-             * PolymerThemes v1.0.3
-             * Homepage: https://polymerthemes.com
-             * Copyright 2015 Polymer Themes
-             * Licensed under BSD
-             * Based on Polymer: http://www.polymer-project.org/
-             * Compatible with Polymer 1.0
-             */
+ * PolymerThemes v1.0.3
+ * Homepage: https://polymerthemes.com
+ * Copyright 2015 Polymer Themes
+ * Licensed under BSD
+ * Based on Polymer: http://www.polymer-project.org/
+ * Compatible with Polymer 1.0
+ */
             @import url("https://fonts.googleapis.com/css?family=Arimo:400,700");
 
             html {
@@ -1043,7 +1043,7 @@
                 text-decoration: underline;
             }
 
-            :root, :host {
+            :root {
                 --default-primary-color: #3ea1e6;
                 --dark-primary-color: #7ec0ee;
                 --light-primary-color: #c5cae9;
@@ -1054,7 +1054,7 @@
                 --secondary-text-color: #7E8D9D;
                 --disabled-text-color: #7E8D9D;
                 --divider-color: #e0e0e0;
-                --paper-checkbox-checked-color: #1a237e;
+                --paper-checkbox-checked-color: #0288d1;
                 --paper-checkbox-checked-ink-color: #3ea1e6;
                 --paper-checkbox-unchecked-color: #7E8D9D;
                 --paper-checkbox-unchecked-ink-color: #7E8D9D;
@@ -1070,29 +1070,29 @@
                 --paper-menu-background-color: #f5fcff;
                 --paper-menu-color: #424540;
                 --paper-menu-disabled-color: #c9c9c9;
-                --paper-progress-active-color: #1a237e;
-                --paper-progress-secondary-color: #e1f5fe;
-                --paper-radio-button-checked-color: #1a237e;
+                --paper-progress-active-color: #0288d1;
+                --paper-progress-secondary-color: #039be5;
+                --paper-radio-button-checked-color: #0288d1;
                 --paper-radio-button-checked-ink-color: white;
                 --paper-radio-button-unchecked-color: #424540;
                 --paper-radio-button-unchecked-ink-color: #424540;
                 --paper-radio-button-label-color: #424540;
-                --paper-slider-knob-color: #1a237e;
-                --paper-slider-active-color: #1a237e;
-                --paper-slider-pin-color: #1a237e;
-                --paper-spinner-layer-1-color: #1a237e;
-                --paper-spinner-layer-2-color: #1a237e;
-                --paper-spinner-layer-3-color: #1a237e;
-                --paper-spinner-layer-4-color: #1a237e;
+                --paper-slider-knob-color: #0288d1;
+                --paper-slider-active-color: #0288d1;
+                --paper-slider-pin-color: #0288d1;
+                --paper-spinner-layer-1-color: #0288d1;
+                --paper-spinner-layer-2-color: #0288d1;
+                --paper-spinner-layer-3-color: #0288d1;
+                --paper-spinner-layer-4-color: #0288d1;
                 --paper-tabs-selection-bar-color: #ffff8d;
                 --paper-tab-ink: #ffff8d;
-                --paper-toggle-button-checked-bar-color: #1a237e;
-                --paper-toggle-button-checked-button-color: #1a237e;
-                --paper-toggle-button-checked-ink-color: #1a237e;
+                --paper-toggle-button-checked-bar-color: #0288d1;
+                --paper-toggle-button-checked-button-color: #0288d1;
+                --paper-toggle-button-checked-ink-color: #0288d1;
                 --paper-toggle-button-unchecked-bar-color: #7E8D9D;
                 --paper-toggle-button-unchecked-button-color: white;
                 --paper-toggle-button-unchecked-ink-color: white;
-                --paper-toolbar-background: #1a237e;
+                --paper-toolbar-background: #0288d1;
                 --paper-toolbar-color: #ffffff;
             }
 
@@ -1101,21 +1101,21 @@
             }
 
             paper-button.primary, paper-button.btn-primary, paper-button[primary] {
-                color: #1a237e;
+                color: #0288d1;
             }
 
             paper-button.primary[raised], paper-button.btn-primary[raised], paper-button[primary][raised] {
-                background-color: #1a237e;
+                background-color: #0288d1;
                 color: #fff;
             }
 
             paper-button.secondary, paper-button.btn-secondary, paper-button[secondary] {
-                color: #e3f2fd;
+                color: #039be5;
             }
 
             paper-button.secondary[raised], paper-button.btn-secondary[raised], paper-button[secondary][raised] {
-                background-color: #e3f2fd;
-                color: #44494c;
+                background-color: #039be5;
+                color: #fff;
             }
 
             paper-button.success, paper-button.btn-success, paper-button[success] {
@@ -1168,22 +1168,22 @@
             }
 
             paper-icon-button.primary, paper-icon-button.btn-primary, paper-icon-button[primary] {
-                color: #1a237e;
+                color: #0288d1;
             }
 
             paper-icon-button.primary:hover, paper-icon-button.btn-primary:hover, paper-icon-button[primary]:hover {
-                background-color: #e8e9f2;
-                background-color: rgba(26, 35, 126, 0.2);
+                background-color: #e6f3fa;
+                background-color: rgba(2, 136, 209, 0.2);
                 border-radius: 50%;
             }
 
             paper-icon-button.secondary, paper-icon-button.btn-secondary, paper-icon-button[secondary] {
-                color: #e3f2fd;
+                color: #039be5;
             }
 
             paper-icon-button.secondary:hover, paper-icon-button.btn-secondary:hover, paper-icon-button[secondary]:hover {
-                background-color: #fcfeff;
-                background-color: rgba(227, 242, 253, 0.2);
+                background-color: #e6f5fc;
+                background-color: rgba(3, 155, 229, 0.2);
                 border-radius: 50%;
             }
 
@@ -1249,21 +1249,21 @@
             }
 
             paper-fab {
-                background-color: #1a237e;
+                background-color: #0288d1;
                 color: #fff;
-                --paper-fab-keyboard-focus-background: #404ed8;
+                --paper-fab-keyboard-focus-background: #013653;
             }
 
             paper-fab.primary, paper-fab.btn-primary, paper-fab[primary] {
-                background-color: #1a237e;
+                background-color: #0288d1;
                 color: #fff;
-                --paper-fab-keyboard-focus-background: #404ed8;
+                --paper-fab-keyboard-focus-background: #013653;
             }
 
             paper-fab.secondary, paper-fab.btn-secondary, paper-fab[secondary] {
-                background-color: #e3f2fd;
-                color: #44494c;
-                --paper-fab-keyboard-focus-background: #6cbbf5;
+                background-color: #039be5;
+                color: #fff;
+                --paper-fab-keyboard-focus-background: #014667;
             }
 
             paper-fab.success, paper-fab.btn-success, paper-fab[success] {
@@ -1300,8 +1300,24 @@
             }
 
             paper-tabs {
-                background-color: #1a237e;
+                background-color: #0288d1;
                 color: #ffffff;
+            }
+
+        </style>
+
+        <style is="custom-style">
+            paper-material::content div {
+                @apply(--paper-font-common-base)
+            }
+
+            iron-list::content paper-material {
+                border-bottom: 1px solid #EEE;
+                padding: 1em 0em;
+            }
+
+            iron-list::content paper-material:hover {
+                elevation: 3;
             }
 
             label {
@@ -1328,6 +1344,33 @@
                     margin: auto;
                     width: 100%;
                 };
+            }
+
+            #drawer paper-header-panel {
+                background-color: #fff;
+            }
+
+            #drawer::content paper-header-panel::content recursive-menu::content paper-menu, #menu {
+                background-color: #fff;
+            }
+
+            #drawer::content paper-header-panel::content #mainPanel {
+                border-right: 1px solid #EEE;
+                box-shadow: 0px 0px 10px #888;
+            }
+
+            ::content paper-menu::content paper-item::content a, ::content paper-menu::content paper-item::content a:visited {
+                @apply(--paper-font-common-base);
+                color: var(--paper-toolbar-background);
+            }
+
+            ::content paper-menu::content paper-item:hover, ::content paper-menu::content paper-item:hover a:hover, ::content paper-menu::content paper-item:hover::content a {
+                background-color: var(--paper-toolbar-background);
+                color: var(--paper-toolbar-color);
+            }
+
+            ::content paper-menu::content {
+                padding-top: 0px;
             }
         </style>
     </template>
