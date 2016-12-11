@@ -11,25 +11,16 @@
         <paper-menu id="menu" attr-for-selected="id" selected-item="{{selectedPage}}" selected="[[selectedPageId]]"
                     selected-class="selected">
             <template is="dom-repeat" items="[[items]]" as="menu" id="template">
-                <template is="dom-if" if="[[!_hasChildren(menu.children)]]">
-                    <paper-item id="[[menu.id]]" class="menu-trigger">
-                        <a href="#[[menu.link]]" class="flex">
-                            [[menu.label]]
-                        </a>
-                    </paper-item>
-                </template>
+                <paper-item id="[[menu.id]]" class="menu-trigger">
+                    <template is="dom-if" if="[[menu.icon]]">
+                        <paper-icon-button icon="[[menu.icon]]"></paper-icon-button>
+                    </template>
+                    <a href="#[[menu.link]]" class="flex" style$="[[_menuPadding(depth)]]">
+                        [[menu.label]]
+                    </a>
+                </paper-item>
                 <template is="dom-if" if="[[_hasChildren(menu.children)]]">
-                    <paper-submenu id="[[menu.id]]">
-                        <paper-item id="[[menu.id]]" class="menu-trigger">
-                            <a href="#[[menu.link]]" class="flex">
-                                [[menu.label]]
-                            </a>
-                            <paper-icon-button icon="arrow-drop-down-circle"></paper-icon-button>
-                        </paper-item>
-                        <div style="padding-left: 20px" class="menu-content">
-                            <recursive-menu items="[[menu.children]]"></recursive-menu>
-                        </div>
-                    </paper-submenu>
+                    <recursive-menu items="[[menu.children]]" depth="[[_childDepth(depth)]]"></recursive-menu>
                 </template>
             </template>
         </paper-menu>
@@ -44,36 +35,28 @@
                     value: function () {
                         return [];
                     }
+                },
+
+                depth: {
+                    type: Number,
+                    value: function () {
+                        return 0;
+                    }
                 }
             },
 
             behaviors: [AppBehaviors.PageNavigationBehavior],
 
-            observers: [
-                "_onItemsChanged(items.*)",
-                "_onSelectedPageChanged(selectedPage)"
-            ],
-
-            _onSelectedPageChanged: function () {
-                if (this.selectedPage) {
-                    if (typeof(this.selectedPage.toggle) === "function") {
-                        this.selectedPage.opened = true;
-                        var submenu = this.selectedPage.querySelector("recursive-menu");
-                        submenu.path = this.selectedPage.path;
-                    }
-                }
-            },
-
-            buildMenu: function (e) {
-                debugger;
-            },
-
-            _onItemsChanged: function () {
-                this.$.template.render ();
-            },
-
             _hasChildren: function (children) {
                 return children && children.length > 0;
+            },
+
+            _childDepth: function (depth) {
+                return depth + 1;
+            },
+
+            _menuPadding: function (depth) {
+                return depth > 0 ? "padding-left: " + (depth * 20) + "px" : "";
             }
         });
     </script>
