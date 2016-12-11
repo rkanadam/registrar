@@ -1373,9 +1373,17 @@
                 padding-top: 0px;
             }
 
-            paper-toolbar.header {
+            paper-header-panel.header::content {
+                padding: 0em 0em 1em 0em;
+            }
+
+            paper-header-panel.header::content paper-toolbar {
                 background: var(--dark-primary-color);
                 color: var(--paper-toolbar-color);
+            }
+
+            #notifications, #notifications:visited, #notifications:hover {
+                color: #fff;
             }
         </style>
     </template>
