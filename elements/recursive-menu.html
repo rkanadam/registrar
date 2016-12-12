@@ -2,15 +2,19 @@
     <template>
         <style is="custom-style" include="app-theme">
             .selected paper-item {
-                background-color: #EEE;
             }
 
             .selected div paper-item {
                 color: var(--default-primary-color);
             }
 
+            .selected div[last-node-of-selected-path] paper-item {
+                background-color: #f5f5f5;
+            }
+
             .selected div[last-node-of-selected-path] paper-item a {
                 font-weight: bold;
+                text-decoration: underline;
             }
 
             paper-item a, paper-item a:visited {
@@ -31,10 +35,14 @@
             recursive-menu {
                 padding: 0px;
             }
+
+            paper-item a {
+                text-decoration: none;
+            }
         </style>
-        <template is="dom-if" if="[[!hideRoot]]">
-            <div leaf-node$="[[!_hasChildren(menu.children)]]" last-node-of-selected-path$="[[lastNodeOfSelectedPath]]">
-                <paper-item id="[[menu.id]]" role="[[_getRole(menu.children)]]">
+        <template is="dom-if" if="[[!hideRoot]]" id="labelTemplate">
+            <div leaf-node$="[[!_hasChildren(menu.children)]]" last-node-of-selected-path$="[[isLastNodeOfSelectedPath(pathHead,path,completePath)]]">
+                <paper-item id="[[menu.id]]">
                     <div style$="[[_menuPadding(depth)]]">
                         <template is="dom-if" if="[[menu.icon]]">
                             <iron-icon icon="[[menu.icon]]"></iron-icon>
@@ -47,10 +55,10 @@
             </div>
         </template>
         <template is="dom-if" if="[[_hasChildren(menu.children)]]">
-            <paper-menu id="menu" attr-for-selected="id" selected-item="{{selectedPage}}" selected="[[selectedPageId]]"
+            <paper-menu id="menu" attr-for-selected="id" selected-item="{{selectedPage}}" selected="{{selectedPageId}}"
                         selected-class="selected">
                 <template is="dom-repeat" items="[[menu.children]]" as="menu">
-                    <recursive-menu id="[[menu.id]]" menu="[[menu]]" depth="[[_childDepth(depth)]]"></recursive-menu>
+                    <recursive-menu id="[[menu.id]]" menu="[[menu]]" depth="[[_childDepth(depth)]]" complete-path="[[completePath]]"></recursive-menu>
                 </template>
             </paper-menu>
         </template>
@@ -93,13 +101,17 @@
                         return false;
                     },
                     notify: true
+                },
+
+                completePath: {
+                    type: String,
+                    value: function () {
+                        return "";
+                    }
                 }
             },
 
             behaviors: [AppBehaviors.PageNavigationBehavior],
-            listeners: {
-                "page-select": "_onPageSelect"
-            },
 
             _hasChildren: function (children) {
                 return children && children.length > 0;
@@ -113,15 +125,14 @@
                 return depth > 0 ? "padding-left: " + (depth * 10) + "px" : "";
             },
 
-            _getRole: function (children) {
-                return this._hasChildren(children) ? "menuitem" : "listitem";
+            isLastNodeOfSelectedPath: function (pathHead, path, completePath) {
+                return path === "" ? pathHead === completePath : false;
             },
 
-            _onPageSelect: function () {
-                if (!this.path) {
-                    this.lastNodeOfSelectedPath = true;
-                } else {
-                    this.lastNodeOfSelectedPath = false;
+            _onSelectedPageIdChanged: function (selectedPageId) {
+                var menu = this.querySelector("paper-menu");
+                if (menu) {
+                    menu.selected = selectedPageId;
                 }
             }
         });

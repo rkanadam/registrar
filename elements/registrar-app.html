@@ -118,8 +118,9 @@
                     }
                 }.bind(this));
 
-                this.$.menu.set("menu", JSON.parse(JSON.stringify(this.menu)));
+                this.$.menu.set("menu", this.menu);
                 this.$.menu.path = this.path;
+                this.$.menu.completePath = this.path;
             },
 
             onLayoutChange: function (wide) {
