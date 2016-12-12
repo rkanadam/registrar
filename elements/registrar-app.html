@@ -22,7 +22,7 @@
                                 on-click="_showProfileSelector">
                         </paper-icon-button>
                     </paper-toolbar>
-                    <recursive-menu id="menu" items="[[menu.children]]"></recursive-menu>
+                    <recursive-menu id="menu" hide-root></recursive-menu>
                 </paper-header-panel>
             </app-drawer>
             <div id="content">
@@ -117,6 +117,8 @@
                         this.push("menu.children", page.menu);
                     }
                 }.bind(this));
+
+                this.$.menu.set("menu", JSON.parse(JSON.stringify(this.menu)));
                 this.$.menu.path = this.path;
             },
 

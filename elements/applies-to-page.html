@@ -22,6 +22,7 @@
             buildMenu: function (pathPrefix) {
                 this.set("menu.label", this.localize("appliesTo"));
                 this.set("menu.id", "appliesTo");
+                this.set("menu.icon", "social:group");
                 this.set("menu.link", (pathPrefix ? pathPrefix + "/" : "") + this.get("menu.id"));
                 this.splice("menu.children", 0, this.menu.children.length);
             }

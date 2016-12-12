@@ -154,6 +154,7 @@
                 this.splice("menu.children", 0, this.menu.children.length);
                 this.set("menu.label", this.track.name || this.localize("newTrack"));
                 this.set("menu.id", this.trackIndex);
+                this.set("menu.icon", "list");
                 this.set("menu.link", (pathPrefix ? pathPrefix + "/" : "") + this.get("menu.id"));
                 _.each(this.$.pages.children, function (page) {
                     if (page.buildMenu) {

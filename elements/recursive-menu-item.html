@@ -1,0 +1,50 @@
+<dom-module id="recursive-menu-item">
+    <template>
+        <style is="custom-style" include="app-theme"></style>
+        <paper-item id="[[menu.id]]" on-page-select="selectPage" class$="[[_getClass(selected)]]">
+            <div style$="[[_menuPadding(depth)]]">
+                <template is="dom-if" if="[[menu.icon]]">
+                    <iron-icon icon="[[menu.icon]]"></iron-icon>
+                </template>
+                <a href="#[[menu.link]]" class="flex">
+                    [[menu.label]]
+                </a>
+            </div>
+        </paper-item>
+    </template>
+    <script>
+        Polymer({
+            is: "recursive-menu-item",
+
+            properties: {
+                menu: {
+                    type: Object,
+                    value: function () {
+                        return {};
+                    }
+                },
+
+                depth: {
+                    type: Number,
+                    value: function () {
+                        return 0;
+                    }
+                }
+            },
+
+            behaviors: [AppBehaviors.PageNavigationBehavior],
+
+            _menuPadding: function (depth) {
+                return depth > 0 ? "padding-left: " + (depth * 10) + "px" : "";
+            },
+
+            selectPage: function (e, page) {
+                this.selected = true;
+            },
+
+            _getClass: function (selected) {
+                return selected ? "selected" : "";
+            }
+        });
+    </script>
+</dom-module>

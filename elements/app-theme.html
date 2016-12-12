@@ -1359,20 +1359,6 @@
                 box-shadow: 0px 0px 10px #888;
             }
 
-            ::content paper-menu::content paper-item::content a, ::content paper-menu::content paper-item::content a:visited {
-                @apply(--paper-font-common-base);
-                color: var(--paper-toolbar-background);
-            }
-
-            ::content paper-menu::content paper-item:hover, ::content paper-menu::content paper-item:hover a:hover, ::content paper-menu::content paper-item:hover::content a {
-                background-color: var(--paper-toolbar-background);
-                color: var(--paper-toolbar-color);
-            }
-
-            ::content paper-menu::content {
-                padding-top: 0px;
-            }
-
             paper-header-panel.header::content {
                 padding: 0em 0em 1em 0em;
             }
@@ -1382,7 +1368,7 @@
                 color: var(--paper-toolbar-color);
             }
 
-            #notifications, #notifications:visited, #notifications:hover {
+            a.notification_icon, a.notification_icon:visited, a.notification_icon:hover {
                 color: #fff;
             }
         </style>

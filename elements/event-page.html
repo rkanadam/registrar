@@ -179,6 +179,7 @@
                     this.set("menu.id", this.event._id);
                 }
                 this.set("menu.link", (pathPrefix ? pathPrefix + "/" : "") + this.get("menu.id"));
+                this.set("menu.icon", "card-membership");
                 _.each(this.$.pages.children, function (page) {
                     if (page.buildMenu) {
                         page.buildMenu(this.get("menu.link"));

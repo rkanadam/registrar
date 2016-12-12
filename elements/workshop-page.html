@@ -135,6 +135,7 @@
                 this.splice("menu.children", 0, this.menu.children.length);
                 this.set("menu.label", this.workshop.name || this.localize("newWorkshop"));
                 this.set("menu.id", this.workshopIndex);
+                this.set("menu.icon", "next-week");
                 this.set("menu.link", (pathPrefix ? pathPrefix + "/" : "") + this.get("menu.id"));
             }
         });

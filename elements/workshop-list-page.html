@@ -110,6 +110,7 @@
             buildMenu: function (pathPrefix) {
                 this.set("menu.label", this.localize("workshops"));
                 this.set("menu.id", "workshops");
+                this.set("menu.icon", "next-week");
                 this.set("menu.link", (pathPrefix ? pathPrefix + "/" : "") + this.get("menu.id"));
                 this.splice("menu.children", 0, this.menu.children.length);
                 if (this.selectedPage && this.selectedPage.menu) {

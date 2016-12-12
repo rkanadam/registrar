@@ -1,40 +1,76 @@
 <dom-module id="recursive-menu">
     <template>
         <style is="custom-style" include="app-theme">
-            /*
-            paper-submenu.selected paper-item {
-                font-weight: bold;
-                background-color: var(--divider-color);
+            .selected paper-item {
+                background-color: #EEE;
             }
-            */
+
+            .selected div paper-item {
+                color: var(--default-primary-color);
+            }
+
+            .selected div[last-node-of-selected-path] paper-item a {
+                font-weight: bold;
+            }
+
+            paper-item a, paper-item a:visited {
+                @apply(--paper-font-common-base);
+                color: var(--paper-toolbar-background);
+            }
+
+            paper-item:hover, paper-item:hover a, paper-item:hover .selected div[last-node-of-selected-path] paper-item a, .selected div paper-item:hover, .selected paper-item:hover {
+                background-color: var(--paper-toolbar-background);
+                color: var(--paper-toolbar-color);
+            }
+
+            paper-menu {
+                padding-top: 0px;
+                padding-bottom: 0px;
+            }
+
+            recursive-menu {
+                padding: 0px;
+            }
         </style>
-        <paper-menu id="menu" attr-for-selected="id" selected-item="{{selectedPage}}" selected="[[selectedPageId]]"
-                    selected-class="selected">
-            <template is="dom-repeat" items="[[items]]" as="menu" id="template">
-                <paper-item id="[[menu.id]]" class="menu-trigger">
-                    <template is="dom-if" if="[[menu.icon]]">
-                        <paper-icon-button icon="[[menu.icon]]"></paper-icon-button>
-                    </template>
-                    <a href="#[[menu.link]]" class="flex" style$="[[_menuPadding(depth)]]">
-                        [[menu.label]]
-                    </a>
+        <template is="dom-if" if="[[!hideRoot]]">
+            <div leaf-node$="[[!_hasChildren(menu.children)]]" last-node-of-selected-path$="[[lastNodeOfSelectedPath]]">
+                <paper-item id="[[menu.id]]" role="[[_getRole(menu.children)]]">
+                    <div style$="[[_menuPadding(depth)]]">
+                        <template is="dom-if" if="[[menu.icon]]">
+                            <iron-icon icon="[[menu.icon]]"></iron-icon>
+                        </template>
+                        <a href="#[[menu.link]]" class="flex">
+                            [[menu.label]]
+                        </a>
+                    </div>
                 </paper-item>
-                <template is="dom-if" if="[[_hasChildren(menu.children)]]">
-                    <recursive-menu items="[[menu.children]]" depth="[[_childDepth(depth)]]"></recursive-menu>
+            </div>
+        </template>
+        <template is="dom-if" if="[[_hasChildren(menu.children)]]">
+            <paper-menu id="menu" attr-for-selected="id" selected-item="{{selectedPage}}" selected="[[selectedPageId]]"
+                        selected-class="selected">
+                <template is="dom-repeat" items="[[menu.children]]" as="menu">
+                    <recursive-menu id="[[menu.id]]" menu="[[menu]]" depth="[[_childDepth(depth)]]"></recursive-menu>
                 </template>
-            </template>
-        </paper-menu>
+            </paper-menu>
+        </template>
     </template>
     <script>
         Polymer({
             is: 'recursive-menu',
 
             properties: {
-                items: {
-                    type: Array,
+                menu: {
+                    type: Object,
                     value: function () {
-                        return [];
-                    }
+                        return {
+                            id: "",
+                            label: "",
+                            icon: "",
+                            children: []
+                        };
+                    },
+                    notify: true
                 },
 
                 depth: {
@@ -42,10 +78,28 @@
                     value: function () {
                         return 0;
                     }
+                },
+
+                hideRoot: {
+                    type: Boolean,
+                    value: function () {
+                        return false;
+                    }
+                },
+
+                lastNodeOfSelectedPath: {
+                    type: Boolean,
+                    value: function () {
+                        return false;
+                    },
+                    notify: true
                 }
             },
 
             behaviors: [AppBehaviors.PageNavigationBehavior],
+            listeners: {
+                "page-select": "_onPageSelect"
+            },
 
             _hasChildren: function (children) {
                 return children && children.length > 0;
@@ -56,7 +110,19 @@
             },
 
             _menuPadding: function (depth) {
-                return depth > 0 ? "padding-left: " + (depth * 20) + "px" : "";
+                return depth > 0 ? "padding-left: " + (depth * 10) + "px" : "";
+            },
+
+            _getRole: function (children) {
+                return this._hasChildren(children) ? "menuitem" : "listitem";
+            },
+
+            _onPageSelect: function () {
+                if (!this.path) {
+                    this.lastNodeOfSelectedPath = true;
+                } else {
+                    this.lastNodeOfSelectedPath = false;
+                }
             }
         });
     </script>
